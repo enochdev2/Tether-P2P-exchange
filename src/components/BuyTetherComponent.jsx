@@ -1,0 +1,20 @@
+const BuyTetherComponent = () => {
+  return (
+    <div className="p-6 bg-white shadow-lg rounded-md">
+      {/* Title */}
+      <h1 className="text-3xl font-bold mb-2">Buy Tether (USDT).</h1>
+
+      {/* Description */}
+      <p className="text-gray-600 mb-4">
+        Buy Tether with over 500 payment methods to choose from, including bank transfers, online wallets, and gift cards.
+      </p>
+
+      {/* Promoted Offers Section */}
+      <button className="w-full py-3 bg-green-500 text-white rounded-md">
+        Promoted offers
+      </button>
+    </div>
+  );
+};
+
+export default BuyTetherComponent
