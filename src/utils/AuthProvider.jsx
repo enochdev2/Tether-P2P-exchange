@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/login", {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   // Handle logout
   const logout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/logout", {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout", {
         method: "POST",
         credentials: "include",
       });
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   const signUp = async (newUser) => {
     try {
       // Send the POST request to your API
-      const response = await fetch("http://localhost:3000/api/v1/user/users", {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
   const allUser = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/v1/user/users", {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (updatedData) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${updatedData.nickname}`,
         {
           method: "PUT",
           headers: {

@@ -41,7 +41,7 @@ const UserDetails = () => {
       const allUser = async () => {
         try {
           const response = await fetch(
-            "http://localhost:3000/api/v1/user/users",
+            "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
             {
               method: "GET",
               headers: {
