@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TrendingUp, Box, Heart, Download, User, HelpCircle, LogOut } from 'lucide-react'; // Import necessary icons
 import { useAuth } from '../../utils/AuthProvider';
 import { SuccessToast } from '../../utils/Success';
-import { userModel } from '../../../../backendjs/models/userModel';
 
 // Define an array of sidebar links with icons
 const sidebarLinks = [
