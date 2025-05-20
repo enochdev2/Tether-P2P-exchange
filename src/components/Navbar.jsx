@@ -24,9 +24,9 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", to: "/", private: false },
-    { name: "Trade Listings", to: "/trade-listings", private: false },
-    { name: "Transaction History", to: "/post-offer", private: true },
-    { name: "My Information", to: "/dashboard/profile", private: true },
+    // { name: "Trade Listings", to: "/trade-listings", private: false },
+    { name: "Transaction History", to: "/post-offer", private: false },
+    { name: "My Page", to: "/dashboard/profile", private: true },
   ];
 
   const handleLinkClick = (link) => {
@@ -66,7 +66,7 @@ const Navbar = () => {
                   to={link.to}
                   className={`${
                     activeLink === link.name ? "text-white" : "text-gray-300"
-                  } hover:text-white px-2 py-2 rounded-md text-[14px] font-medium`}
+                  } hover:text-white px-2 py-2 rounded-md text-[15px] font-medium`}
                   onClick={() => handleLinkClick(link.name)}
                 >
                   {link.name}

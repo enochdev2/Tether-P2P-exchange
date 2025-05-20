@@ -1,78 +1,78 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  TrendingUp,
-  Box,
-  Heart,
-  Download,
-  User,
-  HelpCircle,
-  LogOut,
-} from "lucide-react"; // Import necessary icons
 
-// Define an array of sidebar links with icons
-const sidebarLinks = [
+const sidebarSections = [
   {
-    to: "/admin/dashboard",
-    label: "Dashboard",
-    icon: <User className="w-5 h-5" />,
+    title: null,
+    links: [
+      {
+        id: "account-info",
+        label: "Account info",
+        to: "/account-info",
+      },
+    ],
   },
   {
-    to: "/admin/transactions",
-    label: "Transactions",
-    icon: <TrendingUp className="w-5 h-5" />,
+    title: "Sell",
+    links: [
+      { id: "sell-order", label: "Sell Order", to: "/sell-order" },
+      { id: "sell-history", label: "Sell History", to: "/sell-history" },
+    ],
   },
   {
-    to: "/admin/transaction/1",
-    label: "Transactions",
-    icon: <TrendingUp className="w-5 h-5" />,
-  },
-  { to: "/admin/user", label: "User", icon: <Box className="w-5 h-5" /> },
-  {
-    to: "/admin/alerts",
-    label: "System Alerts",
-    icon: <Heart className="w-5 h-5" />,
+    title: "Buy",
+    links: [
+      { id: "buy-order", label: "Buy Order", to: "/buy-order" },
+      { id: "buy-history", label: "Buy History", to: "/buy-history" },
+    ],
   },
 ];
 
 function Sidebar() {
-  const [activeLink, setActiveLink] = useState("/admin/dashboard"); // Track the active link
+  const [activeLink, setActiveLink] = useState("account-info");
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link); // Update active link when clicked
+  const handleLinkClick = (id) => {
+    setActiveLink(id);
   };
 
   return (
-    <div className="flex flex-col w-1/4 bg-gray-900 text-white p-6 h-auto">
+    <div className="flex flex-col w-64 bg-gray-900 text-white p-6 min-h-screen">
       {/* Profile Section */}
-      <div className="flex items-center space-x-4 mb-6">
-        {/* Profile Image */}
-        <div className="w-12 h-12 rounded-full bg-[#26a17b] flex items-center justify-center">
-          {/* You can replace the div with an <img> tag for a real profile picture */}
-          <span className="text-xl font-bold text-white">Ad</span>{" "}
-          {/* Placeholder for user icon */}
+      <div className="flex items-center space-x-4 mb-8">
+        <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+          U
         </div>
-        <span className="text-white text-lg font-semibold">Admin Panel</span>
+        <span className="text-white text-lg font-semibold lowercase">admin</span>
       </div>
 
-      {/* Top Links Section */}
-      <ul className="space-y-4 flex-1">
-        {/* Iterate over the sidebarLinks array */}
-        {sidebarLinks.map((link) => (
-          <li key={link.to}>
-            <Link
-              to={link.to}
-              className={`flex items-center space-x-3 py-2 px-4 rounded-md ${
-                activeLink === link.to ? "bg-[#26a17b]" : "hover:bg-gray-800"
-              }`}
-              onClick={() => handleLinkClick(link.to)}
-            >
-              {link.icon}
-              <span className="text-lg">{link.label}</span>
-            </Link>
-          </li>
+      {/* Sidebar Links */}
+      <div className="flex flex-col space-y-6 text-lg font-normal">
+        {sidebarSections.map((section, idx) => (
+          <div key={idx}>
+            {section.title && (
+              <h3 className="mb-2 text-gray-400 uppercase tracking-wide font-semibold text-sm">
+                {section.title}
+              </h3>
+            )}
+            <ul className="flex flex-col space-y-1">
+              {section.links.map((link) => (
+                <li key={link.id}>
+                  <button
+                    className={`w-full text-left py-2 px-4 rounded-md text-white ${
+                      activeLink === link.id
+                        ? "bg-[#26a17b]"
+                        : "hover:bg-gray-800"
+                    }`}
+                    onClick={() => handleLinkClick(link.id)}
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
