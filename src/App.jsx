@@ -43,7 +43,7 @@ function App() {
           <Route path="sell-history" element={<History />} />
           <Route path="buy-order" element={<TradingOffers />} />
           {/* <Route path="buy-order" element={<TransactionHistory />} /> */}
-          <Route path="buy-history" element={<History />} />
+          <Route path="buy-history" element={<TradingPage />} />
           <Route path="settings" element={<AccountSettings />} />
           <Route path="support" element={<Support />} />
           <Route path="one-on-one" element={<Support />} />
