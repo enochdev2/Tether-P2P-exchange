@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, Clock, ChevronDown, Star } from 'lucide-react'; 
-import TradeCard from '../../components/TradeCard';
+import TradeCard2 from '../../components/TradeCard2';
 import BuyTetherComponent from '../../components/BuyTetherComponent';
 
 const TransactionHistory = () => {
@@ -15,24 +15,27 @@ const TransactionHistory = () => {
     action: "Sell",
     usdtAmount: 503.56,
     krwAmount: 700000,
-    status: "On sell",
+    status: "Sell completed",
     statusDate: "2025-05-20",
+    statusTime: "18:55:57"
   },
   {
     id: 2,
-    action: "Sell",
+    action: "Buy",
     usdtAmount: 510.12,
     krwAmount: 705000,
-    status: "Pending Approval",
+    status: "Buy Completed",
     statusDate: "2025-05-19",
+    statusTime: "18:55:57"
   },
   {
     id: 3,
-    action: "Sell",
+    action: "Buy",
     usdtAmount: 499.98,
     krwAmount: 695000,
-    status: "Sell completed",
+    status: "Buy completed",
     statusDate: "2025-05-13",
+    statusTime: "18:55:57"
   },
   {
     id: 4,
@@ -41,6 +44,7 @@ const TransactionHistory = () => {
     krwAmount: 700000,
     status: "Sell completed",
     statusDate: "2025-04-28",
+    statusTime: "18:55:57"
   },
   {
     id: 5,
@@ -49,14 +53,16 @@ const TransactionHistory = () => {
     krwAmount: 699000,
     status: "Sell completed",
     statusDate: "2025-04-20",
+    statusTime: "18:55:57"
   },
   {
     id: 6,
-    action: "Sell",
+    action: "Buy",
     usdtAmount: 508.44,
     krwAmount: 702000,
-    status: "On sell",
+    status: "Buy Completed",
     statusDate: "2025-05-20",
+    statusTime: "18:55:57"
   },
 ];
 
@@ -66,7 +72,7 @@ const TransactionHistory = () => {
   };
   
   return (
-      <div className="flex bg-gray-100 pt-18 min-h-screen">
+      <div className="flex md:px-10 lg:space-x-10 bg-gray-100 pt-18 min-h-screen">
       {/* Sidebar Section */}
       <div className="w-1/4 bg-white p-6 shadow-lg space-y-6">
         <h2 className="text-2xl font-bold">Find Transaction History</h2>
@@ -122,7 +128,7 @@ const TransactionHistory = () => {
         {/* Map Over Offers Data */}
         <div className="space-y-4">
           {offers.map((offer) => (
-              <TradeCard key={offer.id} offer={offer} />
+              <TradeCard2 key={offer.id} offer={offer} />
             ))}
         </div>
       </div>
