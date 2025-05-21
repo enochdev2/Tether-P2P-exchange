@@ -1,47 +1,70 @@
-import { CheckCircle, Clock, Star } from 'lucide-react';
+import { CheckCircle, Clock, Star } from "lucide-react";
+import logo2 from "../assets/Tether2.png";
 
+const statusColors = {
+  "On sell": "#26a17b", // Green
+  "Pending Approval": "#a0a0a0", // Grey
+  "Sell completed": "#f59e0b", // Orange (amber)
+};
 
 const TradeCard = ({ offer }) => {
+  // offer object expected to have:
+  // action: "Sell"
+  // usdtAmount: e.g. 503.56
+  // krwAmount: e.g. 700000
+  // status: e.g. "On sell", "Pending Approval", "Sell completed"
+  // statusDate: e.g. "2025-05-20"
+
   return (
-    <div className="bg-white p-4 shadow-md flex justify-between items-center rounded-md mb-4">
-      {/* Left Section (Trader Info) */}
-      <div className="flex items-center space-x-4">
-        {/* Trader's Name and Rating */}
-        <div className="font-semibold text-gray-800">{offer.trader}</div>
-        <div className="flex items-center space-x-1 text-gray-600">
-          <CheckCircle className="w-4 h-4 text-[#26a17b]" />
-          <span>{offer.traderRating}</span>
+    <div className="flex items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200">
+      {/* Left Section */}
+      <div className="flex flex-col items-center w-24 mr-6">
+        <div className="">
+          <div className="bg-green-600 text-white font-bold text-lg px-3 py-1 rounded">
+            {offer.action}
+          </div>
+          <div className="w-2 h-2 mx-auto bg-green-600 rounded-full mt-1"></div>
         </div>
-        <div className="text-gray-600">Seen {offer.timeAgo}</div>
       </div>
 
-      {/* Middle Section (Payment Info) */}
-      <div className="flex flex-col items-center">
+      <div className="flex-1">
+        <div className="mt-2 font-semibold text-xl flex text-gray-900">
+          {" "}
+          <span className="mr-2">
+            <img src={logo2} alt="" className="w-7 h-7" />
+          </span>
+          {offer.usdtAmount} USDT
+        </div>
+      </div>
+
+      {/* Middle Section */}
+      <div className="flex-1 font-semibold text-lg text-gray-900">
+        ₩{offer.krwAmount.toLocaleString()} KRW
+      </div>
+
+      {/* Right Section */}
+      <div className="flex flex-col items-end w-32">
+        <div className="text-sm text-gray-700">
+          {offer.ordernumber}
+        </div>
         <div className="flex items-center space-x-2">
-          <span className="text-gray-600">{offer.paymentMethod}</span>
-          {offer.verified && (
-            <div className="flex items-center space-x-1">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-green-500">VERIFIED</span>
-            </div>
-          )}
+          <div
+            className="w-3 h-3 rounded-full"
+            style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
+          />
+          <span
+            className={`font-semibold ${
+              offer.status === "Pending Approval"
+                ? "text-gray-400"
+                : offer.status === "Sell completed"
+                ? "text-orange-500"
+                : "text-green-600"
+            }`}
+          >
+            {offer.status}
+          </span>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Clock className="w-4 h-4 text-gray-500" />
-          <span>{offer.tradeSpeed}</span>
-        </div>
-      </div>
-
-      {/* Right Section (Price Info & Actions) */}
-      <div className="flex flex-col items-center space-y-2">
-        <div className="font-semibold text-lg">{offer.pricePerTether}</div>
-        <div className="text-gray-500 text-sm">
-          Min purchase: {offer.minPurchase} | Max purchase: {offer.maxPurchase}
-        </div>
-        <div className="flex items-center space-x-2 text-green-500">
-          <Star className="w-4 h-4" />
-          <button className="bg-[#26a17b] text-white py-1 px-4 rounded-md">Buy</button>
-        </div>
+        <div className="text-sm text-gray-400 mt-1">{offer.statusDate}</div>
       </div>
     </div>
   );

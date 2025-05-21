@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { TrendingUp, Box, Heart, Download, User, HelpCircle, LogOut } from 'lucide-react'; // Import necessary icons
-import { useAuth } from '../../utils/AuthProvider';
-import { SuccessToast } from '../../utils/Success';
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  TrendingUp,
+  Box,
+  Heart,
+  Download,
+  User,
+  HelpCircle,
+  LogOut,
+  LogOutIcon,
+} from "lucide-react"; // Import necessary icons
+import { useAuth } from "../../utils/AuthProvider";
+import { SuccessToast } from "../../utils/Success";
 // import { User, LogOut } from "lucide-react"; // example icons for Account info and Sign out
-
-
-
 
 const sidebarData = [
   {
@@ -15,7 +21,7 @@ const sidebarData = [
       {
         id: "account-info",
         label: "Account info",
-        to: "/account-info",
+        to: "profile",
         icon: null, // Add icon here if needed
         active: true, // default active link
       },
@@ -25,16 +31,16 @@ const sidebarData = [
     id: "sell",
     title: "Sell",
     links: [
-      { id: "sell-order", label: "Sell Order", to: "/sell-order" },
-      { id: "sell-history", label: "Sell History", to: "/sell-history" },
+      { id: "sell-order", label: "Sell Order", to: "sell-order" },
+      { id: "sell-history", label: "Sell History", to: "sell-history" },
     ],
   },
   {
     id: "buy",
     title: "Buy",
     links: [
-      { id: "buy-order", label: "Buy Order", to: "/buy-order" },
-      { id: "buy-history", label: "Buy History", to: "/buy-history" },
+      { id: "buy-order", label: "Buy Order", to: "buy-order" },
+      { id: "buy-history", label: "Buy History", to: "buy-history" },
     ],
   },
 ];
@@ -42,35 +48,38 @@ const sidebarData = [
 const inquiryData = {
   title: "Inquiry",
   links: [
-    { id: "edit-info", label: "Edit My Info", to: "/edit-info" },
-    { id: "one-on-one", label: "1:1 inquiry", to: "/one-on-one" },
-    { id: "inquiry-history", label: "Inquiry History", to: "/inquiry-history" },
-    { id: "sign-out", label: "Sign out", to: "/sign-out" },
+    { id: "edit-info", label: "Edit My Info", to: "edit-info" },
+    { id: "one-on-one", label: "1:1 inquiry", to: "one-on-one" },
+    { id: "inquiry-history", label: "Inquiry History", to: "inquiry-history" },
+    // { id: "sign-out", label: "Sign out", to: "sign-out" },
   ],
 };
 
 function Sidebar() {
   const [activeLink, setActiveLink] = useState("account-info");
 
-     const { logout, user } = useAuth(); 
-   const navigate = useNavigate();
+  const { logout, user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  // Extract current path segment safely
+  const currentPathSegment =
+    location.pathname.split("/").filter(Boolean).pop() || "";
+
+    
   const logouts = async () => {
-
-
     try {
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await logout();
 
-      if(response){
-
+      if (response) {
         SuccessToast(" you have just Logout successfully");
-        navigate('/'); 
-      }else {
+        navigate("/");
+      } else {
         return;
-      }       
+      }
     } catch (error) {
-      console.error('Error during sign-up:', error);
+      console.error("Error during sign-up:", error);
       // Optionally handle error here (e.g., show error message)
     }
   };
@@ -82,13 +91,15 @@ function Sidebar() {
   return (
     <div className="flex flex-col w-64 bg-[#1f2937] text-white p-6 min-h-auto ">
       {/* Top Section */}
-      <div className='mb-32'>
+      <div className="mb-32">
         {/* Profile */}
         <div className="flex items-center space-x-4 mb-3">
           <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
             U
           </div>
-          <span className="text-white text-lg font-semibold lowercase">admin</span>
+          <span className="text-white text-lg font-semibold lowercase">
+            admin
+          </span>
         </div>
 
         {/* Sidebar links */}
@@ -96,22 +107,23 @@ function Sidebar() {
           <div key={section.id} className="mb-4">
             {section.title && (
               <h3 className="mb-1 flex items-center  text-gray-400 uppercase tracking-wide font-semibold text-sm">
-                {section.title} <div className='  w-16 h-0.5 ml-3 bg-sky-700/50'/>
+                {section.title}{" "}
+                <div className="  w-16 h-0.5 ml-3 bg-sky-700/50" />
               </h3>
             )}
             <ul className="space-y-">
               {section.links.map((link) => (
                 <li key={link.id}>
-                  <button
-                    className={`w-full text-left py-2 px-4 cursor-pointer rounded-md ${
-                      activeLink === link.id
+                  <Link
+                    to={link.to}
+                    className={`block w-full py-2 cursor-pointer px-4 rounded-md ${
+                      currentPathSegment === link.to.replace("/", "")
                         ? "bg-[#26a17b]"
                         : "hover:bg-gray-700"
                     }`}
-                    onClick={() => handleLinkClick(link.id)}
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -127,18 +139,24 @@ function Sidebar() {
         <ul className="space-y-1">
           {inquiryData.links.map((link) => (
             <li key={link.id}>
-              <button
-                className={`w-full text-left py-2 px-4 rounded-md ${
-                  activeLink === link.id
+              <Link
+                to={link.to}
+                className={`block w-full py-2 px-4 rounded-md ${
+                  currentPathSegment === link.to.replace("/", "")
                     ? "bg-[#26a17b]"
                     : "hover:bg-gray-700"
                 }`}
-                onClick={() => handleLinkClick(link.id)}
               >
                 {link.label}
-              </button>
+              </Link>
             </li>
           ))}
+          <button className="flex items-center hover:bg-[#26a17b] cursor-pointer px-5 py-2 rounded-lg w-full" 
+          onClick={logouts}
+          >
+          <LogOutIcon size={18} className="mr-3 "/>
+            Sign Out
+          </button>
         </ul>
       </div>
     </div>

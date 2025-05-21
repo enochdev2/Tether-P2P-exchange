@@ -39,14 +39,17 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="profile" element={<ProfileOverview />} />
-          <Route path="transactions" element={<History />} />
-          <Route path="my-trade" element={<History />} />
-          <Route path="favorite-offers" element={<TradingOffers />} />
-          <Route path="trade-statistics" element={<BalanceOverview />} />
+          <Route path="sell-order" element={<TradingOffers />} />
+          <Route path="sell-history" element={<History />} />
+          <Route path="buy-order" element={<TradingOffers />} />
+          {/* <Route path="buy-order" element={<TransactionHistory />} /> */}
+          <Route path="buy-history" element={<History />} />
           <Route path="settings" element={<AccountSettings />} />
           <Route path="support" element={<Support />} />
-          <Route path="offers" element={<TradingOffers />} />
-          {/* <Route path="referral" element={<ReferralRewards />} /> */}
+          <Route path="one-on-one" element={<Support />} />
+          <Route path="inquiry-history" element={<Support />} />
+          <Route path="sell-history" element={<TradingOffers />} />
+          <Route path="edit-info" element={<TradingOffers />} />
           {/* <Route path="support" element={<Support />} /> */}
         </Route>
 
