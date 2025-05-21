@@ -238,7 +238,7 @@ const Navbar = () => {
                   key={link.name}
                   to={link.to}
                   className={`${
-                    activeLink === link.name ? "bg-green-800" : "text-white"
+                    activeLink === link.name ? "" : "text-white"
                   } block px-3 py-2 rounded-md text-base font-medium`}
                   onClick={() => handleLinkClick(link.name)}
                 >
