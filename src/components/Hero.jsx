@@ -39,7 +39,7 @@ const Hero = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
             The Secure,
           </h1>
-          <h1 className="text-3xl sm:text-5xl md:text-[58px] font-bold text-green-600">
+          <h1 className="text-3xl sm:text-5xl md:text-[50px] font-bold text-green-600">
             People-powered way to
           </h1>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
@@ -64,7 +64,7 @@ const Hero = () => {
                 </Link>
                 <Link
                   className="bg-green-800 text-white px-8 py-2 rounded-md text-base font-medium hover:bg-green-600 sm:w-auto w-full transition"
-                  to="signin"
+                  to="signup"
                 >
                   Sign Up
                 </Link>

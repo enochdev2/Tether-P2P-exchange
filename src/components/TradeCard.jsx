@@ -4,67 +4,65 @@ import logo2 from "../assets/Tether2.png";
 const statusColors = {
   "On sell": "#26a17b", // Green
   "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Orange (amber)
+  "Sell completed": "#f59e0b", // Amber
 };
 
 const TradeCard = ({ offer }) => {
-  // offer object expected to have:
-  // action: "Sell"
-  // usdtAmount: e.g. 503.56
-  // krwAmount: e.g. 700000
-  // status: e.g. "On sell", "Pending Approval", "Sell completed"
-  // statusDate: e.g. "2025-05-20"
-
   return (
-    <div className="flex items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200">
-      {/* Left Section */}
-      <div className="flex flex-col items-center w-24 mr-6">
-        <div className="">
-          <div className="bg-green-600 text-white font-bold text-lg px-3 py-1 rounded">
-            {offer.action}
-          </div>
-          <div className="w-2 h-2 mx-auto bg-green-600 rounded-full mt-1"></div>
+    <div
+      className="bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto sm:max-w-full 
+          flex flex-col items-center text-center
+          lg:flex-row lg:items-center lg:justify-between lg:text-left border border-gray-200 hover:shadow-lg transition-shadow duration-300"
+    >
+      {/* Left: Action and Status */}
+      <div className="flex flex-col items-center mb-5 sm:mb-0 sm:min-w-[150px] lg:items-start">
+        <div
+          className="text-white font-semibold px-5 py-2 rounded-full tracking-wide text-center text-sm sm:text-base"
+          style={{ backgroundColor: statusColors[offer.status] || "#888" }}
+        >
+          {offer.status}
+        </div>
+        {/* <div
+          className="hidden sm:block w-1 h-1 rounded-full mt-3"
+          style={{ backgroundColor: statusColors[offer.status] || "#888" }}
+        ></div> */}
+        {/* Right bottom date (desktop) */}
+        <div className="hidden lg:block text-gray-400 text-sm italic mt-3">
+          Updated{" "}
+          {new Date(offer.statusDate).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
         </div>
       </div>
 
-      <div className="flex-1">
-        <div className="mt-2 font-semibold text-xl flex text-gray-900">
-          {" "}
-          <span className="mr-2">
-            <img src={logo2} alt="" className="w-7 h-7" />
-          </span>
-          {offer.usdtAmount} USDT
+      {/* Middle: Amounts */}
+      <div className="flex-1 flex flex-col items-center space-y-3 sm:flex-row sm:items-center sm:justify-center sm:space-y-0 sm:space-x-12">
+        <div className="flex items-center space-x-3 text-gray-900 font-bold text-2xl">
+          <img src={logo2} alt="USDT" className="w-8 h-8" />
+          <span>{Number(offer.usdtAmount).toFixed(2)} USDT</span>
+        </div>
+        <div className="text-gray-700 font-semibold text-xl sm:text-2xl">
+          ₩{Number(offer.krwAmount).toLocaleString()} KRW
         </div>
       </div>
 
-      {/* Middle Section */}
-      <div className="flex-1 font-semibold text-lg text-gray-900">
-        ₩{offer.krwAmount.toLocaleString()} KRW
+      {/* Right: Action */}
+      <div className="mt-5 sm:mt-0 sm:min-w-[100px] flex justify-center sm:justify-end">
+        <div className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold tracking-wide cursor-default select-none shadow-sm">
+          {offer.action}
+        </div>
       </div>
 
-      {/* Right Section */}
-      <div className="flex flex-col items-end w-32">
-        <div className="text-sm text-gray-700">
-          {offer.ordernumber}
-        </div>
-        <div className="flex items-center space-x-2">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
-          />
-          <span
-            className={`font-semibold ${
-              offer.status === "Pending Approval"
-                ? "text-gray-400"
-                : offer.status === "Sell completed"
-                ? "text-orange-500"
-                : "text-green-600"
-            }`}
-          >
-            {offer.status}
-          </span>
-        </div>
-        <div className="text-sm text-gray-400 mt-1">{offer.statusDate}</div>
+      {/* Bottom date (mobile only) */}
+      <div className="sm:hidden mt-4 text-center text-gray-400 text-xs italic">
+        Updated:{" "}
+        {new Date(offer.statusDate).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })}
       </div>
     </div>
   );

@@ -74,14 +74,13 @@ const FeaturesSection = () => {
               key={index}
               data-aos="fade-up"
               data-aos-delay={index * 100}
-              className="bg-gray-900/40 hover:bg-gray-800/60 transition-all duration-300 p-6 rounded-2xl shadow-lg text-center hover:scale-105"
+              className="bg-gray-900/40 hover:bg-gray-800/60 transition-transform duration-75 ease-in-out transform hover:scale-105 p-6 rounded-2xl shadow-lg text-center"
             >
               <div>{feature.icon}</div>
               <h3 className="text-lg md:text-xl font-semibold mt-4 mb-3">
                 {feature.title}
               </h3>
               <p className="text-gray-400 text-base sm:text-md md:text-md">
-                {/* text-base sm:text-lg md:text-xl */}
                 {feature.description}
               </p>
             </div>
