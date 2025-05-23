@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AccountSetting from "../../components/AccountSetting";
 import InfoCard from "../../components/InfoCard";
+import PopupModal from "../../components/PopupModal";
 import { Settings2Icon, SettingsIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
@@ -8,6 +9,7 @@ import { useAuth } from "../../utils/AuthProvider";
 function AccountSettings() {
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(true);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -22,15 +24,6 @@ function AccountSettings() {
       }
     }
   }, [navigate]);
-
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("user");
-  //   const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
-
-  //   if (storedUser && storedIsLoggedIn === "true") {
-  //     setUser(JSON.parse(storedUser));
-  //   }
-  // }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -53,8 +46,8 @@ function AccountSettings() {
 
   return (
     <div className="w-full">
-      <div className="md:w-[90%] mx-auto">
-      <div className="flex-1">
+      <div className="md:w-[90%] my-auto mx-auto">
+        {/* <div className="flex-1">
         <InfoCard
           icon={<SettingsIcon size={24} />}
           title="Account Setting"
@@ -65,18 +58,18 @@ function AccountSettings() {
           customize your preferences to keep your account secure and tailored to
           your needs.{" "}
         </InfoCard>
-      </div>
-      <div className="my-4 flex justify-end">
-        {/* <button disabled className="bg-blue-500 text-white px-4 rounded hover:bg-blue-600">Change Password</button> */}
-        {/* <button className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 mt-4">Enable 2FA</button> */}
-        <button
-          onClick={handleEdit}
-          className="bg-cyan-700 cursor-pointer font-semibold text-white py-2 px-4 rounded hover:bg-cyan-900 mt-4"
-        >
-          Edit Personal Info
-        </button>
-      </div>
-      <AccountSetting isEditing={isEditing} setIsEditing={setIsEditing} user={user} />
+      </div> */}
+
+        <div className="flex justify-center items-center md:h-[50vh]  ">
+          {showModal && (
+            <PopupModal
+              message={` → Please leave the details you wish to 
+edit in the 1:1 Inquiry info.`}
+              // onClose={() => setShowModal(false)}
+              onClose={() => navigate("/dashboard/one-on-one")}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

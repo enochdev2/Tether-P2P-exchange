@@ -1,9 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import InquiryModal from "../components/InquiryModal";
+import LoadingSpiner from "../components/LoadingSpiner";
 
 const Support = () => {
-  return (
-    <div>Support</div>
-  )
-}
+  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        setShowModal(true);
+      }, 500);
+  
+      return () => clearTimeout(timer);
+    }, []);
+  
 
-export default Support
+  const handleSubmit = (data) => {
+    console.log("Submitted:", data);
+    setShowModal(false);
+  };
+
+  if (isLoading) return <LoadingSpiner />;
+
+  return (
+    <>
+      <InquiryModal
+        isOpen={showModal}
+        onCancel={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+      />
+    </>
+  );
+};
+
+
+export default Support;

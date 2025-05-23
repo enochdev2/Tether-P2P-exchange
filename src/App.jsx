@@ -24,6 +24,9 @@ import History from "./components/History";
 import Footers from "./components/Footers";
 import Support from "./pages/Support";
 import SystemAlert from "./pages/adminDashboard/SystemAlert";
+import BuyFormInput from "./pages/dashboard/BuyFormInput";
+import AccountSetting from "./components/AccountSetting";
+import InquiryHistory from "./pages/dashboard/InquiryHistory";
 
 function App() {
   return (
@@ -34,22 +37,22 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/" element={<Home />} />
-        <Route path="/trade-listings" element={<TradingPage />} />
+        {/* <Route path="/trade-listings" element={<TradingPage />} /> */}
         <Route path="/post-offer" element={<TransactionHistory />} />
 
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="profile" element={<ProfileOverview />} />
           <Route path="sell-order" element={<TradingOffers />} />
           <Route path="sell-history" element={<History />} />
-          <Route path="buy-order" element={<TradingOffers />} />
+          <Route path="buy-order" element={<BuyFormInput />} />
           {/* <Route path="buy-order" element={<TransactionHistory />} /> */}
           <Route path="buy-history" element={<TradingPage />} />
           <Route path="settings" element={<AccountSettings />} />
           <Route path="support" element={<Support />} />
           <Route path="one-on-one" element={<Support />} />
-          <Route path="inquiry-history" element={<Support />} />
-          <Route path="sell-history" element={<TradingOffers />} />
-          <Route path="edit-info" element={<TradingOffers />} />
+          <Route path="inquiry-history" element={<InquiryHistory />} />
+          {/* <Route path="sell-history" element={<TradingOffers />} /> */}
+          <Route path="edit-info" element={<AccountSettings />} />
           {/* <Route path="support" element={<Support />} /> */}
         </Route>
 

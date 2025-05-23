@@ -89,26 +89,26 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 bg-[#1f2937] text-white p-6 min-h-auto ">
+    <div className="flex flex-col w-64 lg:w-72 bg-[#1f2937] text-white p-6 min-h-auto ">
       {/* Top Section */}
       <div className="mb-32">
         {/* Profile */}
         <div className="flex items-center space-x-4 mb-3">
-          <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
             U
           </div>
-          <span className="text-white text-lg font-semibold lowercase">
-            admin
+          <span className="text-white text-xl font-semibold lowercase">
+            {user?.fullName}
           </span>
         </div>
 
         {/* Sidebar links */}
         {sidebarData.map((section) => (
-          <div key={section.id} className="mb-4">
+          <div key={section.id} className="mb-4 ">
             {section.title && (
-              <h3 className="mb-1 flex items-center  text-gray-400 uppercase tracking-wide font-semibold text-sm">
+              <h3 className="mb-2 flex items-center  text-gray-400 uppercase tracking-wide font-semibold md:text-base text-sm">
                 {section.title}{" "}
-                <div className="  w-16 h-0.5 ml-3 bg-sky-700/50" />
+                <div className="  w-16 h-0.5  ml-3 bg-sky-700/50" />
               </h3>
             )}
             <ul className="space-y-">
@@ -116,7 +116,7 @@ function Sidebar() {
                 <li key={link.id}>
                   <Link
                     to={link.to}
-                    className={`block w-full py-2 cursor-pointer px-4 rounded-md ${
+                    className={`block w-full md:text-base py-2 cursor-pointer px-4 rounded-md ${
                       currentPathSegment === link.to.replace("/", "")
                         ? "bg-[#26a17b]"
                         : "hover:bg-gray-700"
@@ -133,18 +133,22 @@ function Sidebar() {
 
       {/* Bottom Inquiry Section */}
       <div>
-        <h3 className="mb-2 text-gray-400 uppercase tracking-wide font-semibold text-sm">
+        <div className="flex items-center">
+        <h3 className="mb-2 text-gray-400 md:text-base uppercase tracking-wide font-semibold text-sm">
           {inquiryData.title}
         </h3>
+                <div className="  w-16 h-0.5  ml-3 bg-sky-700/50" />
+        </div>
+
         <ul className="space-y-1">
           {inquiryData.links.map((link) => (
             <li key={link.id}>
               <Link
                 to={link.to}
-                className={`block w-full py-2 px-4 rounded-md ${
+                className={`block w-full md:text-[17px] py-2 px-4 rounded-md ${
                   currentPathSegment === link.to.replace("/", "")
                     ? "bg-[#26a17b]"
-                    : "hover:bg-gray-700"
+                    : "hover:bg-gray-500"
                 }`}
               >
                 {link.label}

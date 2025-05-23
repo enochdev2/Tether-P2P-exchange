@@ -1,78 +1,134 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle, Clock, ChevronDown, Star } from 'lucide-react'; 
-import TradeCard2 from '../../components/TradeCard2';
-import BuyTetherComponent from '../../components/BuyTetherComponent';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { CheckCircle, Clock, ChevronDown, Star } from "lucide-react";
+import TradeCard2 from "../../components/TradeCard2";
+import BuyTetherComponent from "../../components/BuyTetherComponent";
+import { useEffect } from "react";
+import LoadingSpiner from "../../components/LoadingSpiner";
 
 const TransactionHistory = () => {
- 
   const [activeLink, setActiveLink] = useState("findOffers");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSellOrders();
+  }, []);
+
+  // Function to fetch buy orders, optionally filtered by status
+  async function fetchSellOrders(status = "") {
+    try {
+      // Build the URL with optional status query parameter
+      const url = status
+        ? `http://localhost:3000/api/v1/sellsell-orders?status=${encodeURIComponent(
+            status
+          )}`
+        : // : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          "http://localhost:3000/api/v1/sell/all-orders";
+
+      // Assuming you have an auth token stored in localStorage or cookie
+      // const token = localStorage.getItem("authToken");
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const allOrders = await response.json();
+      console.log("Fetched all orders:", allOrders);
+
+      const combinedOrders = allOrders.combinedOrders || [];
+
+      // Sort by createdAt descending (newest first)
+      combinedOrders.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      setOrders(combinedOrders);
+
+      return allOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // Example data for trading offers
   const offers = [
-  {
-    id: 1,
-    action: "Sell",
-    usdtAmount: 503.56,
-    krwAmount: 700000,
-    status: "Sell completed",
-    statusDate: "2025-05-20",
-    statusTime: "18:55:57"
-  },
-  {
-    id: 2,
-    action: "Buy",
-    usdtAmount: 510.12,
-    krwAmount: 705000,
-    status: "Buy Completed",
-    statusDate: "2025-05-19",
-    statusTime: "18:55:57"
-  },
-  {
-    id: 3,
-    action: "Buy",
-    usdtAmount: 499.98,
-    krwAmount: 695000,
-    status: "Buy completed",
-    statusDate: "2025-05-13",
-    statusTime: "18:55:57"
-  },
-  {
-    id: 4,
-    action: "Sell",
-    usdtAmount: 503.56,
-    krwAmount: 700000,
-    status: "Sell completed",
-    statusDate: "2025-04-28",
-    statusTime: "18:55:57"
-  },
-  {
-    id: 5,
-    action: "Sell",
-    usdtAmount: 502.34,
-    krwAmount: 699000,
-    status: "Sell completed",
-    statusDate: "2025-04-20",
-    statusTime: "18:55:57"
-  },
-  {
-    id: 6,
-    action: "Buy",
-    usdtAmount: 508.44,
-    krwAmount: 702000,
-    status: "Buy Completed",
-    statusDate: "2025-05-20",
-    statusTime: "18:55:57"
-  },
-];
-
+    {
+      id: 1,
+      action: "Sell",
+      usdtAmount: 503.56,
+      krwAmount: 700000,
+      status: "Sell completed",
+      statusDate: "2025-05-20",
+      statusTime: "18:55:57",
+    },
+    {
+      id: 2,
+      action: "Buy",
+      usdtAmount: 510.12,
+      krwAmount: 705000,
+      status: "Buy Completed",
+      statusDate: "2025-05-19",
+      statusTime: "18:55:57",
+    },
+    {
+      id: 3,
+      action: "Buy",
+      usdtAmount: 499.98,
+      krwAmount: 695000,
+      status: "Buy completed",
+      statusDate: "2025-05-13",
+      statusTime: "18:55:57",
+    },
+    {
+      id: 4,
+      action: "Sell",
+      usdtAmount: 503.56,
+      krwAmount: 700000,
+      status: "Sell completed",
+      statusDate: "2025-04-28",
+      statusTime: "18:55:57",
+    },
+    {
+      id: 5,
+      action: "Sell",
+      usdtAmount: 502.34,
+      krwAmount: 699000,
+      status: "Sell completed",
+      statusDate: "2025-04-20",
+      statusTime: "18:55:57",
+    },
+    {
+      id: 6,
+      action: "Buy",
+      usdtAmount: 508.44,
+      krwAmount: 702000,
+      status: "Buy Completed",
+      statusDate: "2025-05-20",
+      statusTime: "18:55:57",
+    },
+  ];
 
   const handleLinkClick = (link) => {
     setActiveLink(link); // Set active link when clicked
   };
-  
+
+   
+
+
   return (
-      <div className="flex md:px-10 lg:space-x-10 bg-gray-100 pt-18 min-h-screen">
+    <div className="flex md:px-10 lg:space-x-10 bg-gray-100 pt-18 min-h-screen">
       {/* Sidebar Section */}
       <div className="w-1/4 bg-white p-6 shadow-lg space-y-6">
         <h2 className="text-2xl font-bold">Find Transaction History</h2>
@@ -82,7 +138,7 @@ const TransactionHistory = () => {
             <span>Tether</span>
             <ChevronDown className="w-4 h-4" />
           </div>
-       
+
           <div>
             <input
               type="number"
@@ -90,7 +146,7 @@ const TransactionHistory = () => {
               className="w-full p-2 border rounded-md mt-2"
             />
           </div>
-         
+
           <div className="flex items-center space-x-2">
             <span>Trader Location</span>
             <ChevronDown className="w-4 h-4" />
@@ -109,33 +165,35 @@ const TransactionHistory = () => {
         <button
           onClick={() => handleLinkClick("findOffers")}
           className="w-full py-3 bg-green-500 text-white rounded-md mt-6"
-          >
+        >
           Find History
         </button>
       </div>
 
       {/* Main Content Section */}
       <div className="flex-1 p-6 overflow-y-auto">
-        <BuyTetherComponent/>
+        <BuyTetherComponent />
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-green-600 mt-5">Transaction History</h1>
+          <h1 className="text-3xl font-bold text-green-600 mt-5">
+            Transaction History
+          </h1>
 
           <div className="space-x-4">
-            <button className="bg-gray-200 px-4 py-2 rounded-md">Sort By</button>
+            <button className="bg-gray-200 px-4 py-2 rounded-md">
+              Sort By
+            </button>
           </div>
         </div>
 
         {/* Map Over Offers Data */}
         <div className="space-y-4">
-          {offers.map((offer) => (
-              <TradeCard2 key={offer.id} offer={offer} />
-            ))}
+          {orders.map((offer, index) => (
+            <TradeCard2 key={index} offer={offer} loading={loading} />
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-
-
-export default TransactionHistory
+export default TransactionHistory;

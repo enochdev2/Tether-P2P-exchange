@@ -10,7 +10,7 @@ const BuyTetherComponent = () => {
       </p>
 
       {/* Promoted Offers Section */}
-      <button className="w-full py-3 bg-[#26a17b] font-semibold text-white rounded-md">
+      <button className="w-full py-3 bg-[#26a17b]/90 font-semibold text-white rounded-md">
         Promoted offers
       </button>
     </div>

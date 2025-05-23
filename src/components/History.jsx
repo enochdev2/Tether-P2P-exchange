@@ -2,9 +2,13 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import BuyTetherComponent from "./BuyTetherComponent";
 import TradeCard from "./TradeCard";
+import { useEffect } from "react";
+import LoadingSpiner from "./LoadingSpiner";
 
 const History = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const offers = [
     {
@@ -63,9 +67,71 @@ const History = () => {
     },
   ];
 
+  useEffect(() => {
+    fetchSellOrders();
+  }, []);
+
+  // Function to fetch buy orders, optionally filtered by status
+  async function fetchSellOrders(status = "") {
+    try {
+      // Build the URL with optional status query parameter
+      const url = status
+        ? `http://localhost:3000/api/v1/sellsell-orders?status=${encodeURIComponent(
+            status
+          )}`
+        : // : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          "http://localhost:3000/api/v1/sell/sell-orders";
+
+      // Assuming you have an auth token stored in localStorage or cookie
+      // const token = localStorage.getItem("authToken");
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const sellOrders = await response.json();
+      console.log("Fetched sell orders:", sellOrders);
+
+      const statusPriority = {
+        "Pending Approval": 1,
+        "On Sale": 2,
+        "Sale Completed": 3,
+      };
+
+      sellOrders.sort((a, b) => {
+        if (statusPriority[a.status] !== statusPriority[b.status]) {
+          return statusPriority[a.status] - statusPriority[b.status];
+        }
+        // If same status, sort by createdAt descending
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      setOrders(sellOrders);
+      // You can now render buyOrders in your UI
+      return sellOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleLinkClick = (link) => {
     setActiveLink(link); // Set active link when clicked
   };
+
+  
+  if (loading) return <LoadingSpiner/>;
+
+  const Sell = true; 
 
   return (
     <div>
@@ -83,7 +149,6 @@ const History = () => {
             </div>
           </div>
         </div> */}
-
 
       {/* </div> */}
       <div className="flex bg-gray-100 pt-2 min-h-screen">
@@ -103,7 +168,7 @@ const History = () => {
           </div>
           {/* Map Over Offers Data */}
 
-          {!offers ? (
+          {loading == false && !orders ? (
             <div className="bg-white p-6 rounded-lg shadow-md">
               {/* My Past Trades */}
               <h2 className="text-xl font-semibold mb-4">My Past Trades</h2>
@@ -114,8 +179,8 @@ const History = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {offers.map((offer) => (
-                <TradeCard key={offer.id} offer={offer} />
+              {orders.map((offer, index) => (
+                <TradeCard key={index} offer={offer} sell={Sell} />
               ))}
             </div>
           )}
