@@ -128,7 +128,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/v1/buy",
+        "http://localhost:5173/api/v1/buy",
         {
           method: "POST",
           headers: {
