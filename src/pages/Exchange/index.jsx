@@ -79,8 +79,8 @@ const TradingPage = () => {
       // Build the URL with optional status query parameter
       const url = status
         ? `/api/buy-orders?status=${encodeURIComponent(status)}`
-        : // : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/buy-orders";
-          "http://localhost:5173/api/v1/buy/buy-orders";
+        :  "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/buy-orders";
+          // "http://localhost:5173/api/v1/buy/buy-orders";
 
       // Assuming you have an auth token stored in localStorage or cookie
       // const token = localStorage.getItem("authToken");

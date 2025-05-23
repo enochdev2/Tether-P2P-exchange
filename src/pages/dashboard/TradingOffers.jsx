@@ -1,21 +1,14 @@
-import React, { useState } from "react";
-import SellOfferPage from "../../components/SellOfferPage";
 import {
   ArrowDown,
-  ArrowDownNarrowWide,
   Copy,
   Equal,
-  Icon,
   PiIcon,
-  RefreshCcw,
-  X,
+  RefreshCcw
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import { SuccessToast } from "../../utils/Success";
-import logo2 from "../../assets/Tether2.png";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
 
 
 const TradingOffers = () => {

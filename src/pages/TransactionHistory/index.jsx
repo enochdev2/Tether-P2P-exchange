@@ -20,11 +20,11 @@ const TransactionHistory = () => {
     try {
       // Build the URL with optional status query parameter
       const url = status
-        ? `http://localhost:5173/api/v1/sellsell-orders?status=${encodeURIComponent(
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/all-orders?status=${encodeURIComponent(
             status
           )}`
-        : // : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-          "http://localhost:5173/api/v1/sell/all-orders";
+        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/all-orders";
+          // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/all-orders";
 
       // Assuming you have an auth token stored in localStorage or cookie
       // const token = localStorage.getItem("authToken");
@@ -124,9 +124,6 @@ const TransactionHistory = () => {
     setActiveLink(link); // Set active link when clicked
   };
 
-   
-
-
   return (
     <div className="flex md:px-10 lg:space-x-10 bg-gray-100 pt-18 min-h-screen">
       {/* Sidebar Section */}
@@ -193,7 +190,6 @@ const TransactionHistory = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
