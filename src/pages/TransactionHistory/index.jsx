@@ -193,6 +193,7 @@ const TransactionHistory = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

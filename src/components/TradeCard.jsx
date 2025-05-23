@@ -4,25 +4,25 @@ import logo2 from "../assets/Tether2.png";
 const statusColors = {
   "On sell": "#26a17b", // Green
   "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Orange (amber)
+  "Sell completed": "#f59e0b", // Amber
 };
 
 const TradeCard = ({ offer, sell }) => {
-  const isPending = sell ? offer.status === " " : offer.status === " " ;
+  const isPending = sell ? offer.status === " " : offer.status === " ";
 
   const timestamp = offer.createdAt;
-const dateObj = new Date(timestamp);
+  const dateObj = new Date(timestamp);
 
-// Get date only (e.g. "2025-05-22")
-const dateOnly = dateObj.toLocaleDateString('en-CA'); // ISO-like format YYYY-MM-DD
+  // Get date only (e.g. "2025-05-22")
+  const dateOnly = dateObj.toLocaleDateString("en-CA"); // ISO-like format YYYY-MM-DD
 
-// Get time only (e.g. "02:38:31" or "2:38 AM")
-const timeOnly = dateObj.toLocaleTimeString('en-US', {
-  hour12: false,  // false for 24-hour, true for AM/PM
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
+  // Get time only (e.g. "02:38:31" or "2:38 AM")
+  const timeOnly = dateObj.toLocaleTimeString("en-US", {
+    hour12: false, // false for 24-hour, true for AM/PM
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 
   return (
     <div
@@ -34,7 +34,7 @@ const timeOnly = dateObj.toLocaleTimeString('en-US', {
       <div className="flex  flex-col items-center w-24 mr-6">
         <div className="flex justify-between items-center space-x-2">
           <div className="bg-green-500/80 text-white font-bold text-lg px-3 py-1 rounded">
-           { sell ? "Sell" : "Buy"}
+            {sell ? "Sell" : "Buy"}
           </div>
           <div className="w-2 h-2 mx-auto bg-green-600/80 rounded-full mt-1"></div>
         </div>
@@ -72,18 +72,17 @@ const timeOnly = dateObj.toLocaleTimeString('en-US', {
                 : offer.status === "Sell completed"
                 ? "text-orange-500"
                 : offer.status === "Buy Completed"
-                ? "text-orange-500" : "text-lime-600"
+                ? "text-orange-500"
+                : "text-lime-600"
             }`}
           >
             {offer.status}
           </span>
         </div>
-        <div className="text-sm text-gray-800 mt-1">{dateOnly
-}</div>
+        <div className="text-sm text-gray-800 mt-1">{dateOnly}</div>
       </div>
     </div>
   );
 };
-
 
 export default TradeCard;

@@ -11,11 +11,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthProvider";
-import logo2 from "../assets/Tether2.png"
-import logo from "../assets/Tether.png"
+import logo2 from "../assets/Tether2.png";
+import logo from "../assets/Tether.png";
 
 const Navbar = () => {
-  const {isLoggedIn, user } = useAuth()
+  const { isLoggedIn, user } = useAuth();
   const [activeLink, setActiveLink] = useState(""); // Track the active link
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Manage mobile menu visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown visibility
@@ -40,19 +40,17 @@ const Navbar = () => {
 
   useEffect(() => {
     // Check if the user is an admin and handle accordingly
-  }, [user]); 
-  
+  }, [user]);
 
   return (
-    <nav className="bg-black text-white fixed w-full z-50 shadow-lg py-2 border-b border-b-gray-500 overflow-x-hidden overflow-y-hidden">
+    <nav className="bg-black  fixed  text-white  w-full transition-all duration-300 ease-linear z-50 shadow-lg py-2 px-4 border-b border-b-gray-500 overflow-x-hidden overflow-y-hidden">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/">
             <div className="flex flex-shrink-0 justify-center items-center text-white space-x-2 text-xl font-bold">
               <img src={logo} className="w-12 h-12" />
-              Tether <br />
-              Zone
+              <span className="lg:block hidden"> Tether Zone</span>
             </div>
           </Link>
 
@@ -170,33 +168,35 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link
-                  to="/signin"
-                  className="bg-gray-800 text-white px-4 py-2 rounded-md text-lg font-medium"
-                  onClick={() => handleLinkClick("signin")}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="bg-green-500 text-white px-4 py-2 rounded-md text-lg font-medium"
-                  onClick={() => handleLinkClick("signup")}
-                >
-                  Sign Up
-                </Link>
+                <div className="hidden lg:flex items-center space-x-4">
+                  <Link
+                    to="/signin"
+                    className="bg-gray-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition"
+                    onClick={() => handleLinkClick("signin")}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="bg-green-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-green-600 transition"
+                    onClick={() => handleLinkClick("signup")}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               </>
             )}
           </div>
-           {/* Render Admin Dashboard if user is admin */}
-            {user && user.admin && (
-              <Link
-                to="/admin"
-                className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl py-3 rounded-xl text-[15px] font-bold "
-                onClick={() => handleLinkClick("admin-dashboard")}
-              >
-                Admin
-              </Link>
-            )}
+          {/* Render Admin Dashboard if user is admin */}
+          {user && user.admin && (
+            <Link
+              to="/admin"
+              className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl py-3 rounded-xl text-[15px] font-bold "
+              onClick={() => handleLinkClick("admin-dashboard")}
+            >
+              Admin
+            </Link>
+          )}
 
           {/* Mobile Navbar Hamburger */}
           <div className="md:hidden">
@@ -229,16 +229,16 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
+        <div className="md:hidden " id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navLinks
-              .filter((link) => !link.private || isLoggedIn) // Show links based on login status
+              .filter((link) => !link.private || isLoggedIn)
               .map((link) => (
                 <Link
                   key={link.name}
                   to={link.to}
                   className={`${
-                    activeLink === link.name ? "bg-green-800" : "text-white"
+                    activeLink === link.name ? "" : "text-white"
                   } block px-3 py-2 rounded-md text-base font-medium`}
                   onClick={() => handleLinkClick(link.name)}
                 >
@@ -255,20 +255,22 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <Link
-                  to="/signin"
-                  className="bg-gray-800 text-white px-4 py-2 rounded-md text-lg font-medium"
-                  onClick={() => handleLinkClick("signin")}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="bg-green-500 text-white px-4 py-2 rounded-md text-lg font-medium"
-                  onClick={() => handleLinkClick("signup")}
-                >
-                  Sign Up
-                </Link>
+                <div className="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 mt-4 sm:mt-0">
+                  <Link
+                    to="/signin"
+                    className="w-full sm:w-auto bg-gray-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
+                    onClick={() => handleLinkClick("signin")}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="w-full sm:w-auto bg-green-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
+                    onClick={() => handleLinkClick("signup")}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               </>
             )}
           </div>
