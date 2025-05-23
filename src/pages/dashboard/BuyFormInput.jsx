@@ -37,7 +37,7 @@ const BuyFormInput = () => {
 
   return (
     <div className="relative">
-      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent lg:px-10 bg-clip-text mb-4 font-bold">
+      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold  underline mb-8 rounded-2xl text-center border  border-slate-300 py-3 shadow-xl md:w-4xl mx-auto">
         Buy Order
       </h2>
 
@@ -195,7 +195,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
                 min={0}
                 disabled={true}
                 // value={wonAmount}
-                onChange={(e) => setWonAmount(e.target.value)}
+                // onChange={(e) => setWonAmount(e.target.value)}
                 placeholder={rate}
                 className="bg-transparent w-full text-white text-right placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount in won"
