@@ -276,11 +276,11 @@ const Modal = ({ isModalOpen, closeModal }) => {
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs md:text-base py-2 px-2 rounded-sm select-none ${
+              className={`text-xs cursor-pointer md:text-base py-2 px-2 rounded-sm select-none ${
                 val === 1000000
                   ? "bg-[#CCCCCC] text-black"
                   : "bg-[#444444] text-white"
-              } hover:bg-[#FF5722] hover:text-white transition`}
+              } hover:bg-[#037926] hover:text-white transition`}
             >
               {val / 10000} k
             </button>
