@@ -91,6 +91,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
     SuccessToast("Successfully Copied");
   };
 
+  
+
   return (
     <div
       className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center py-2 rounded-2xl mx-auto overflow-auto"
