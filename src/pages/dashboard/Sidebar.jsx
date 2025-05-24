@@ -159,7 +159,7 @@ function Sidebar() {
           ))}
 
           {/* Inquiry Section */}
-          <div className="mb-6 mt-24">
+          <div className="mb-6 mt-20">
             {!collapsed && (
               <h3 className="text-gray-400 text-sm font-semibold uppercase mb-2">
                 {inquiryData.title}
