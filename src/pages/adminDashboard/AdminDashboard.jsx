@@ -25,7 +25,7 @@ const AdminDashboard = () => {
       }
     } else {
       // Not logged in
-      navigate("/login"); // redirect to login or homepage
+      navigate("/signin"); // redirect to login or homepage
     }
   }, [navigate]);
 

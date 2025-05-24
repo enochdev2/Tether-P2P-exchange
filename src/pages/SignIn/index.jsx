@@ -37,9 +37,13 @@ const SignIn = () => {
       ...credentials,
     };
 
+      console.log("Login successfully", user)
+
+
     try {
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await login(user);
+      console.log("Login successfully", response)
 
       if (response) {
         SuccessToast(" Login successfully");

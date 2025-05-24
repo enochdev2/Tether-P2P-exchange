@@ -7,12 +7,13 @@ import {
   Download,
   User,
   HelpCircle,
-  LogOut,
-  LogOutIcon,
-} from "lucide-react"; // Import necessary icons
+  LogOut as LogOutIcon,
+  Menu,
+  X,
+} from "lucide-react";
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
-// import { User, LogOut } from "lucide-react"; // example icons for Account info and Sign out
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 const sidebarData = [
   {
@@ -22,8 +23,7 @@ const sidebarData = [
         id: "account-info",
         label: "Account info",
         to: "profile",
-        icon: null, // Add icon here if needed
-        active: true, // default active link
+        icon: <User />,
       },
     ],
   },
@@ -31,16 +31,31 @@ const sidebarData = [
     id: "sell",
     title: "Sell",
     links: [
-      { id: "sell-order", label: "Sell Order", to: "sell-order" },
-      { id: "sell-history", label: "Sell History", to: "sell-history" },
+      {
+        id: "sell-order",
+        label: "Sell Order",
+        to: "sell-order",
+        icon: <TrendingUp />,
+      },
+      {
+        id: "sell-history",
+        label: "Sell History",
+        to: "sell-history",
+        icon: <Download />,
+      },
     ],
   },
   {
     id: "buy",
     title: "Buy",
     links: [
-      { id: "buy-order", label: "Buy Order", to: "buy-order" },
-      { id: "buy-history", label: "Buy History", to: "buy-history" },
+      { id: "buy-order", label: "Buy Order", to: "buy-order", icon: <Box /> },
+      {
+        id: "buy-history",
+        label: "Buy History",
+        to: "buy-history",
+        icon: <Heart />,
+      },
     ],
   },
 ];
@@ -48,120 +63,136 @@ const sidebarData = [
 const inquiryData = {
   title: "Inquiry",
   links: [
-    { id: "edit-info", label: "Edit My Info", to: "edit-info" },
-    { id: "one-on-one", label: "1:1 inquiry", to: "one-on-one" },
-    { id: "inquiry-history", label: "Inquiry History", to: "inquiry-history" },
-    // { id: "sign-out", label: "Sign out", to: "sign-out" },
+    { id: "edit-info", label: "Edit My Info", to: "edit-info", icon: <User /> },
+    {
+      id: "one-on-one",
+      label: "1:1 inquiry",
+      to: "one-on-one",
+      icon: <HelpCircle />,
+    },
+    {
+      id: "inquiry-history",
+      label: "Inquiry History",
+      to: "inquiry-history",
+      icon: <HelpCircle />,
+    },
   ],
 };
 
 function Sidebar() {
-  const [activeLink, setActiveLink] = useState("account-info");
-
+  const [collapsed, setCollapsed] = useState(false);
   const { logout, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Extract current path segment safely
   const currentPathSegment =
     location.pathname.split("/").filter(Boolean).pop() || "";
 
-    
-  const logouts = async () => {
+  const handleLogout = async () => {
     try {
-      // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await logout();
-
       if (response) {
-        SuccessToast(" you have just Logout successfully");
+        SuccessToast("You have just logged out successfully");
         navigate("/");
-      } else {
-        return;
       }
     } catch (error) {
-      console.error("Error during sign-up:", error);
-      // Optionally handle error here (e.g., show error message)
+      console.error("Logout Error:", error);
     }
   };
 
-  const handleLinkClick = (id) => {
-    setActiveLink(id);
-  };
+  const isActive = (to) => currentPathSegment === to.replace("/", "");
 
   return (
-    <div className="flex flex-col w-64 lg:w-72 bg-[#1f2937] text-white p-6 min-h-auto ">
-      {/* Top Section */}
-      <div className="mb-32">
-        {/* Profile */}
-        <div className="flex items-center space-x-4 mb-3">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
-            U
+    <div
+      className={` z-10  bg-[#1f2937] text-white transition-all duration-300 ${
+        collapsed ? "w-[80px]" : "w-[260px]"
+      }`}
+    >
+      {/* Top section */}
+      <div className="flex items-center justify-between p-4">
+        {!collapsed && (
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+              U
+            </div>
+            <span className="text-white text-xl font-semibold lowercase">
+              {user?.fullName}
+            </span>
           </div>
-          <span className="text-white text-xl font-semibold lowercase">
-            {user?.fullName}
-          </span>
-        </div>
+        )}
+        <button
+          className="cursor-pointer"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {/* {collapsed ? <Menu size={24} /> : <X size={24} />} */}
 
-        {/* Sidebar links */}
-        {sidebarData.map((section) => (
-          <div key={section.id} className="mb-4 ">
-            {section.title && (
-              <h3 className="mb-2 flex items-center  text-gray-400 uppercase tracking-wide font-semibold md:text-base text-sm">
-                {section.title}{" "}
-                <div className="  w-16 h-0.5  ml-3 bg-sky-700/50" />
+          {collapsed ? <FiArrowRight size={25} /> : <FiArrowLeft size={25} />}
+        </button>
+      </div>
+
+      <div className="scroll-auto">
+        {/* Scrollable Links Section */}
+        <div className="flex-1  px-4">
+          {sidebarData.map((section) => (
+            <div key={section.id} className="mb-6">
+              {section.title && !collapsed && (
+                <h3 className="text-gray-400 text-sm font-semibold uppercase mb-2">
+                  {section.title}
+                </h3>
+              )}
+              <ul className="space-y-1">
+                {section.links.map((link) => (
+                  <li key={link.id}>
+                    <Link
+                      to={link.to}
+                      className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
+                        isActive(link.to) ? "bg-[#26a17b]" : "hover:bg-gray-700"
+                      }`}
+                    >
+                      {link.icon}
+                      {!collapsed && <span>{link.label}</span>}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          {/* Inquiry Section */}
+          <div className="mb-6">
+            {!collapsed && (
+              <h3 className="text-gray-400 text-sm font-semibold uppercase mb-2">
+                {inquiryData.title}
               </h3>
             )}
-            <ul className="space-y-">
-              {section.links.map((link) => (
+            <ul className="space-y-1">
+              {inquiryData.links.map((link) => (
                 <li key={link.id}>
                   <Link
                     to={link.to}
-                    className={`block w-full md:text-base py-2 cursor-pointer px-4 rounded-md ${
-                      currentPathSegment === link.to.replace("/", "")
-                        ? "bg-[#26a17b]"
-                        : "hover:bg-gray-700"
+                    className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
+                      isActive(link.to) ? "bg-[#26a17b]" : "hover:bg-gray-700"
                     }`}
                   >
-                    {link.label}
+                    {link.icon}
+                    {!collapsed && <span>{link.label}</span>}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        ))}
-      </div>
-
-      {/* Bottom Inquiry Section */}
-      <div>
-        <div className="flex items-center">
-        <h3 className="mb-2 text-gray-400 md:text-base uppercase tracking-wide font-semibold text-sm">
-          {inquiryData.title}
-        </h3>
-                <div className="  w-16 h-0.5  ml-3 bg-sky-700/50" />
         </div>
 
-        <ul className="space-y-1">
-          {inquiryData.links.map((link) => (
-            <li key={link.id}>
-              <Link
-                to={link.to}
-                className={`block w-full md:text-[17px] py-2 px-4 rounded-md ${
-                  currentPathSegment === link.to.replace("/", "")
-                    ? "bg-[#26a17b]"
-                    : "hover:bg-gray-500"
-                }`}
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-          <button className="flex items-center hover:bg-[#26a17b] cursor-pointer px-5 py-2 rounded-lg w-full" 
-          onClick={logouts}
+        {/* Logout Button */}
+        <div className="p-4 border-t border-gray-700">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 py-2 px-3 rounded-md hover:bg-red-600 w-full"
           >
-          <LogOutIcon size={18} className="mr-3 "/>
-            Sign Out
+            <LogOutIcon size={18} />
+            {!collapsed && <span>Sign Out</span>}
           </button>
-        </ul>
+        </div>
       </div>
     </div>
   );
