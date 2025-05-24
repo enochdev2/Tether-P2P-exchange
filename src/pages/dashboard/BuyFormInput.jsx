@@ -37,7 +37,7 @@ const BuyFormInput = () => {
 
   return (
     <div className="relative">
-      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent lg:px-10 bg-clip-text mb-4 font-bold">
+      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent lg:px-10 bg-clip-text mb-4 font-bold border border-slate-600">
         Buy Order
       </h2>
 
