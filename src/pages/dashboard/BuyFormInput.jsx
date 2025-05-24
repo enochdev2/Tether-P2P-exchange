@@ -128,7 +128,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
     try {
       const response = await fetch(
-        "http://localhost:5173/api/v1/buy",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy",
         {
           method: "POST",
           headers: {

@@ -76,21 +76,24 @@ const History = () => {
     try {
       // Build the URL with optional status query parameter
       const url = status
-        ? `http://localhost:5173/api/v1/sellsell-orders?status=${encodeURIComponent(
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
             status
           )}`
-        : // : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-          "http://localhost:5173/api/v1/sell/sell-orders";
+        :  "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          // "http://localhost:5173/api/v1/sell/sell-orders";
 
       // Assuming you have an auth token stored in localStorage or cookie
       // const token = localStorage.getItem("authToken");
 
-      const response = await fetch(url, {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders", {
         method: "GET",
         headers: {
+           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include",
       });
 
       if (!response.ok) {

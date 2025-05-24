@@ -78,20 +78,24 @@ const TradingPage = () => {
     try {
       // Build the URL with optional status query parameter
       const url = status
-        ? `https://tether-p2p-exchang-backend.onrender.com/api/buy/buy-orders?status=${encodeURIComponent(status)}`
-        :  "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders";
-          // "http://localhost:5173/api/v1/buy/buy-orders";
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/buy/buy-orders?status=${encodeURIComponent(
+            status
+          )}`
+        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders";
+      // : "http://localhost:3000/api/v1/buy/buy-orders";
 
-      // Assuming you have an auth token stored in localStorage or cookie
-      // const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("token");
 
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(url ,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          // credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -100,7 +104,7 @@ const TradingPage = () => {
       const buyOrders = await response.json();
       console.log("Fetched buy orders:", buyOrders);
 
-       const statusPriority = {
+      const statusPriority = {
         "Waiting for Buy": 1,
         "Buy Completed": 2,
       };

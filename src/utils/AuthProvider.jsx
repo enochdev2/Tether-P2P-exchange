@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     try {
-      // const response = await fetch("http://localhost:5173/api/v1/user/login", {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login", {
+      // const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login", {
+        const response = await fetch("http://localhost:3000/api/v1/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -41,7 +41,9 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-
+         localStorage.setItem("token", data.token);
+         console.log("checking it out", data.token);
+         
       setIsLoggedIn(true);
       setUser(data.user);
 
@@ -140,9 +142,10 @@ export const AuthProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
+             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: "include",
+          // credentials: "include",
           body: JSON.stringify(updatedData),
         }
       );
