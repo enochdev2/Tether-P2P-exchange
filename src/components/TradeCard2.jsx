@@ -8,7 +8,7 @@ const statusColors = {
   "Sell completed": "#f59e0b", // Orange (amber)
 };
 
-const TradeCard2 = ({ offer, loading }) => {
+const TradeCard2 = ({ offer }) => {
   // offer object expected to have:
   // action: "Sell"
   // usdtAmount: e.g. 503.56
@@ -30,15 +30,11 @@ const TradeCard2 = ({ offer, loading }) => {
     second: "2-digit",
   });
 
-  if (loading) return <LoadingSpiner />;
+ 
 
   return (
     <div>
-      {loading ? (
-        <div className="bg-red-500 w-full h-40">
-          <LoadingSpiner />
-        </div>
-      ) : (
+     
         <div className="flex items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200">
           {/* Left Section */}
           <div className="flex flex-1 lg:flex-2 items-center w-24 mr-6">
@@ -89,7 +85,6 @@ const TradeCard2 = ({ offer, loading }) => {
             </div>
           </div>
         </div>
-      )}
     </div>
   );
 };

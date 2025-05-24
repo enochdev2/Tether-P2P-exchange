@@ -183,11 +183,15 @@ const TransactionHistory = () => {
         </div>
 
         {/* Map Over Offers Data */}
+        {loading ? (  <LoadingSpiner />) :(
         <div className="space-y-4">
           {orders.map((offer, index) => (
             <TradeCard2 key={index} offer={offer} loading={loading} />
           ))}
-        </div>
+        </div>)
+        
+      }
+
       </div>
     </div>
   );
