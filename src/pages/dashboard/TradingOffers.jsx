@@ -1,20 +1,26 @@
+import React, { useState } from "react";
+import SellOfferPage from "../../components/SellOfferPage";
 import {
   ArrowDown,
+  ArrowDownNarrowWide,
   Copy,
   Equal,
+  Icon,
   PiIcon,
-  RefreshCcw
+  RefreshCcw,
+  X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import { SuccessToast } from "../../utils/Success";
-
+import logo2 from "../../assets/Tether2.png";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const TradingOffers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,7 +38,7 @@ const TradingOffers = () => {
   return (
     <div className="relative">
       <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold  underline mb-8 rounded-2xl text-center border  border-slate-300 py-3 shadow-xl md:w-4xl mx-auto">
-        Buy Order
+        Sell Order
       </h2>
 
       {/* Modal Component */}
@@ -56,8 +62,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
   const [rate, setRate] = useState("1435.5");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [walletAddress, setWalletAddress] = useState(
     "0x1234a0x1234346yr5t64rabcd5678ef901f9012" // Dummy admin wallet address
   );
@@ -69,15 +75,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
     10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000,
   ];
 
-   useEffect(() => {
-        const timer = setTimeout(() => {
-          setError(null);
-        }, 2000);
-    
-        return () => clearTimeout(timer);
-      }, [error]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 2000);
 
- 
+    return () => clearTimeout(timer);
+  }, [error]);
+
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
     setWonAmount(value.toString());
@@ -91,7 +96,71 @@ const Modal = ({ isModalOpen, closeModal }) => {
     SuccessToast("Successfully Copied");
   };
 
-  
+  const validateInputs = () => {
+    if (!wonAmount || isNaN(wonAmount) || Number(wonAmount) <= 0) {
+      setError("Please enter a valid KRW amount greater than 0.");
+      return false;
+    }
+    if (!usdtAmount || isNaN(usdtAmount) || Number(usdtAmount) <= 0) {
+      setError("USDT amount must be greater than 0.");
+      return false;
+    }
+    // Optional: check if usdtAmount roughly matches wonAmount / rate
+    const expectedUSDT = Number(wonAmount) / rate;
+    const diff = Math.abs(expectedUSDT - Number(usdtAmount));
+    if (diff > 0.01) {
+      setError("USDT amount does not match KRW amount and rate.");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  async function submitOrder() {
+    setLoading(true);
+    setError(null);
+
+    if (!validateInputs()) {
+      setLoading(false);
+      return; // Stop submission if validation fails
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/sell", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Add auth tokens here if needed, e.g.:
+          // "Authorization": `Bearer ${token}`
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          amount: Number(usdtAmount),
+          price: Number(rate),
+          krwAmount: Number(wonAmount),
+          // Add other data fields you want to submit
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Order submitted successfully:", data);
+
+      // Optionally clear input or close modal
+      setWonAmount("");
+      setUsdtAmount("");
+      SuccessToast("Successfully placed a sell order");
+      closeModal();
+    } catch (err) {
+      console.error("Failed to submit order:", err);
+      setError("Failed to submit order. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -121,25 +190,27 @@ const Modal = ({ isModalOpen, closeModal }) => {
                 type="number"
                 min={0}
                 disabled={true}
-                value={wonAmount}
-                onChange={(e) => setWonAmount(e.target.value)}
-                placeholder="1435.5"
-                className="bg-transparent w-full text-white text-right placeholder-gray-400 focus:outline-none text-sm"
+                // value={wonAmount}
+                // onChange={(e) => setWonAmount(e.target.value)}
+                placeholder={rate}
+                className="bg-transparent w-full text-white text-right placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount in won"
               />
               <span className="ml-2 select-none">KRW</span>
             </div>
             <Equal size={28} className="text-orange-300 font-bold" />
             <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-2 w-1/2">
-              <div className="bg-[#0A693E] rounded-full w-9 h-7 flex items-center justify-center mr-2 text-white font-bold select-none">
-                T
+              <div className=" rounded-full w-9 h-6 flex items-center justify-center mr-2 text-white font-bold select-none">
+                <span>
+                  <img src={logo2} alt="" className="w-8 h-8" />
+                </span>
               </div>
               <input
                 type="number"
                 min={0}
                 disabled={true}
-                value={usdtAmount}
-                onChange={(e) => setUsdtAmount(e.target.value)}
+                // value={usdtAmount}
+                // onChange={(e) => setUsdtAmount(e.target.value)}
                 placeholder="1"
                 className="bg-transparent text-right w-full text-white placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount of USDT"
@@ -163,11 +234,15 @@ const Modal = ({ isModalOpen, closeModal }) => {
           </h4>
         </div>
 
+        {error && <div className="ml-6 text-lg text-red-600">{error}</div>}
+
         {/* Inputs for USDT and won */}
         <div className="flex gap-3 px-6 mb-4 items-center">
           <div className="flex items-center bg-[#222222] rounded-md px-3 py-2 w-1/2">
-            <div className="bg-[#0A693E] rounded-full w-8 h-6 flex items-center justify-center mr-2 text-white font-bold select-none">
-              T
+            <div className=" rounded-full w-8 h-5 flex items-center justify-center mr-2 text-white font-bold select-none">
+              <span>
+                <img src={logo2} alt="" className="w-8 h-8" />
+              </span>
             </div>
             <input
               type="number"
@@ -211,7 +286,11 @@ const Modal = ({ isModalOpen, closeModal }) => {
             </button>
           ))}
           <button
-            className="ml-auto bg-[#FF5722] text-white text-xs px-3 py-1 rounded-md hover:bg-[#E64A19] transition select-none"
+            onClick={() => {
+              setWonAmount("");
+              setUsdtAmount("");
+            }}
+            className="ml-auto bg-[#037926] cursor-pointer text-white text-xs md:text-lg font-bold px-3 py-1 rounded-md hover:bg-[#03992a] transition select-none"
             title="정정"
           >
             Clear
@@ -335,21 +414,22 @@ const Modal = ({ isModalOpen, closeModal }) => {
         <div className="flex justify-center  bottom-0 gap-3 px-6 py-4 border-t border-gray-700 bg-[#181818] rounded-b-md">
           <button
             onClick={closeModal}
-            className="bg-[#333333] text-white px-6 py-2 rounded hover:bg-[#555555] transition"
+            className="bg-[#333333] text-white px-6 py-2 rounded hover:bg-[#555555] cursor-pointer transition"
             type="button"
           >
             Cancel
           </button>
           <button
-            type="submit"
+            onClick={submitOrder}
+            type="button"
             disabled={!agreed}
-            className={`px-8 py-2 rounded text-white transition ${
+            className={`px-8 py-2 cursor-pointer rounded text-white transition ${
               agreed
-                ? "bg-[#FF5722] hover:bg-[#E64A19]"
-                : "bg-[#FF5722]/60 cursor-not-allowed"
+                ? "bg-[#037926] hover:bg-green-700"
+                : "bg-[#037926]/60 cursor-not-allowed"
             }`}
           >
-            Submit
+           {loading ? <LoadingSpinner /> : "Submit"}
           </button>
         </div>
       </div>
