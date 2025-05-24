@@ -31,8 +31,8 @@ const TradingOffers = () => {
 
   return (
     <div className="relative">
-      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold">
-        Sell Order
+      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold  underline mb-8 rounded-2xl text-center border  border-slate-300 py-3 shadow-xl md:w-4xl mx-auto">
+        Buy Order
       </h2>
 
       {/* Modal Component */}
