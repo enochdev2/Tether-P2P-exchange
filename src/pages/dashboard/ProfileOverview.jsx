@@ -48,8 +48,8 @@ function ProfileOverview() {
           // actionText="Set answers"
           // onAction={() => console.log("Navigate to security questions")}
         />
-        <div className="flex w-full space-x-6 my-4">
-          <div className="flex-1">
+        <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
+          <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<PiggyBank size={24} />}
               title="Bank Name"
@@ -57,16 +57,24 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
-          <div className="flex-1">
+          <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<BanknoteIcon size={24} />}
-              title="Bank Accpunt Number"
+              title="Bank Account Number"
               actionText={user?.bankAccount}
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
+           <div className="min-w-[280px] sm:min-w-0 flex-1">
+            <InfoCard
+              icon={<BanknoteIcon size={24} />}
+              title=""
+              // actionText={user?.bankAccount}
+              onAction={() => console.log("Navigate to security questions")}
+            />
+          </div>
+        {/* <InfoCard /> */}
         </div>
-        <InfoCard />
       </div>
     </div>
   );
