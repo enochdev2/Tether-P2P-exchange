@@ -30,44 +30,38 @@ function Dashboard() {
       <Sidebar />
 
       {/* Content Area */}
-      <div className="w-3/4 p-6 overflow-y-hidden ">
+      <div className="lg:w-3/4 lg:p-6 overflow-y-hidden ">
         {/* Dashboard Header */}
-        <div className="flex space-x-4 mb-6 mx-auto justify-center">
-          {/* Phone Verified */}
-          <div className="flex items-center bg-white shadow-md rounded-md px-6 py-3 space-x-2">
-            <InfoCard
-              icon={
-                <CheckCircle className="w-8 h-8 bg-green-500 text-white rounded-full p-1" />
-              }
-              title="Account Level: 1"
-              actionText=""
-              onAction={() => console.log("Redirect to 2FA setup")}
-            />
-          </div>
-          <div className="flex items-center bg-white shadow-md rounded-md px-6 py-3 space-x-2">
-            <InfoCard
-              icon={
-                <Phone className="w-8 h-8 bg-green-500 text-white rounded-full p-1" />
-              }
-              title="You're Phone Verified"
-              actionText="Phone Number Verified"
-              onAction={() => console.log("Redirect to 2FA setup")}
-            />
-          </div>
+        <div className="w-full px-4 py-10 bg-gray-50">
+          <div className="flex sm:grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto overflow-x-auto sm:overflow-visible">
+            <div className="min-w-[280px] sm:min-w-0">
+              <InfoCard
+                icon={<CheckCircle className="w-6 h-6" />}
+                title="Account Level: 1"
+              />
+            </div>
 
-          <div className="flex items-center bg-white shadow-md rounded-md px-6 py-3 space-x-2">
-            <InfoCard
-              icon={
-                <Shield className="w-8 h-8 bg-red-500 text-white rounded-full p-1" />
-              }
-              title="2FA Not Enabled"
-              actionText="Setup 2FA"
-              onAction={() => console.log("Redirect to 2FA setup")}
-            />
-          </div>
+            <div className="min-w-[280px] sm:min-w-0">
+              <InfoCard
+                icon={<Phone className="w-6 h-6" />}
+                title="You're Phone Verified"
+                actionText="Phone Number Verified"
+                onAction={() => console.log("Redirect to phone setup")}
+              />
+            </div>
 
-          {/* 2FA Not Enabled */}
+            <div className="min-w-[280px] sm:min-w-0">
+              <InfoCard
+                icon={<Shield className="w-6 h-6" />}
+                title="2FA Not Enabled"
+                actionText="Setup 2FA"
+                onAction={() => console.log("Redirect to 2FA setup")}
+              />
+            </div>
+          </div>
         </div>
+
+
         {/* Render nested components */}
         <Outlet />
       </div>

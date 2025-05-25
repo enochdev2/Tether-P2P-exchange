@@ -13,65 +13,54 @@ const TradeCard = ({ offer, sell }) => {
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
 
-  // Get date only (e.g. "2025-05-22")
-  const dateOnly = dateObj.toLocaleDateString("en-CA"); // ISO-like format YYYY-MM-DD
-
-  // Get time only (e.g. "02:38:31" or "2:38 AM")
-  const timeOnly = dateObj.toLocaleTimeString("en-US", {
-    hour12: false, // false for 24-hour, true for AM/PM
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
   return (
     <div
-      className={`flex items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200
+      className={`flex flex-col sm:flex-row items-center bg-white rounded-lg p-4 mb-4 border border-gray-200 shadow-sm
         ${isPending ? "opacity-90 filter grayscale" : ""}
       `}
     >
       {/* Left Section */}
-      <div className="flex  flex-col items-center w-24 mr-6">
-        <div className="flex justify-between items-center space-x-2">
-          <div className="bg-green-500/80 text-white font-bold text-lg px-3 py-1 rounded">
+      <div className="flex items-center w-full sm:w-24 mb-4 sm:mb-0 sm:mr-6 justify-center sm:justify-start">
+        <div className="flex items-center space-x-2">
+          <div className="bg-green-600 text-white font-semibold text-base sm:text-sm md:text-base px-4 py-2 rounded-md select-none whitespace-nowrap">
             {sell ? "Sell" : "Buy"}
           </div>
-          <div className="w-2 h-2 mx-auto bg-green-600/80 rounded-full mt-1"></div>
+          <div className="w-3 h-3 bg-green-700 rounded-full mt-1" />
         </div>
       </div>
 
-      <div className="flex-1">
-        <div className="mt-2 font-semibold text-xl flex text-gray-900">
-          {" "}
-          <span className="mr-2">
-            <img src={logo2} alt="" className="w-7 h-7" />
-          </span>
+      {/* Center Left Section */}
+      <div className="flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
+        <img src={logo2} alt="Tether logo" className="w-7 h-7 mr-3" />
+        <span className="font-semibold text-lg sm:text-xl text-gray-900 truncate">
           {offer.amount} USDT
-        </div>
+        </span>
       </div>
 
-      {/* Middle Section */}
-      <div className="flex-1 font-semibold text-lg text-gray-900">
+      {/* Center Right Section */}
+      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-base sm:text-lg mb-4 sm:mb-0 text-center sm:text-left truncate">
         {offer.krwAmount
           ? `₩${offer.krwAmount.toLocaleString()} KRW`
           : `₩${offer.price.toLocaleString()} KRW`}
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col flex-1 items-end w-32">
-        <div className="text-sm text-gray-800">{offer._id.slice(0, 10)}</div>
+      <div className="flex flex-col flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-sm space-y-1">
+        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
+          {offer._id.slice(0, 10)}
+        </div>
         <div className="flex items-center space-x-2">
           <div
-            className="w-3 h-3 rounded-full"
+            className="w-3 h-3 rounded-full flex-shrink-0"
             style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
           />
           <span
-            className={`font-semibold ${
+            className={`font-semibold select-none truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
                 ? "text-gray-400"
-                : offer.status === "Sell completed"
-                ? "text-orange-500"
-                : offer.status === "Buy Completed"
+                : offer.status === "Sell completed" || offer.status === "Buy Completed"
                 ? "text-orange-500"
                 : "text-lime-600"
             }`}
@@ -79,7 +68,7 @@ const TradeCard = ({ offer, sell }) => {
             {offer.status}
           </span>
         </div>
-        <div className="text-sm text-gray-800 mt-1">{dateOnly}</div>
+        <div className="text-center sm:text-right">{dateOnly}</div>
       </div>
     </div>
   );

@@ -36,8 +36,8 @@ const BuyFormInput = () => {
   if (isLoading) return <LoadingSpiner />;
 
   return (
-    <div className="relative">
-      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold  underline mb-8 rounded-2xl text-center border  border-slate-300 py-3 shadow-xl md:w-4xl mx-auto">
+    <div className="relative px-3 sm:px-6 md:px-8">
+      <h2 className="text-center from-[#26a17b] to-[#0d4e3a] text-xl sm:text-2xl md:text-3xl font-bold underline bg-gradient-to-b  text-transparent bg-clip-text border border-slate-300 rounded-2xl shadow-xl py-3 mb-8 max-w-4xl mx-auto">
         Buy Order
       </h2>
 
@@ -53,7 +53,6 @@ export default BuyFormInput;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
-   
 
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
@@ -82,13 +81,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
   //   "₩1,000,000",
   // ];
 
-   useEffect(() => {
-      const timer = setTimeout(() => {
-        setError(null);
-      }, 2000);
-  
-      return () => clearTimeout(timer);
-    }, [error]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [error]);
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
@@ -156,7 +155,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       // Optionally clear input or close modal
       setWonAmount("");
       setUsdtAmount("");
-      SuccessToast("Successfully placed a buy order")
+      SuccessToast("Successfully placed a buy order");
       closeModal();
     } catch (err) {
       console.error("Failed to submit order:", err);
@@ -168,28 +167,30 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   return (
     <div
-      className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center py-2 rounded-2xl mx-auto overflow-auto"
+      className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center p-4 py-6 rounded-2xl mx-auto overflow-auto"
       aria-modal="true"
       role="dialog"
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
     >
-      <div className="bg-[#181818] rounded-md max-w-4xl w-full max-h-[60vh] overflow-auto flex flex-col text-white font-sans">
+      <div className="bg-[#181818] rounded-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
         <div className="border  mt-5   border-gray-700 rounded-xl md:w-[95%] mx-auto">
-          <div className="flex justify-start space-x-4 items-center px-3 pt-3  text-xs text-gray-400 ">
-            <span>Tether Rate Calculator: As of May 19, 2025, 11:41 PM</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
+            <span className="text-[0.8rem]  leading-tight break-words">
+              Tether Rate Calculator: As of May 19, 2025, 11:41 PM
+            </span>
             <button
-              className="hover:text-white transition"
+              className="hover:text-white transition flex items-center gap-1 self-end"
               aria-label="Refresh rate"
               onClick={() => alert("Refresh clicked")}
             >
-              <RefreshCcw size={16} />
+              <RefreshCcw size={14} />
             </button>
           </div>
 
           {/* Rate display */}
-          <div className="flex items-center space-x-4 rounded-md mx-1 my-2  p-3">
-            <div className="bg-[#222222] rounded-md px-3 py-2 flex border border-gray-800 items-center w-1/2 text-white">
+          <div className="flex flex-row items-center sm:justify-between lg:gap-4 gap-2 p-2 lg:p-4">
+            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-1 py-2 w-full sm:w-1/2">
               <input
                 type="number"
                 min={0}
@@ -200,15 +201,25 @@ const Modal = ({ isModalOpen, closeModal }) => {
                 className="bg-transparent w-full text-white text-right placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount in won"
               />
-              <span className="ml-2 select-none">KRW</span>
+              <span className="ml-2 select-none lg:text-xs text-sm text-gray-300">
+                KRW
+              </span>
             </div>
-            <Equal size={28} className="text-orange-300 font-bold" />
-            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-2 w-1/2">
-              <div className=" rounded-full w-9 h-6 flex items-center justify-center mr-2 text-white font-bold select-none">
-                <span>
-                  <img src={logo2} alt="" className="w-8 h-8" />
-                </span>
+
+            {/* Equal Icon */}
+            <div className="text-orange-300">
+              <Equal size={20} lg:size={28} className="font-bold" />
+            </div>
+
+            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-1 lg:py-2 w-full sm:w-1/2">
+              <div className="rounded-full lg:w-8 lg:h-8 flex items-center justify-center mr-2  text-white font-bold select-none">
+                <img
+                  src={logo2}
+                  alt=""
+                  className="lg:w-full lg:h-full w-30 h-6 lg:object-contain"
+                />
               </div>
+
               <input
                 type="number"
                 min={0}
@@ -219,34 +230,38 @@ const Modal = ({ isModalOpen, closeModal }) => {
                 className="bg-transparent text-right w-full text-white placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount of USDT"
               />
-              <span className="ml-2 text-white select-none">USDT</span>
+              <span className="ml-2 lg:text-xs text-[12px] text-white select-none">
+                USDT
+              </span>
             </div>
           </div>
         </div>
         {/* Header: Tether Rate Calculator */}
 
         {/* Amount to Buy */}
-        <div className="flex justify-between mt-9 px-6 mb-1">
+        <div className="flex justify-between mt-9 lg:px-6 mb-1">
           <h4 className="md:text-lg text-sm  font-semibold mb-6">
             Amount to Buy
           </h4>
         </div>
 
-        <div className=" px-8">
+        <div className=" lg:px-6">
           <h4 className="md:text-lg text-sm font-semibold text-gray-500">
             Enter Amount
           </h4>
         </div>
 
-        {error && <div className="ml-6 text-lg text-red-600">{error}</div> }
+        {error && <div className="ml-6 text-lg text-red-600">{error}</div>}
 
         {/* Inputs for USDT and won */}
-        <div className="flex gap-3 px-6 mb-4 items-center">
-          <div className="flex items-center bg-[#222222] rounded-md px-3 py-2 w-1/2">
-            <div className=" rounded-full w-8 h-5 flex items-center justify-center mr-2 text-white font-bold select-none">
-              <span>
-                <img src={logo2} alt="" className="w-8 h-8" />
-              </span>
+        <div className="flex flex-col sm:flex-row gap-3 mb-5 px-1">
+          <div className="flex items-center bg-[#222222] rounded-md px-3 lg:py-2 w-full sm:w-1/2">
+            <div className="flex items-center justify-center w-10 h-10 mr-3 rounded-full  select-none">
+              <img
+                src={logo2}
+                alt=""
+                className="w-full h-full object-contain"
+              />
             </div>
             <input
               type="number"
@@ -254,39 +269,45 @@ const Modal = ({ isModalOpen, closeModal }) => {
               value={usdtAmount}
               onChange={(e) => setUsdtAmount(e.target.value)}
               placeholder="0"
-              className="bg-transparent text-right w-full text-white placeholder-gray-400 focus:outline-none text-sm"
+              className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
               aria-label="Enter amount of USDT"
             />
-            <span className="ml-2 text-white select-none">USDT</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">
+              USDT
+            </span>
           </div>
-          <Equal size={28} className="text-orange-300 font-bold" />
-          <div className="bg-[#222222] rounded-md px-3 py-2 flex items-center w-1/2 text-white">
+          <div className="flex items-center justify-center text-orange-400 text-2xl font-bold">
+            <Equal size={28} />
+          </div>
+          <div className="flex items-center bg-[#222222] rounded-md px-3 py-2 w-full sm:w-1/2">
             <input
               type="number"
               min={0}
               value={wonAmount}
               onChange={(e) => setWonAmount(e.target.value)}
               placeholder="0"
-              className="bg-transparent w-full text-white text-right placeholder-gray-400 focus:outline-none text-sm"
+                            className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
+
               aria-label="Enter amount in won"
             />
-            <span className="ml-2 select-none">KRW</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">KRW</span>
           </div>
         </div>
 
         {/* Korean currency buttons + orange "정정" button */}
-        <div className="flex flex-wrap gap-2 px-6 mb-3">
-          {krwButtons.map((val) => (
+        <div className="flex flex-wrap gap-2 px-2 lg:px-6 mb-3">
+         {krwButtons.map((val) => (
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs md:text-base py-2 px-2 cursor-pointer rounded-sm select-none ${
-                val === 1000000
-                  ? "bg-[#CCCCCC] text-black"
-                  : "bg-[#444444] text-white"
-              } hover:bg-[#037926] hover:text-white transition`}
+              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+          ${
+            val === 1000000
+              ? "bg-gray-300 text-black"
+              : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
+          }`}
             >
-              {val / 10000} k
+              {val / 10000}k
             </button>
           ))}
           <button
@@ -294,7 +315,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-[#037926] cursor-pointer text-white text-xs md:text-lg font-bold px-3 py-1 rounded-md hover:bg-[#03992a] transition select-none"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
             title="정정"
           >
             Clear

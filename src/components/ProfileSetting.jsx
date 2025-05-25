@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InfoCard from "./InfoCard";
-import { ShieldAlertIcon, UserIcon } from "lucide-react";
+import { FaUserAlt, FaShieldAlt, FaPhoneAlt, FaBirthdayCake } from "react-icons/fa";
+import { AiOutlineUser } from "react-icons/ai";
 
 export default function ProfileSetting({user}) {
   const [phone, setPhone] = useState("+234567891");
@@ -26,126 +27,95 @@ export default function ProfileSetting({user}) {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Top grid: Phone & Username */}
+    <div className="space-y-10 px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-lg shadow-md">
+      {/* Top grid: Phone & Nickname */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Phone Number */}
         <div>
-          <label className="block text-sm md:text-base font-medium text-gray-700">
-            Phone
-          </label>
-          <div className="mt-1 relative">
-            <input
-              type="text"
-              value={user?.phone}
-              disabled={true}
-              // onChange={handlePhoneChange}
-              className="w-full  px-3 py-3 border border-gray-400 rounded focus:outline-none focus:ring"
-            />
-          </div>
-        </div>
-        <div className="flex items-start space-x-4">
-          <div className="text-gray-400">
-            <UserIcon size={38} className="text-[#26a17b]" />
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm md:text-base font-medium text-gray-700">
-              Nickname
-            </label>
-            <div className="mt-1 flex items-center space-x-2">
-              <input
-                type="text"
-                value={user?.nickname}
-                className="flex-1 px-3 py-3 border border-gray-400 rounded focus:outline-none focus:ring"
-                disabled={true}
-              />
-              {/* <button
-                onClick={handleUsernameSave}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-              >
-                Save
-              </button> */}
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <FaPhoneAlt className="text-[#26a17b]" />
+              Phone Number
             </div>
+          </label>
+          <input
+            type="text"
+            value={user?.phone}
+            disabled
+            className="w-full px-4 py-3 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
+          />
+        </div>
 
-            {/* <div className="mt-4">
-              <label className="inline-flex items-center space-x-2 cursor-pointer text-sm text-gray-700">
-                <span>Upload image</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
-              <p className="mt-1 text-xs text-gray-500">
-                Upload a nice picture, preferably of yourself. If you upload any explicit or otherwise inappropriate image, we'll remove it immediately.
-              </p>
-            </div> */}
-          </div>
-        </div>
+        {/* Nickname */}
         <div>
-          <label className="block text-sm md:text-base font-medium text-gray-700">
-            Date Of Birth
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <FaUserAlt className="text-[#26a17b]" />
+              Nickname
+            </div>
           </label>
-          <div className="mt-1 relative">
-            <input
-              type="text"
-              value={user?.dob}
-              disabled={true}
-              // onChange={handlePhoneChange}
-              className="w-full px-3 py-3 border-gray-400 border rounded focus:outline-none focus:ring"
-            />
-            {/* Country prefix dropdown */}
-            <div className="absolute inset-y-0 left-0 flex items-center">
-             
-            </div>
-          </div>
+          <input
+            type="text"
+            value={user?.nickname}
+            disabled
+            className="w-full px-4 py-3 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
+          />
         </div>
-        <div className="flex items-start space-x-4">
-          <div className="text-gray-400">
-            <UserIcon size={38} className="text-[#26a17b]" />
-          </div>
-          <div className="flex-1">
-            <label className="block text-sm md:text-base font-medium text-gray-700">
-              Username
-            </label>
-            <div className="mt-1 flex items-center space-x-2">
-              <input
-                type="text"
-                value={user?.username}
-                // onChange={(e) => setUsername(e.target.value)}
-                className="flex-1 px-3 py-3 border rounded border-gray-400 focus:outline-none focus:ring"
-                disabled={true}
-              />
+
+        {/* Date of Birth */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <FaBirthdayCake className="text-[#26a17b]" />
+              Date of Birth
             </div>
-          </div>
+          </label>
+          <input
+            type="text"
+            value={user?.dob}
+            disabled
+            className="w-full px-4 py-3 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
+          />
+        </div>
+
+        {/* Username */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center gap-2">
+              <AiOutlineUser className="text-[#26a17b]" />
+              Username
+            </div>
+          </label>
+          <input
+            type="text"
+            value={user?.username}
+            disabled
+            className="w-full px-4 py-3 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
+          />
         </div>
       </div>
 
-      {/* Preferred currency */}
+      {/* Preferred Currency */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Preferred currency
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Preferred Currency
         </label>
-        <div className="mt-1">
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            className="w-48 px-3 py-2 border rounded focus:outline-none focus:ring"
-          >
-            <option value="KRW">Korea (KRW)</option>
-            {/* <option value="USD">US Dollar (USD)</option> */}
-            {/* <option value="NGN">Nigerian Naira (NGN)</option> */}
-            {/* add more as needed */}
-          </select>
-        </div>
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          className="w-full max-w-xs px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#26a17b] bg-white"
+        >
+          <option value="KRW">Korea (KRW)</option>
+          {/* Add more options if needed */}
+        </select>
         <p className="mt-1 text-xs text-gray-500">
-          Select which currency your Account will use
+          This will determine how values are displayed in your account.
         </p>
       </div>
 
-      {/* Security questions warning */}
+      {/* Security Questions */}
       <InfoCard
-        icon={<ShieldAlertIcon size={24} />}
+        icon={<FaShieldAlt className="text-[#26a17b]" size={20} />}
         title="Security Questions Required"
         actionText="Set answers"
         onAction={() => console.log("Navigate to security questions")}

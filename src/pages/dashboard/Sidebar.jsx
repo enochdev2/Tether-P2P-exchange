@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   TrendingUp,
@@ -102,10 +102,21 @@ function Sidebar() {
 
   const isActive = (to) => currentPathSegment === to.replace("/", "");
 
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth < 768);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div
       className={` z-10  bg-[#1f2937] text-white transition-all duration-300 ${
-        collapsed ? "w-[80px]" : "w-[260px]"
+        collapsed ? "w-[75px]" : "lg:relative fixed w-[300px]"
       }`}
     >
       {/* Top section */}
@@ -113,15 +124,22 @@ function Sidebar() {
         {!collapsed && (
           <div className="flex items-center space-x-4">
             <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
-              U
+              <img
+                src="https://i.pravatar.cc/150?img=43"
+                className="rounded-full"
+                alt=""
+              />
+              {/* <span className="text-white uppercase text-sm font-semibold">
+              {user?.fullName
+                ?.split(" ")
+                .map((name) => name.charAt(0))
+                .join("")}
+            </span> */}
             </div>
-            <span className="text-white text-xl font-semibold lowercase">
-              {user?.fullName}
-            </span>
           </div>
         )}
         <button
-          className="cursor-pointer"
+          className="cursor-pointer lg:hidden"
           onClick={() => setCollapsed(!collapsed)}
         >
           {/* {collapsed ? <Menu size={24} /> : <X size={24} />} */}
