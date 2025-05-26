@@ -10,6 +10,9 @@ import {
   LogOut as LogOutIcon,
   Menu,
   X,
+  Send,
+  DollarSign,
+  TrendingDown,
 } from "lucide-react";
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
@@ -41,7 +44,7 @@ const sidebarData = [
         id: "sell-history",
         label: "Sell History",
         to: "sell-history",
-        icon: <Download />,
+        icon: <DollarSign />,
       },
     ],
   },
@@ -49,12 +52,12 @@ const sidebarData = [
     id: "buy",
     title: "Buy",
     links: [
-      { id: "buy-order", label: "Buy Order", to: "buy-order", icon: <Box /> },
+      { id: "buy-order", label: "Buy Order", to: "buy-order", icon: <TrendingUp /> },
       {
         id: "buy-history",
         label: "Buy History",
         to: "buy-history",
-        icon: <Heart />,
+        icon: <DollarSign />,
       },
     ],
   },

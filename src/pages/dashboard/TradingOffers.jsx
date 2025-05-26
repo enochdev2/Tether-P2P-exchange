@@ -375,7 +375,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
             />
           </div>
           <p className="mt-1 text-gray-500 text-[10px] sm:text-xs">
-            Only one Solana chain can be selected (using a dropdown menu).
+            Only one Solana chain can be selected.
           </p>
         </div>
 
