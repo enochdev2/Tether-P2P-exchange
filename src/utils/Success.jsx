@@ -21,7 +21,7 @@ const SuccessToast = (message) =>
         </svg>
         <span className="sr-only">Success icon</span>
       </div>
-      <div className="ms-5 text-xl font-bold">{message}</div>
+      <div className="ms-5 text-sm font-bold">{message}</div>
       <button
         type="button"
         className="ms-auto -mx-1.5 -my-1.5 bg-gray-800 text-gray-400 hover:text-white rounded-lg focus:ring-2 focus:ring-transparent p-1.5 hover:bg-gray-700 inline-flex items-center justify-center h-8 w-8 transition-all"

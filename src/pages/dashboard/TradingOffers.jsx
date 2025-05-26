@@ -36,16 +36,16 @@ const TradingOffers = () => {
   if (isLoading) return <LoadingSpiner />;
 
   return (
-    <div className="relative">
-      <h2 className="text-xl md:text-3xl bg-gradient-to-b from-purple-700 to-pink-600 text-transparent bg-clip-text font-bold  underline mb-8 rounded-2xl text-center border  border-slate-300 py-3 shadow-xl md:w-4xl mx-auto">
+    <div className="relative px-3 sm:px-6 md:px-8">
+      {/* Page Heading */}
+      <h2 className="text-center from-[#26a17b] to-[#0d4e3a] text-xl sm:text-2xl md:text-3xl font-bold underline bg-gradient-to-b  text-transparent bg-clip-text border border-slate-300 rounded-2xl shadow-xl py-3 mb-8 max-w-4xl mx-auto">
         Sell Order
       </h2>
 
       {/* Modal Component */}
       {isModalOpen && (
         <Modal isModalOpen={isModalOpen} closeModal={closeModal}>
-          {/* Your modal content here */}
-          <div className="p-4 text-center text-lg font-medium">
+          <div className="p-6 sm:p-8 text-center text-base sm:text-lg font-medium text-gray-800">
             Sell Order Form Content
           </div>
         </Modal>
@@ -164,71 +164,84 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   return (
     <div
-      className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center py-2 rounded-2xl mx-auto overflow-auto"
-      aria-modal="true"
+      className="bg-black bg-opacity-70 z-50 flex justify-center items-center py-4 px-2 min-h-screen"
       role="dialog"
+      aria-modal="true"
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
     >
-      <div className="bg-[#181818] rounded-md max-w-4xl w-full max-h-[60vh] overflow-auto flex flex-col text-white font-sans">
+      <div className="bg-[#181818] rounded-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
         <div className="border  mt-5   border-gray-700 rounded-xl md:w-[95%] mx-auto">
-          <div className="flex justify-start space-x-4 items-center px-3 pt-3  text-xs text-gray-400 ">
-            <span>Tether Rate Calculator: As of May 19, 2025, 11:41 PM</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
+            <span className="text-[0.8rem]  leading-tight break-words">
+              Tether Rate Calculator: <br className="block sm:hidden" />
+              As of May 19, 2025, 11:41 PM
+            </span>
             <button
-              className="hover:text-white transition"
+              className="hover:text-white transition flex items-center gap-1 self-end"
               aria-label="Refresh rate"
               onClick={() => alert("Refresh clicked")}
             >
-              <RefreshCcw size={16} />
+              <RefreshCcw size={14} />
+              <span className="hidden sm:inline">Refresh</span>
             </button>
           </div>
 
           {/* Rate display */}
-          <div className="flex items-center space-x-4 rounded-md mx-1 my-2  p-3">
-            <div className="bg-[#222222] rounded-md px-3 py-2 flex border border-gray-800 items-center w-1/2 text-white">
+          <div className="flex flex-row items-center sm:justify-between lg:gap-4 gap-2 p-2 lg:p-4">
+            {/* KRW Input */}
+            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-2 w-full sm:w-1/2">
               <input
                 type="number"
                 min={0}
-                disabled={true}
-                // value={wonAmount}
-                // onChange={(e) => setWonAmount(e.target.value)}
+                disabled
                 placeholder={rate}
                 className="bg-transparent w-full text-white text-right placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount in won"
               />
-              <span className="ml-2 select-none">KRW</span>
+              <span className="ml-2 select-none lg:text-xs text-sm text-gray-300">
+                KRW
+              </span>
             </div>
-            <Equal size={28} className="text-orange-300 font-bold" />
-            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-2 w-1/2">
-              <div className=" rounded-full w-9 h-6 flex items-center justify-center mr-2 text-white font-bold select-none">
-                <span>
-                  <img src={logo2} alt="" className="w-8 h-8" />
-                </span>
+
+            {/* Equal Icon */}
+            <div className="text-orange-300">
+              <Equal size={20} lg:size={28} className="font-bold" />
+            </div>
+
+            {/* USDT Input */}
+            <div className="flex items-center bg-[#222222] border border-gray-800 rounded-md px-3 py-2 w-full sm:w-1/2">
+              <div className="rounded-full lg:w-8 lg:h-8 flex items-center justify-center mr-2">
+                <img
+                  src={logo2}
+                  alt="USDT logo"
+                  className="lg:w-full lg:h-full w-36 h-6 lg:object-contain"
+                />
               </div>
               <input
                 type="number"
                 min={0}
-                disabled={true}
-                // value={usdtAmount}
-                // onChange={(e) => setUsdtAmount(e.target.value)}
+                disabled
                 placeholder="1"
                 className="bg-transparent text-right w-full text-white placeholder-gray-100 focus:outline-none text-sm"
                 aria-label="Enter amount of USDT"
               />
-              <span className="ml-2 text-white select-none">USDT</span>
+              <span className="ml-2 lg:text-xs text-[12px] text-white select-none">
+                USDT
+              </span>
             </div>
           </div>
         </div>
         {/* Header: Tether Rate Calculator */}
 
         {/* Amount to Sell */}
-        <div className="flex justify-between mt-9 px-6 mb-1">
+        <div className="flex justify-between mt-9 lg:px-6 mb-1">
           <h4 className="md:text-lg text-sm  font-semibold mb-6">
             Amount to Sell
           </h4>
         </div>
 
-        <div className=" px-8">
+        <div className=" lg:px-6">
           <h4 className="md:text-lg text-sm font-semibold text-gray-500">
             Enter Amount of USDT
           </h4>
@@ -237,12 +250,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
         {error && <div className="ml-6 text-lg text-red-600">{error}</div>}
 
         {/* Inputs for USDT and won */}
-        <div className="flex gap-3 px-6 mb-4 items-center">
-          <div className="flex items-center bg-[#222222] rounded-md px-3 py-2 w-1/2">
-            <div className=" rounded-full w-8 h-5 flex items-center justify-center mr-2 text-white font-bold select-none">
-              <span>
-                <img src={logo2} alt="" className="w-8 h-8" />
-              </span>
+        <div className="flex flex-col sm:flex-row gap-3 mb-5 px-1">
+          <div className="flex items-center bg-[#222222] rounded-md px-3 lg:py-2 w-full sm:w-1/2">
+            <div className="flex items-center justify-center w-10 h-10 mr-3 rounded-full  select-none">
+              <img
+                src={logo2}
+                alt="USDT Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <input
               type="number"
@@ -250,39 +265,46 @@ const Modal = ({ isModalOpen, closeModal }) => {
               value={usdtAmount}
               onChange={(e) => setUsdtAmount(e.target.value)}
               placeholder="0"
-              className="bg-transparent text-right w-full text-white placeholder-gray-400 focus:outline-none text-sm"
               aria-label="Enter amount of USDT"
+              className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
             />
-            <span className="ml-2 text-white select-none">USDT</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">
+              USDT
+            </span>
           </div>
-          <Equal size={28} className="text-orange-300 font-bold" />
-          <div className="bg-[#222222] rounded-md px-3 py-2 flex items-center w-1/2 text-white">
+          <div className="flex items-center justify-center text-orange-400 text-2xl font-bold">
+            <Equal size={28} />
+          </div>
+          <div className="flex items-center bg-[#222222] rounded-md px-3 py-2 w-full sm:w-1/2">
             <input
               type="number"
               min={0}
               value={wonAmount}
               onChange={(e) => setWonAmount(e.target.value)}
               placeholder="0"
-              className="bg-transparent w-full text-white text-right placeholder-gray-400 focus:outline-none text-sm"
               aria-label="Enter amount in won"
+              className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
             />
-            <span className="ml-2 select-none">KRW</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">
+              KRW
+            </span>
           </div>
         </div>
 
         {/* Korean currency buttons + orange "정정" button */}
-        <div className="flex flex-wrap gap-2 px-6 mb-3">
+        <div className="flex flex-wrap gap-2 px-2 lg:px-6 mb-3">
           {krwButtons.map((val) => (
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs cursor-pointer md:text-base py-2 px-2 rounded-sm select-none ${
-                val === 1000000
-                  ? "bg-[#CCCCCC] text-black"
-                  : "bg-[#444444] text-white"
-              } hover:bg-[#037926] hover:text-white transition`}
+              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+          ${
+            val === 1000000
+              ? "bg-gray-300 text-black"
+              : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
+          }`}
             >
-              {val / 10000} k
+              {val / 10000}k
             </button>
           ))}
           <button
@@ -290,7 +312,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-[#037926] cursor-pointer text-white text-xs md:text-lg font-bold px-3 py-1 rounded-md hover:bg-[#03992a] transition select-none"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
             title="정정"
           >
             Clear
@@ -298,10 +320,10 @@ const Modal = ({ isModalOpen, closeModal }) => {
         </div>
 
         {/* Deposit Wallet Address */}
-        <div className="px-6 mb-2">
+        <div className="mb-4 px-1">
           <label
             htmlFor="wallet-address"
-            className="block text-xs md:text-lg font-semibold mb-1 text-gray-300"
+            className="block text-xs sm:text-sm font-semibold mb-1 text-gray-400"
           >
             Deposit Wallet Address
           </label>
@@ -312,8 +334,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
               value={walletAddress}
               onChange={(e) => setWalletAddress(e.target.value)}
               placeholder="(Admin Wallet Address)"
-              className="w-full bg-[#222222] rounded-md text-white text-sm px-3 py-2 pr-10 placeholder-gray-400 focus:outline-none border border-sky-600/40"
               aria-label="Deposit wallet address"
+              className="w-full bg-[#222222] rounded-md text-white text-sm sm:text-base px-3 py-2 pr-10 placeholder-gray-400 border border-sky-600/40 focus:outline-none"
             />
             <button
               onClick={copyWalletAddress}
@@ -327,41 +349,41 @@ const Modal = ({ isModalOpen, closeModal }) => {
         </div>
 
         {/* Deposit Network */}
-        <div className="px-6 mb-4">
+        <div className="mb-6 px-1 max-w-xs">
           <label
             htmlFor="deposit-network"
-            className="block text-xs md:text-sm font-semibold mb-1"
+            className="block text-xs sm:text-sm font-semibold mb-1 text-gray-400"
           >
             Deposit Network
           </label>
-          <div className="flex relative items-center bg-[#222222] mb-4  w-80 rounded-full px-4">
-            <PiIcon size={18} />
+          <div className="relative flex items-center bg-[#222222] rounded-full px-4 py-2">
+            <PiIcon size={18} className="text-white mr-2" />
             <select
               id="deposit-network"
-              className="bg-[#222222] absolute left-0 z-1 top-0 px-3 py-1 rounded-full text-white w-full text-sm focus:outline-none appearance-none"
+              className="bg-[#222222] w-full text-white text-sm sm:text-base rounded-full appearance-none focus:outline-none px-2"
               value={depositNetwork}
               onChange={(e) => setDepositNetwork(e.target.value)}
               aria-label="Select deposit network"
             >
-              <option value="SOL">
-                {/* Solana icon on left with text */}
-                Solana (SOL)
-              </option>
+              <option value="SOL">Solana (SOL)</option>
             </select>
-            <ArrowDown size={18} />
+            <ArrowDown
+              size={18}
+              className="absolute right-4 pointer-events-none text-white"
+            />
           </div>
-          <p className="text-gray-400 mt-1 text-[11px]">
+          <p className="mt-1 text-gray-500 text-[10px] sm:text-xs">
             Only one Solana chain can be selected (using a dropdown menu).
           </p>
         </div>
 
         {/* Scrollable Notice text & Checkbox */}
         <div className="px-6 mb-6 flex-1  border border-gray-700 rounded-md bg-[#111111] p-4 text-xs text-gray-300">
-          <p className="text-[14px] md:text-[15px]">
+          <p className="font-semibold mb-2 text-sm sm:text-base">
             <strong>[Notice]</strong> Please read the following carefully before
             proceeding to the next step.
           </p>
-          <ul className="list-disc text-[12px] md:text-[14px] list-inside mt-2 space-y-3">
+          <ul className="list-disc text-justify list-inside space-y-2 text-[11px] sm:text-sm leading-relaxed">
             <li>
               Before making a deposit, make sure the copied wallet address is
               correct. After copying the address, paste it into a memo or
@@ -394,7 +416,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
           {/* Confirmation Checkbox */}
           <label className="mt-4 flex flex-col  justify-center items-center  gap-1 cursor-pointer text-gray-300 select-none">
-            <span className="text-[12px] md:text-[15px] font-semibold">
+            <span className="text-[12px] md:text-[15px] text-justify font-semibold">
               I hereby acknowledge that I have carefully read and understood all
               of the above notices. I fully accept that failure to comply with
               these instructions may result in financial loss, for which I take
@@ -429,7 +451,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
                 : "bg-[#037926]/60 cursor-not-allowed"
             }`}
           >
-           {loading ? <LoadingSpinner /> : "Submit"}
+            {loading ? <LoadingSpinner /> : "Submit"}
           </button>
         </div>
       </div>

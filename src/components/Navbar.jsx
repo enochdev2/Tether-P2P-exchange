@@ -84,83 +84,107 @@ const Navbar = () => {
 
             {isLoggedIn ? (
               <>
-                {/* Email and password visibility toggle */}
-                <div className="text-gray-300 hidden md:flex flex-col items-end">
-                  <span className="text-xs md:text-sm">{user?.username}</span>
-                  <span
-                    className="ml-2 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  >
-                    {/* <Eye
-                      className="w-4 h-4 inline-block"
-                      color={showPassword ? "green" : "white"}
-                    /> */}
-                  </span>
+                {/* Display Username (Mobile & Desktop) */}
+                <div className="hidden md:flex flex-col items-end text-sm text-gray-200 font-medium mb-1">
+                  <span>{user?.username}</span>
                 </div>
 
                 {/* Profile Icon and Dropdown */}
                 <div className="relative z-50 hidden md:flex ">
+                  {/* Profile Button */}
                   <button
                     onClick={toggleDropdown}
-                    className="text-white flex items-center space-x-2"
+                    className="flex items-center gap-2 text-white hover:text-gray-300 transition duration-200"
                   >
-                    <User className="w-7 h-7 rounded-full bg-gray-600 p-1" />{" "}
-                    {/* Profile Icon */}
+                    {/* <User className="w-8 h-8 rounded-full bg-gray-600 p-1" /> */}
+                    <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+                      <img
+                        src="https://i.pravatar.cc/150?img=43"
+                        className="rounded-full"
+                        alt=""
+                      />
+                    </div>
                     <svg
                       className="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth="2"
                         d="M19 9l-7 7-7-7"
-                      ></path>
+                      />
                     </svg>
                   </button>
 
                   {/* Dropdown Menu */}
                   {isDropdownOpen && (
-                    <div className="absolute right-0 w-60 bg-white text-black shadow-lg rounded-md mt-2 z-100">
-                      <div className="px-4 py-2 border-b">
-                        <span className="text-sm text-red-500">Verify Me</span>
+                    <div className="absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-xl overflow-hidden ring-1 ring-black/10 transition-all duration-300 z-50">
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <span className="text-sm font-semibold text-[#CC1747]">
+                          Verify Me
+                        </span>
                       </div>
-                      <ul className="py-2 text-sm space-y-2">
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <User className="w-4 h-4" />
-                          <Link to="/profile">My Profile</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <Settings className="w-4 h-4" />
-                          <Link to="/payment-methods">Payment Methods</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <FileText className="w-4 h-4" />
-                          <Link to="/settings">Settings</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <FileText className="w-4 h-4" />
-                          <Link to="/trade-history">Trade History</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <Users className="w-4 h-4" />
-                          <Link to="/trade-partners">Trade Partners</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <Share2 className="w-4 h-4" />
-                          <Link to="/invite-friend">Invite a Friend</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <ArrowUpDown className="w-4 h-4" />
-                          <Link to="/my-transactions">My Transactions</Link>
-                        </li>
-                        <li className="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md">
-                          <X className="w-4 h-4" />
-                          <Link to="/logout">Log Out</Link>
-                        </li>
+                      <ul className="text-sm divide-y divide-gray-100">
+                        {[
+                          {
+                            icon: <User className="w-4 h-4" />,
+                            label: "My Profile",
+                            to: "/profile",
+                          },
+                          {
+                            icon: <Settings className="w-4 h-4" />,
+                            label: "Payment Methods",
+                            to: "/payment-methods",
+                          },
+                          {
+                            icon: <FileText className="w-4 h-4" />,
+                            label: "Settings",
+                            to: "/settings",
+                          },
+                          {
+                            icon: <FileText className="w-4 h-4" />,
+                            label: "Trade History",
+                            to: "/trade-history",
+                          },
+                          {
+                            icon: <Users className="w-4 h-4" />,
+                            label: "Trade Partners",
+                            to: "/trade-partners",
+                          },
+                          {
+                            icon: <Share2 className="w-4 h-4" />,
+                            label: "Invite a Friend",
+                            to: "/invite-friend",
+                          },
+                          {
+                            icon: <ArrowUpDown className="w-4 h-4" />,
+                            label: "My Transactions",
+                            to: "/my-transactions",
+                          },
+                          {
+                            icon: <X className="w-4 h-4 text-red-500" />,
+                            label: "Log Out",
+                            to: "/logout",
+                            danger: true,
+                          },
+                        ].map((item, idx) => (
+                          <li
+                            key={idx}
+                            className={`flex items-center gap-2 px-4 py-3 hover:bg-gray-100 transition ${
+                              item.danger
+                                ? "text-red-600 hover:bg-red-100"
+                                : "text-gray-700"
+                            }`}
+                          >
+                            {item.icon}
+                            <Link to={item.to} className="block w-full">
+                              {item.label}
+                            </Link>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   )}
