@@ -38,7 +38,7 @@ const TradingOffers = () => {
   return (
     <div className="relative px-3 sm:px-6 md:px-8">
       {/* Page Heading */}
-      <h2 className="text-center from-[#26a17b] to-[#0d4e3a] text-xl sm:text-2xl md:text-3xl font-bold underline bg-gradient-to-b  text-transparent bg-clip-text border border-slate-300 rounded-2xl shadow-xl py-3 mb-8 max-w-4xl mx-auto">
+      <h2 className="text-center from-[#26a17b] to-[#0d4e3a] text-xl sm:text-2xl md:text-3xl font-bold underline bg-gradient-to-b  text-transparent bg-clip-text border border-slate-300 rounded-2xl shadow-xl py-3 mb-6 max-w-4xl mx-auto">
         Sell Order
       </h2>
 
@@ -164,14 +164,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   return (
     <div
-      className="bg-black bg-opacity-70 z-50 flex justify-center items-center py-4 px-2 min-h-screen"
+      className="bg-black bg-opacity-70 z-50 flex justify-center items-center py-4 px-3 h-[50hv]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
     >
-      <div className="bg-[#181818] rounded-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
-        <div className="border  mt-5   border-gray-700 rounded-xl md:w-[95%] mx-auto">
+      <div className="bg-[#181818] rounded-xl w-full max-w-4xl max-h-[75vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
+        <div className="border  mt-7   border-gray-700 rounded-xl md:w-[95%] mx-auto">
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
             <span className="text-[0.8rem]  leading-tight break-words">
               Tether Rate Calculator: <br className="block sm:hidden" />
@@ -235,7 +235,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
         {/* Header: Tether Rate Calculator */}
 
         {/* Amount to Sell */}
-        <div className="flex justify-between mt-9 lg:px-6 mb-1">
+        <div className="flex justify-between mt-7 lg:px-6 mb-1">
           <h4 className="md:text-lg text-sm  font-semibold mb-6">
             Amount to Sell
           </h4>

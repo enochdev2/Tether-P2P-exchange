@@ -167,13 +167,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   return (
     <div
-      className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center p-4 py-6 rounded-2xl mx-auto overflow-auto"
+      className=" bg-black bg-opacity-70 max-w-[920px] z-50 flex justify-center items-center px-3 py-3 rounded-2xl mx-auto overflow-auto"
       aria-modal="true"
       role="dialog"
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
     >
-      <div className="bg-[#181818] rounded-xl w-full max-w-3xl max-h-[85vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
+      <div className="bg-[#181818] rounded-xl w-full max-w-4xl max-h-[85vh] overflow-y-auto text-white font-sans shadow-2xl mx-auto p-4 sm:p-6">
         <div className="border  mt-5   border-gray-700 rounded-xl md:w-[95%] mx-auto">
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
             <span className="text-[0.8rem]  leading-tight break-words">

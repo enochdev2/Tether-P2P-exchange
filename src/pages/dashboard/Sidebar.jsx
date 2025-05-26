@@ -115,26 +115,24 @@ function Sidebar() {
 
   return (
     <div
-      className={` z-10  bg-[#1f2937] text-white transition-all duration-300 ${
+      className={` z-10 pt-4  bg-[#1f2937] text-white transition-all duration-300 ${
         collapsed ? "w-[75px]" : "lg:relative fixed w-[300px]"
       }`}
     >
       {/* Top section */}
       <div className="flex items-center justify-between p-4">
         {!collapsed && (
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+          <div className="flex items-center md:ml-14 space-x-4">
+            <div className="w-10 h-10 rounded-full bg-[#26a flex items-center pl- justify-center text-white font-bold text-lg space-x-3 md:space-x-6">
               <img
                 src="https://i.pravatar.cc/150?img=43"
-                className="rounded-full"
+                className="rounded-full w-12 h-10 hidden sm:block"
                 alt=""
               />
-              {/* <span className="text-white uppercase text-sm font-semibold">
+              <span className="text-white uppercase text-sm md:text-base font-semibold">
               {user?.fullName
-                ?.split(" ")
-                .map((name) => name.charAt(0))
-                .join("")}
-            </span> */}
+                }
+            </span> 
             </div>
           </div>
         )}
