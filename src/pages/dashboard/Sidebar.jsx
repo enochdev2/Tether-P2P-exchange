@@ -187,7 +187,7 @@ function Sidebar() {
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 py-2 px-3 rounded-md hover:bg-red-600 w-full"
+            className="flex items-center cursor-pointer gap-3 py-2 px-3 rounded-md hover:bg-red-600 w-full"
           >
             <LogOutIcon size={18} />
             {!collapsed && <span>Sign Out</span>}

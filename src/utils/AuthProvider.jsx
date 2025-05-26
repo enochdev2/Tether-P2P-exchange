@@ -61,12 +61,14 @@ export const AuthProvider = ({ children }) => {
   // Handle logout
   const logout = async () => {
     try {
+
+      localStorage.setItem("token", " ");
       // const response = await fetch("http://localhost:5173/api/v1/user/logout", {
       const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout", {
         method: "POST",
         credentials: "include",
       });
-
+     
       if (!response.ok) {
         throw new Error("Failed to log out");
       }

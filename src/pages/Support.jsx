@@ -5,22 +5,18 @@ import LoadingSpiner from "../components/LoadingSpiner";
 const Support = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-  
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-        setShowModal(true);
-      }, 500);
-  
-      return () => clearTimeout(timer);
-    }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
 
-  const handleSubmit = (data) => {
-    console.log("Submitted:", data);
-    setShowModal(false);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setShowModal(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
 
   if (isLoading) return <LoadingSpiner />;
 
@@ -29,11 +25,10 @@ const Support = () => {
       <InquiryModal
         isOpen={showModal}
         onCancel={() => setShowModal(false)}
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       />
     </>
   );
 };
-
 
 export default Support;

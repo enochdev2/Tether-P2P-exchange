@@ -3,8 +3,54 @@ import React, { useState } from "react";
 const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
   const [inquiryType, setInquiryType] = useState("Edit Account Info");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!isOpen) return null;
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+      
+    try {
+      const token = localStorage.getItem("token");
+      // Assuming your backend API endpoint for inquiry creation
+      const response = await fetch(
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry",
+        "http://localhost:3000/api/v1/inquiry",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: inquiryType,
+            description: message,
+          }),
+        }
+      );
+      console.log("🚀 ~ handleSubmit ~ response:", response)
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to submit inquiry");
+      }
+
+      const data = await response.json();
+      console.log("🚀 ~ handleSubmit ~ data:", data)
+
+      // Optionally, reset form or close modal here
+      setInquiryType("Edit Account Info");
+      setMessage("");
+      // onCancel();
+      setShowModal(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -25,7 +71,7 @@ const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
           <div className="bg-white border rounded-2xl px-3 py-2 mb-4">
             <select
               id="inquiry-type"
-              placeholder='Inquiry Type'              
+              placeholder="Inquiry Type"
               value={inquiryType}
               onChange={(e) => setInquiryType(e.target.value)}
               className="w-full h-7 rounded-md border border-gray-800 text-sm pl-2 mb-2 text-center
@@ -61,7 +107,7 @@ const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
               Cancle
             </button>
             <button
-              onClick={() => onSubmit({ inquiryType, message })}
+              onClick={() => handleSubmit()}
               className="w-[90px] py-1 rounded-md border border-slate-500 bg-slate-300 hover:bg-slate-600 text-sm cursor-pointer"
             >
               Submit
