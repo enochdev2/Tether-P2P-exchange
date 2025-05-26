@@ -367,7 +367,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               onChange={(e) => setDepositNetwork(e.target.value)}
               aria-label="Select deposit network"
             >
-              <option value="SOL">   <img src={logo} className="w-5 h-5" alt="" />Solana (SOL)</option>
+              <option value="SOL">  Solana (SOL)</option>
             </select>
             <ArrowDown
               size={18}

@@ -99,22 +99,26 @@ export default function InquiryHistory() {
 
 
 const AllInquiries = () => {
-  const [allUsers, setAllUsers] = useState([]);
+  const [allInquiry, setAllInquiry] = useState([]);
   const { allUser } = useAuth();
   // const navigate = useNavigate();
 
   useEffect(() => {
     const allUser = async () => {
+
+      const token = localStorage.getItem("token");
       try {
         const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry/user",
           {
             method: "GET",
             headers: {
+               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
+        console.log("🚀 ~ allUser ~ response:", response)
 
         if (!response.ok) {
           throw new Error("Failed to fetch users");
@@ -122,7 +126,7 @@ const AllInquiries = () => {
 
         const data = await response.json();
         console.log("Users fetched successfully 12345667", data);
-        setAllUsers(data); // return parsed user data
+        setAllInquiry(data); // return parsed user data
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -130,28 +134,14 @@ const AllInquiries = () => {
     allUser()
   }, []);
 
-  const getAllUsers = async () => {
-    try {
-      const response = await allUser();
 
-      if (response) {
-        setAllUsers(response);
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-    } finally {
-      setIsLoading(false); // Hide loading state after completion
-    }
-  };
 
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
     // navigate(`/`);
   };
 
-  if (!allUsers || allUsers.length === 0) {
+  if (!allInquiry || allInquiry.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 bg-gray-50">
         <p className="text-gray-500 text-lg">No users found.</p>
@@ -189,7 +179,7 @@ const AllInquiries = () => {
           </thead>
 
           <tbody>
-            {inquiries?.map((user, idx) => (
+            {allInquiry?.map((user, idx) => (
               <tr
                 key={user.id}
                 className={`cursor-pointer hover:bg-indigo-50 transition-colors ${
@@ -203,8 +193,8 @@ const AllInquiries = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">
                   {user?.username}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user?.description}
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700 w">
+                  {/* {user?.description} */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">
                   {user.comment || "-"}

@@ -17,8 +17,8 @@ const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
       const token = localStorage.getItem("token");
       // Assuming your backend API endpoint for inquiry creation
       const response = await fetch(
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry",
-        "http://localhost:3000/api/v1/inquiry",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry",
+        // "http://localhost:3000/api/v1/inquiry",
         {
           method: "POST",
           headers: {
