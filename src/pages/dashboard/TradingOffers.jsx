@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SellOfferPage from "../../components/SellOfferPage";
+
 import {
   ArrowDown,
   ArrowDownNarrowWide,
@@ -16,6 +17,7 @@ import { SuccessToast } from "../../utils/Success";
 import logo2 from "../../assets/Tether2.png";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/SolanaLogo.png";
 
 const TradingOffers = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -357,7 +359,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
             Deposit Network
           </label>
           <div className="relative flex items-center bg-[#222222] rounded-full px-4 py-2">
-            <PiIcon size={18} className="text-white mr-2" />
+            <img src={logo} className="w-5 h-5" alt="" />
             <select
               id="deposit-network"
               className="bg-[#222222] w-full text-white text-sm sm:text-base rounded-full appearance-none focus:outline-none px-2"
@@ -365,7 +367,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               onChange={(e) => setDepositNetwork(e.target.value)}
               aria-label="Select deposit network"
             >
-              <option value="SOL">Solana (SOL)</option>
+              <option value="SOL">   <img src={logo} className="w-5 h-5" alt="" />Solana (SOL)</option>
             </select>
             <ArrowDown
               size={18}
