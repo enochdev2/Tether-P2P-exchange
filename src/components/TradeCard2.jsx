@@ -33,59 +33,58 @@ const TradeCard2 = ({ offer }) => {
  
 
   return (
-    <div>
-     
-        <div className="flex items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200">
-          {/* Left Section */}
-          <div className="flex flex-1 lg:flex-2 items-center w-24 mr-6">
-            <div className="flex flex-1">
-              <div className="b text-gray-500 font-bold text-base lg:text-base px-3 py-1 rounded">
-                {dateOnly}
-              </div>
-              <div className="b text-gray-600 font-bold text-base lg:text-lg px-3 py-1 rounded">
-                {timeOnly}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1">
-            <div className="mt-2 font-semibold text-xl flex text-gray-900">
-              {offer.action === "Buy" ? "Buying" : "Selling"}
-            </div>
-          </div>
-
-          {/* Middle Section */}
-          <div className="flex-1 md:flex-2 flex font-semibold text-base text-gray-900 items-center">
-            <span className="mr-2">
-              <img src={logo2} alt="" className="w-7 h-7" />
-            </span>
-            {offer.amount} USDT
-          </div>
-
-          {/* Right Section */}
-          <div className="flex flex-1 md:flex-2 justify-end w-32">
-            <div className="flex items-center space-x-3">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{
-                  backgroundColor: statusColors[offer.status] || "#ccc",
-                }}
-              />
-              <span
-                className={`font-semibold sm:base lg:text-lg ${
-                  offer.status === "Pending Approval"
-                    ? "text-gray-400"
-                    : offer.status === "Sell completed"
-                    ? "text-green-800"
-                    : "text-green-500"
-                }`}
-              >
-                ( {offer.status})
-              </span>
-            </div>
-          </div>
-        </div>
+   <div className="w-full">
+  <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap items-start sm:items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200 gap-4 sm:gap-0">
+    
+    {/* Left Section - Date & Time */}
+    <div className="flex items-center gap-3 sm:w-auto w-full">
+      <div className="text-gray-500 font-medium text-sm sm:text-base px-3 py-1 bg-gray-100 rounded">
+        {dateOnly}
+      </div>
+      <div className="text-gray-700 font-semibold text-sm sm:text-base px-3 py-1 bg-gray-100 rounded">
+        {timeOnly}
+      </div>
     </div>
+
+    {/* Action - Buying/Selling */}
+    <div className="text-gray-900 font-semibold text-base sm:text-lg sm:w-auto w-full">
+      {offer.action === "Buy" ? "Buying" : "Selling"}
+    </div>
+
+    {/* Amount and Status in One Row on All Screens */}
+    <div className="flex items-center justify-between gap-3 sm:gap-4 flex-wrap sm:flex-nowrap w-full sm:w-auto">
+      {/* Amount */}
+      <div className="flex items-center gap-2 text-gray-900 font-medium text-sm sm:text-base">
+        <img src={logo2} alt="usdt" className="w-5 h-5 sm:w-6 sm:h-6" />
+        <span>{offer.amount} USDT</span>
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center gap-2 text-sm sm:text-base font-semibold">
+        <div
+          className="w-3 h-3 rounded-full"
+          style={{
+            backgroundColor: statusColors[offer.status] || "#ccc",
+          }}
+        />
+        <span
+          className={`${
+            offer.status === "Pending Approval"
+              ? "text-gray-400"
+              : offer.status === "Sell completed"
+              ? "text-green-800"
+              : "text-green-500"
+          }`}
+        >
+          ({offer.status})
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   );
 };
 
