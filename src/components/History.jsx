@@ -10,63 +10,6 @@ const History = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const offers = [
-    {
-      id: 1,
-      action: "Sell",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      ordernumber: "12545",
-      status: "On sell",
-      statusDate: "2025-05-20",
-    },
-    {
-      id: 2,
-      action: "Sell",
-      usdtAmount: 510.12,
-      krwAmount: 705000,
-      ordernumber: "12348",
-      status: "Pending Approval",
-      statusDate: "2025-05-19",
-    },
-    {
-      id: 3,
-      action: "Sell",
-      usdtAmount: 499.98,
-      krwAmount: 695000,
-      ordernumber: "12375",
-      status: "Sell completed",
-      statusDate: "2025-05-13",
-    },
-    {
-      id: 4,
-      action: "Sell",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      ordernumber: "12348",
-      status: "Sell completed",
-      statusDate: "2025-04-28",
-    },
-    {
-      id: 5,
-      action: "Sell",
-      usdtAmount: 502.34,
-      krwAmount: 699000,
-      ordernumber: "12345",
-      status: "Sell completed",
-      statusDate: "2025-04-20",
-    },
-    {
-      id: 6,
-      action: "Sell",
-      usdtAmount: 508.44,
-      krwAmount: 702000,
-      ordernumber: "12345",
-      status: "On sell",
-      statusDate: "2025-05-20",
-    },
-  ];
-
   useEffect(() => {
     fetchSellOrders();
   }, []);

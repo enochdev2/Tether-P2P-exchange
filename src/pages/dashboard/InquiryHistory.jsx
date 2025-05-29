@@ -43,60 +43,14 @@ export default function InquiryHistory() {
     return () => clearTimeout(timer);
   }, []);
 
-   if (isLoading) return <LoadingSpiner />;
+  if (isLoading) return <LoadingSpiner />;
 
   return (
     <div className="bg-gray-100 h-auto w-full flex flex-col items-center pt-10 font-sans">
-      <AllInquiries/>
-      {/* Card container */}
-      <div className="bg-white rounded-md shadow-md sm:w-[420px] md:w-4xl mx-auto py-5">
-        {/* Header */}
-        <div className="flex justify-center py-2 border border-gray-400 rounded-t-md bg-gray-200 mx-20 cursor-default select-none mb-4">
-          <button className="text-gray-700 text-sm font-semibold rounded px-3 py-1">
-            Inquiry History
-          </button>
-        </div>
-
-        {/* Inquiry list */}
-        <div className="divide-y divide-gray-300">
-          {sortedInquiries.map(({ title, description, date, comment }, idx) => (
-            <div
-              key={idx}
-              className="flex items-center  px-4 py-3 hover:bg-gray-50 cursor-default"
-            >
-              {/* Title */}
-              <div className="flex-1 text-sm text-gray-800 truncate">
-                {title}
-              </div>
-
-              {/* Separator */}
-              <div className="w-2 h-9 bg-gray-300 mx-2"></div>
-
-              {/* Description */}
-              <div className="flex-1 flex text-sm text-gray-600 truncate">
-                {description}
-                {comment}
-              </div>
-              {/* Info icon (circle with small dash) */}
-              <div
-                className=" flex-1 space-x-3 mx-2 flex select-none cursor-pointer"
-                title="More info"
-              ></div>
-
-              {/* Date */}
-              <div className="text-xs text-gray-700 w-24 text-right select-none">
-                {date}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <AllInquiries />
     </div>
   );
 }
-
-
-
 
 const AllInquiries = () => {
   const [allInquiry, setAllInquiry] = useState([]);
@@ -105,7 +59,6 @@ const AllInquiries = () => {
 
   useEffect(() => {
     const allUser = async () => {
-
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
@@ -113,12 +66,12 @@ const AllInquiries = () => {
           {
             method: "GET",
             headers: {
-               Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
-        console.log("🚀 ~ allUser ~ response:", response)
+        console.log("🚀 ~ allUser ~ response:", response);
 
         if (!response.ok) {
           throw new Error("Failed to fetch users");
@@ -131,15 +84,15 @@ const AllInquiries = () => {
         console.error("Error fetching users:", error);
       }
     };
-    allUser()
+    allUser();
   }, []);
-
-
 
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
     // navigate(`/`);
   };
+
+
 
   if (!allInquiry || allInquiry.length === 0) {
     return (
@@ -150,29 +103,32 @@ const AllInquiries = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
+      <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-gray-900 tracking-tight">
         All Inquiries
       </h1>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gradient-to-r from-green-400 via-green-500 to-green-700
- text-white">
+      {/* Desktop Table: visible from sm and up */}
+      <div className="hidden md:block overflow-x-auto bg-white rounded-lg shadow-lg">
+        <table className="min-w-full table-auto border-collapse text-xs  md:text-sm">
+          <thead className="bg-gradient-to-r from-green-400 via-green-500 to-green-700 text-white">
             <tr>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Title
               </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Username
               </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Description
               </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Comment
               </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Date
               </th>
             </tr>
@@ -191,13 +147,13 @@ const AllInquiries = () => {
                   {user.title}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user?.username}
+                  {user.username}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700 w">
-                  {/* {user?.description} */}
+                <td className="px-6 py-4 text-gray-700 max-w-sm break-words">
+                  {user.description}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user.comment || "-"}
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700 truncate max-w-xs">
+                  {user.comment || "No comment yet"}
                 </td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap font-semibold ${
@@ -208,15 +164,77 @@ const AllInquiries = () => {
                       : "text-red-600"
                   }`}
                 >
-                  {user.date || "Unknown"}
+                  {user.status}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                  {formatDateTime(user.date )|| "Unknown"}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {/* <Outlet/> */}
+
+      {/* Mobile Card/List view: visible only below sm */}
+      <div className="md:hidden space-y-4">
+        {allInquiry?.map((user) => (
+          <div
+            key={user.id}
+            className="bg-white rounded-lg shadow p-4 cursor-pointer hover:bg-indigo-50 transition"
+            onClick={() => handleViewUser(user.id)}
+          >
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              {user.title}
+            </h2>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-semibold">Username:</span> {user.username}
+            </p>
+            <p className="text-sm text-gray-700 mb-1">
+              <span className="font-semibold">Description:</span>{" "}
+              {user.description}
+            </p>
+            <p className="text-sm text-gray-600 mb-1 truncate">
+              <span className="font-semibold">Comment:</span>{" "}
+              {user.comment || "No comment yet"}
+            </p>
+            <p
+              className={`text-sm font-semibold mb-1 ${
+                user.status?.toLowerCase() === "active"
+                  ? "text-green-600"
+                  : user.status?.toLowerCase() === "pending"
+                  ? "text-yellow-600"
+                  : "text-red-600"
+              }`}
+            >
+              Status: {user.status}
+            </p>
+            <p className="text-sm text-gray-600">
+              Date: {user.date || "Unknown"}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
+
+function formatDateTime(timestamp) {
+  if (!timestamp) return "Unknown";
+
+  const dateObj = new Date(timestamp);
+
+  // Format date as YYYY-MM-DD
+  const dateOnly = dateObj.toLocaleDateString("en-CA");
+
+  // Format time as HH:mm:ss (24-hour)
+  const timeOnly = dateObj.toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+
+  // return `${dateOnly} ${timeOnly}`;
+  return `${dateOnly}`;
+}
 

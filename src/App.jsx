@@ -27,6 +27,9 @@ import SystemAlert from "./pages/adminDashboard/SystemAlert";
 import BuyFormInput from "./pages/dashboard/BuyFormInput";
 import AccountSetting from "./components/AccountSetting";
 import InquiryHistory from "./pages/dashboard/InquiryHistory";
+import Dashboards from "./pages/adminDashboard/Dashboard";
+import SellLivePage from "./pages/adminDashboard/SellLivePage";
+import BuyLivePage from "./pages/adminDashboard/BuyLivePage";
 
 function App() {
   return (
@@ -57,10 +60,12 @@ function App() {
 
         <Route path="/admin" element={<AdminDashboard />}>
           {/* Nested Routes */}
-          <Route path="dashboard" element={<div>Dashboard Content</div>} />
+          <Route path="dashboard" element={<Dashboards/>} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
           {/* Embedded in Admin Dashboard */}
           <Route path="transaction/:id" element={<TransactionDetails />} />
+          <Route path="sell-orders" element={<SellLivePage />} />
+          <Route path="buy-orders" element={<BuyLivePage />} />
           {/* <Route path="users" element={<AdminUsers />} />{" "} */}
           {/* User Registration page */}
           <Route path="user" element={<AllUsers />}>

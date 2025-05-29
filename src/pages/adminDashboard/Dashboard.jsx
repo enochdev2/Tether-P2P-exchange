@@ -1,13 +1,10 @@
-import React, { use, useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom"; // Import Outlet for dynamic content rendering
-import Sidebar from "./Sidebar";
-import { useAuth } from "../../utils/AuthProvider";
-import InfoCard from "../../components/InfoCard";
-import { SettingsIcon, User2 } from "lucide-react";
-import UsersCard from "../../components/UsersCard";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom"; 
 import DashboardMetrics from "../../components/DashboardMetrics";
+import { useAuth } from "../../utils/AuthProvider";
+import Sidebar from "./Sidebar";
 
-const AdminDashboard = () => {
+const Dashboards = () => {
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
@@ -44,21 +41,14 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-gray-100 pt-18">
-      <Sidebar />
-
-      {/* Main Content Area */}
-      <div className="flex-1 p-8 space-y-5">
-        <div className="border-b flex px-3  items-center border-slate-300 shadow-xs">
-        <h1 className="text-3xl font-bold mb-6 ">Admin Dashboard</h1>
-        </div>
-        {/* <UsersCard users={users} Icon={User2} /> */}
-        {/* Dynamic Content Rendering */}
-        <Outlet />{" "}
-        {/* This is where the child routes' components will be rendered */}
-      </div>
+    <div className="flex-1 p-8 space-y-5">
+      <DashboardMetrics {...stats} />;
+      {/* <UsersCard users={users} Icon={User2} /> */}
+      {/* Dynamic Content Rendering */}
+      <Outlet />{" "}
+      {/* This is where the child routes' components will be rendered */}
     </div>
   );
 };
 
-export default AdminDashboard;
+export default Dashboards;

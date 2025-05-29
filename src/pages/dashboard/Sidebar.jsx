@@ -14,6 +14,7 @@ import {
   DollarSign,
   TrendingDown,
 } from "lucide-react";
+
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
