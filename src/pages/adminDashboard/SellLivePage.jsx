@@ -4,6 +4,8 @@ import LoadingSpiner from "../../components/LoadingSpiner";
 import TradeCard from "../../components/TradeCard";
 import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
+import { SuccessToast } from "../../utils/Success";
+import { ErrorToast } from "../../utils/Error";
 
 const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
@@ -11,6 +13,8 @@ const SellLivePage = () => {
   const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   // Amount filter state for sell orders: "all", "lt500", "500to1000", "gt1000"
 
@@ -18,8 +22,39 @@ const SellLivePage = () => {
 
   useEffect(() => {
     fetchSellOrders();
-    fetchSellPendingOrders()
+    fetchSellPendingOrders();
   }, []);
+
+  const handleMatch = async (buyerOrderId, sellerOrderId) => {
+    try {
+
+      if(!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID")
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:3000/api/v1/sell/admin/match-orders`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to match orders: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Orders matched successfully:", result);
+       await fetchSellOrders();
+      SuccessToast("Orders matched successfully!");
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
+  };
 
   async function fetchSellOrders(status = "") {
     try {
@@ -121,9 +156,9 @@ const SellLivePage = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-     const result = await response.json();
+      const result = await response.json();
       console.log("Order approved:", result);
-      SuccessToast("Sell Order Approve Successful")
+      SuccessToast("Sell Order Approve Successful");
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) =>
@@ -156,9 +191,9 @@ const SellLivePage = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-     const result = await response.json();
+      const result = await response.json();
       console.log("Order approved:", result);
-      SuccessToast("Buy Order Rejected Successful")
+      SuccessToast("Buy Order Rejected Successful");
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) =>
@@ -170,7 +205,62 @@ const SellLivePage = () => {
     }
   }
 
-  
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  async function fetchNotifications() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "http://localhost:3000/api/v1/notification/unread/sellOrders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch notifications");
+
+      const data = await response.json();
+      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }
+
+  async function markNotificationRead(notificationId) {
+    try {
+      const token = localStorage.getItem("token");
+      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const response = await fetch(
+        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to mark notification as read");
+
+      console.log("🚀 ~ markNotificationRead ~ response:", response);
+      // Remove the marked notification from state so the card disappears
+      setNotifications((prev) =>
+        prev.filter((notif) => notif._id !== notificationId)
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }
 
   // Handle amount filter button clicks
   const handleAmountFilterChange = (filter) => {
@@ -260,8 +350,8 @@ const SellLivePage = () => {
           </div>
 
           <div>
-            {pendingOrders && (
-                pendingOrders?.map((offer) => (
+            {pendingOrders &&
+              pendingOrders?.map((offer) => (
                 <AdminTradeCard2
                   key={offer._id}
                   offer={offer}
@@ -272,8 +362,7 @@ const SellLivePage = () => {
                   showChatButton={offer.status === "Pending Approval"}
                   onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
                 />
-                ))
-            )}
+              ))}
           </div>
 
           {/* Render Sell Orders */}
@@ -287,6 +376,7 @@ const SellLivePage = () => {
                   key={offer._id}
                   offer={offer}
                   sell={Sell}
+                  onMatch={handleMatch}
                   showChatButton={offer.status === "On Sale"}
                   onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
                 />
@@ -295,6 +385,32 @@ const SellLivePage = () => {
           </div>
         </div>
       </div>
+      {/* Notification Alert Box */}
+      {!loadingNotifications && notifications.length > 0 && (
+        <div
+          className="fixed bottom-5 right-5 w-80 max-w-full bg-white  border-2 border-red-700 rounded-lg  shadow-lg p-4 z-50"
+          style={{ maxHeight: "400px", overflowY: "auto" }}
+        >
+          <h3 className="font-semibold mb-2 text-red-600 text-lg">
+            Unread Notifications
+          </h3>
+          {notifications.map((notif) => (
+            <div
+              key={notif._id}
+              className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
+            >
+              <p className="text-sm mb-2">{notif.message}</p>
+              <button
+                onClick={() => markNotificationRead(notif._id)}
+                className="text-xs bg-green-600 hover:bg-green-700 cursor-pointer text-white py-1 px-3 rounded"
+                type="button"
+              >
+                Mark as Read
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

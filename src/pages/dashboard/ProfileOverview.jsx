@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileCard from "../../components/ProfileCard";
 import InfoCard from "../../components/InfoCard";
 import AccountSetting from "../../components/AccountSetting";
@@ -16,6 +16,8 @@ import { useAuth } from "../../utils/AuthProvider";
 function ProfileOverview() {
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -31,6 +33,64 @@ function ProfileOverview() {
       }
     }
   }, [navigate]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  async function fetchNotifications() {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("🚀 ~ fetchNotifications ~ token:", token);
+      const response = await fetch(
+        "http://localhost:3000/api/v1/notification/unread/user/buyOrders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch notifications");
+
+      const data = await response.json();
+      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }
+
+  async function markNotificationRead(notificationId) {
+    try {
+      const token = localStorage.getItem("token");
+      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const response = await fetch(
+        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to mark notification as read");
+
+      console.log("🚀 ~ markNotificationRead ~ response:", response);
+      // Remove the marked notification from state so the card disappears
+      setNotifications((prev) =>
+        prev.filter((notif) => notif._id !== notificationId)
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }
 
   const tether = `Wallet Address:  ${user?.tetherAddress}`;
 
@@ -65,7 +125,7 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
-           <div className="min-w-[280px] sm:min-w-0 flex-1">
+          <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<BanknoteIcon size={24} />}
               title=""
@@ -73,9 +133,34 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
-        {/* <InfoCard /> */}
+          {/* <InfoCard /> */}
         </div>
       </div>
+      {!loadingNotifications && notifications.length > 0 && (
+        <div
+          className="fixed bottom-5 right-5 w-80 max-w-full bg-white  border-2 border-red-700 rounded-lg  shadow-lg p-4 z-50"
+          style={{ maxHeight: "400px", overflowY: "auto" }}
+        >
+          <h3 className="font-semibold mb-2 text-red-600 text-lg">
+            Unread Notifications
+          </h3>
+          {notifications.map((notif) => (
+            <div
+              key={notif._id}
+              className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
+            >
+              <p className="text-sm mb-2">{notif.message}</p>
+              <button
+                onClick={() => markNotificationRead(notif._id)}
+                className="text-xs bg-green-600 hover:bg-green-700 cursor-pointer text-white py-1 px-3 rounded"
+                type="button"
+              >
+                Mark as Read
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

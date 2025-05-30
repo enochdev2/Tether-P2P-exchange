@@ -9,6 +9,8 @@ const History = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   useEffect(() => {
     fetchSellOrders();
@@ -22,22 +24,25 @@ const History = () => {
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
             status
           )}`
-        :  "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-          // "http://localhost:5173/api/v1/sell/sell-orders";
+        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+      // "http://localhost:5173/api/v1/sell/sell-orders";
 
       // Assuming you have an auth token stored in localStorage or cookie
       // const token = localStorage.getItem("authToken");
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders", {
-        method: "GET",
-        headers: {
-           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        // credentials: "include",
-      });
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          // credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -70,14 +75,67 @@ const History = () => {
     }
   }
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link); // Set active link when clicked
-  };
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
-  
-  if (loading) return <LoadingSpiner/>;
+  async function fetchNotifications() {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("🚀 ~ fetchNotifications ~ token:", token)
+      const response = await fetch(
+        "http://localhost:3000/api/v1/notification/unread/user/sellOrders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-  const Sell = true; 
+      if (!response.ok) throw new Error("Failed to fetch notifications");
+
+      const data = await response.json();
+      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }
+
+  async function markNotificationRead(notificationId) {
+    try {
+      const token = localStorage.getItem("token");
+      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const response = await fetch(
+        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to mark notification as read");
+
+      console.log("🚀 ~ markNotificationRead ~ response:", response);
+      // Remove the marked notification from state so the card disappears
+      setNotifications((prev) =>
+        prev.filter((notif) => notif._id !== notificationId)
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }
+
+  if (loading) return <LoadingSpiner />;
+
+  const Sell = true;
 
   return (
     <div>
@@ -132,6 +190,31 @@ const History = () => {
           )}
         </div>
       </div>
+      {!loadingNotifications && notifications.length > 0 && (
+        <div
+          className="fixed bottom-5 right-5 w-80 max-w-full bg-white  border-2 border-red-700 rounded-lg  shadow-lg p-4 z-50"
+          style={{ maxHeight: "400px", overflowY: "auto" }}
+        >
+          <h3 className="font-semibold mb-2 text-red-600 text-lg">
+            Unread Notifications
+          </h3>
+          {notifications.map((notif) => (
+            <div
+              key={notif._id}
+              className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
+            >
+              <p className="text-sm mb-2">{notif.message}</p>
+              <button
+                onClick={() => markNotificationRead(notif._id)}
+                className="text-xs bg-green-600 hover:bg-green-700 cursor-pointer text-white py-1 px-3 rounded"
+                type="button"
+              >
+                Mark as Read
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

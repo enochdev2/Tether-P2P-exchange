@@ -32,7 +32,7 @@ function Dashboard() {
       {/* Content Area */}
       <div className="lg:w-3/4 lg:p-6 overflow-y-hidden ">
         {/* Dashboard Header */}
-        <div className="w-full px-4 py-10 bg-gray-50">
+        <div className="w-full px-4 py-6 bg-gray-50">
           <div className="flex sm:grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto overflow-x-auto sm:overflow-visible">
             <div className="min-w-[280px] sm:min-w-0">
               <InfoCard

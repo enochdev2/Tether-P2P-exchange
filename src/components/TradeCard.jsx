@@ -17,7 +17,7 @@ const TradeCard = ({ offer, sell }) => {
 
   return (
     <div
-      className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-3 md:py-4 mb-4 border border-gray-200 shadow-sm
+      className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm
         ${isPending ? "opacity-90 filter grayscale" : ""}
       `}
     >

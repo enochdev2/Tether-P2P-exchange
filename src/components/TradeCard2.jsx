@@ -34,7 +34,7 @@ const TradeCard2 = ({ offer }) => {
 
   return (
    <div className="w-full">
-  <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap items-start sm:items-center justify-between bg-white rounded-md p-4 mb-3 border border-gray-200 gap-4 sm:gap-0">
+  <div className="flex flex-col sm:flex-row flex-wrap sm:flex-nowrap items-start sm:items-center justify-between bg-white rounded-md p-3 mb-3 border border-gray-200 gap-4 sm:gap-0">
     
     {/* Left Section - Date & Time */}
     <div className="flex items-center gap-3 sm:w-auto w-full">

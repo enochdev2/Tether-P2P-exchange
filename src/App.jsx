@@ -60,7 +60,7 @@ function App() {
 
         <Route path="/admin" element={<AdminDashboard />}>
           {/* Nested Routes */}
-          <Route path="dashboard" element={<Dashboards/>} />
+          <Route path="dashboard" element={<Dashboards />} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
           {/* Embedded in Admin Dashboard */}
           <Route path="transaction/:id" element={<TransactionDetails />} />

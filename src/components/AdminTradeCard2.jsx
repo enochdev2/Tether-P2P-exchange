@@ -10,8 +10,22 @@ const statusColors = {
 
 // import your logo and statusColors accordingly
 
-const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
+const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) => {
   const navigate = useNavigate();
+
+  const handleMatchClick = () => {
+    setIsMatchModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsMatchModalOpen(false);
+  };
+
+  const handleMatchSubmit = () => {
+    onMatch(buyerOrderId, offer._id); // Trigger matching in the parent component
+    setIsMatchModalOpen(false); // Close the modal
+    setBuyerOrderId(""); // Reset the input field
+  };
 
   // Adjust isPending logic if needed
   const isPending = sell

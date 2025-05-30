@@ -55,6 +55,8 @@ export default function InquiryHistory() {
 const AllInquiries = () => {
   const [allInquiry, setAllInquiry] = useState([]);
   const { allUser } = useAuth();
+  const [notifications, setNotifications] = useState([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
   // const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,18 +94,74 @@ const AllInquiries = () => {
     // navigate(`/`);
   };
 
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
+  async function fetchNotifications() {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("🚀 ~ fetchNotifications ~ token:", token);
+      const response = await fetch(
+        "http://localhost:3000/api/v1/notification/unread/user/buyOrders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch notifications");
+
+      const data = await response.json();
+      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      setNotifications(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }
+
+  async function markNotificationRead(notificationId) {
+    try {
+      const token = localStorage.getItem("token");
+      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const response = await fetch(
+        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to mark notification as read");
+
+      console.log("🚀 ~ markNotificationRead ~ response:", response);
+      // Remove the marked notification from state so the card disappears
+      setNotifications((prev) =>
+        prev.filter((notif) => notif._id !== notificationId)
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }
 
   if (!allInquiry || allInquiry.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-8 bg-gray-50">
+      <div className=" flex items-center justify-center p-8 bg-gray-50">
         <p className="text-gray-500 text-lg">No users found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-100 p-2 sm:px-8 sm:py-2">
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-gray-900 tracking-tight">
         All Inquiries
       </h1>
@@ -167,7 +225,7 @@ const AllInquiries = () => {
                   {user.status}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {formatDateTime(user.date )|| "Unknown"}
+                  {formatDateTime(user.date) || "Unknown"}
                 </td>
               </tr>
             ))}
@@ -214,6 +272,31 @@ const AllInquiries = () => {
           </div>
         ))}
       </div>
+      {!loadingNotifications && notifications.length > 0 && (
+        <div
+          className="fixed bottom-5 right-5 w-80 max-w-full bg-white  border-2 border-red-700 rounded-lg  shadow-lg p-4 z-50"
+          style={{ maxHeight: "400px", overflowY: "auto" }}
+        >
+          <h3 className="font-semibold mb-2 text-red-600 text-lg">
+            Unread Notifications
+          </h3>
+          {notifications.map((notif) => (
+            <div
+              key={notif._id}
+              className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
+            >
+              <p className="text-sm mb-2">{notif.message}</p>
+              <button
+                onClick={() => markNotificationRead(notif._id)}
+                className="text-xs bg-green-600 hover:bg-green-700 cursor-pointer text-white py-1 px-3 rounded"
+                type="button"
+              >
+                Mark as Read
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -237,4 +320,3 @@ function formatDateTime(timestamp) {
   // return `${dateOnly} ${timeOnly}`;
   return `${dateOnly}`;
 }
-
