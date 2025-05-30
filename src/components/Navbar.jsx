@@ -214,7 +214,7 @@ const Navbar = () => {
           {/* Render Admin Dashboard if user is admin */}
           {user && user.admin && (
             <Link
-              to="/admin"
+              to="/admin/dashboard"
               className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl py-3 rounded-xl text-[15px] font-bold "
               onClick={() => handleLinkClick("admin-dashboard")}
             >
