@@ -84,7 +84,7 @@ const History = () => {
       const token = localStorage.getItem("token");
       console.log("🚀 ~ fetchNotifications ~ token:", token)
       const response = await fetch(
-        "http://localhost:3000/api/v1/notification/unread/user/sellOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/sellOrders",
         {
           method: "GET",
           headers: {
@@ -111,7 +111,7 @@ const History = () => {
       const token = localStorage.getItem("token");
       // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
-        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
           method: "PUT",
           headers: {

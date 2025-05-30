@@ -32,7 +32,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/sell/admin/match-orders`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/match-orders`,
         {
           method: "POST",
           headers: {
@@ -104,7 +104,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/sell/admin/all/pending-orders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/pending-orders",
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
@@ -140,7 +140,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/sell/admin/sell-orders/${orderId}/approve`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/approve`,
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
@@ -175,7 +175,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/sell/admin/sell-orders/${orderId}/reject`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/reject`,
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
@@ -213,7 +213,7 @@ const SellLivePage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "http://localhost:3000/api/v1/notification/unread/sellOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/sellOrders",
         {
           method: "GET",
           headers: {
@@ -240,7 +240,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
       // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
-        `http://localhost:3000/api/v1/notification/mark-read/${notificationId}`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
           method: "PUT",
           headers: {

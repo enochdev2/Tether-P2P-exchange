@@ -93,7 +93,7 @@ const Navbar = () => {
                 <div className="relative z-50 hidden md:flex ">
                   {/* Profile Button */}
                   <button
-                    onClick={toggleDropdown}
+                    // onClick={toggleDropdown}
                     className="flex items-center gap-2 text-white hover:text-gray-300 transition duration-200"
                   >
                     {/* <User className="w-8 h-8 rounded-full bg-gray-600 p-1" /> */}
@@ -104,7 +104,7 @@ const Navbar = () => {
                         alt=""
                       />
                     </div>
-                    <svg
+                    {/* <svg
                       className="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
@@ -116,7 +116,7 @@ const Navbar = () => {
                         strokeWidth="2"
                         d="M19 9l-7 7-7-7"
                       />
-                    </svg>
+                    </svg> */}
                   </button>
 
                   {/* Dropdown Menu */}
