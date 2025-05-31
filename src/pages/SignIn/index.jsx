@@ -116,7 +116,7 @@ const SignIn = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white text-base sm:text-lg font-semibold py-3 rounded-md shadow-md transition disabled:opacity-50"
+            className="w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer text-base sm:text-lg font-semibold py-3 rounded-md shadow-md transition disabled:opacity-50"
             disabled={isLoading}
           >
             {isLoading ? <LoadingSpinner /> : "Sign In"}

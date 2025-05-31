@@ -166,7 +166,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   return (
     <div
-      className="bg-black bg-opacity-70 z-50 flex justify-center items-center py-4 px-3 h-[50hv]"
+      className="bg-black bg-opacity-70 max-w-4xl mx-auto rounded-lg z-50 flex justify-center items-center py-4 px-3 h-[50hv]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"

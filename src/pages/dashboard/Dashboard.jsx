@@ -6,8 +6,16 @@ import { useAuth } from "../../utils/AuthProvider";
 import InfoCard from "../../components/InfoCard";
 
 function Dashboard() {
-  const { user, setIsLoggedIn, setUser } = useAuth();
+  const { user, setIsLoggedIn, setUser,isTokenExpired } = useAuth();
   const navigate = useNavigate();
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+  
+      if (isTokenExpired(token)) {
+        localStorage.removeItem("token");
+        navigate("/signin"); // force logout
+      }
+    }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

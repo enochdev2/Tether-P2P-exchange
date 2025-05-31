@@ -79,14 +79,13 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           alt="Tether logo"
           className="w-5 h-5 md:w-7 md:h-7 mr-3"
         />
-        <div  className="flex flex-col space-y-2">
-
-        <span className="font-medium text-xs sm:text-[16px] text-gray-400 truncate">
-        Total:  {offer.amount} USDT
-        </span>
-        <span className="font-medium text-xs sm:text-[16px] text-gray-900 truncate">
-          {offer.amountRemaining} USDT
-        </span>
+        <div className="flex flex-col space-y-2">
+          <span className="font-medium text-xs sm:text-[16px] text-gray-400 truncate">
+            Total: {offer.amount} USDT
+          </span>
+          <span className="font-medium text-xs sm:text-[16px] text-gray-900 truncate">
+            Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+          </span>
         </div>
       </div>
 
@@ -102,14 +101,14 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           {/* Chat button for buy orders waiting for buy */}
           {!sell && offer.status === "Waiting for Buy" ? (
             <button
-              onClick={() => navigate(`/admin/chat/${offer._id}`)}
+              onClick={() => navigate(`/chat/${offer._id}`)}
               className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               1:1 Chat
             </button>
           ) : (
             <button
-              onClick={() => navigate(`/admin/chat/${offer._id}`)}
+              onClick={() => navigate(`/chat/${offer._id}`)}
               className="mt-2 px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               1:1 Chat
@@ -117,18 +116,16 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           )}
         </div>
 
-        {sell &&
-        <div className="">
-          <button
-            onClick={handleMatchClick}
-            className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-          >
-            Match
-          </button>
-        </div>
-
-        }
-
+        {sell && (
+          <div className="">
+            <button
+              onClick={handleMatchClick}
+              className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+            >
+              Match
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Right Section */}
@@ -160,7 +157,9 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
       {isMatchModalOpen && (
         <div className="fixed inset-0 bg-black/30 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg border-green-700 border-2 shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">Match Seller with Buyer</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Match Seller with Buyer
+            </h3>
             <input
               type="text"
               className="border border-gray-300 rounded-md p-2 mb-4 w-full"

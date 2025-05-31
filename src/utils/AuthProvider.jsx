@@ -1,6 +1,5 @@
-// src/context/AuthContext.js
-
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Create the context
 const AuthContext = createContext();
@@ -14,6 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null); // State to hold user data
+  
   // console.log("🚀 ~ AuthProvider ~ user:", user);
 
   useEffect(() => {
@@ -26,24 +26,29 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  
+
   const login = async (userData) => {
     try {
       // const response = await fetch("http://localhost:3000/api/v1/user/login", {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to log in");
       }
 
       const data = await response.json();
-         localStorage.setItem("token", data.token);
-         console.log("checking it out", data.token);
-         
+      localStorage.setItem("token", data.token);
+      console.log("checking it out", data.token);
+
       setIsLoggedIn(true);
       setUser(data.user);
 
@@ -61,14 +66,16 @@ export const AuthProvider = ({ children }) => {
   // Handle logout
   const logout = async () => {
     try {
-
       localStorage.setItem("token", " ");
       // const response = await fetch("http://localhost:5173/api/v1/user/logout", {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-     
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Failed to log out");
       }
@@ -91,13 +98,16 @@ export const AuthProvider = ({ children }) => {
     try {
       // Send the POST request to your API
       // const response = await fetch("http://localhost:5173/api/v1/user/users", {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser), // Sending the new user data to the backend
-      });
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser), // Sending the new user data to the backend
+        }
+      );
 
       // Check if the response is successful
       if (!response.ok) {
@@ -117,12 +127,15 @@ export const AuthProvider = ({ children }) => {
   const allUser = async () => {
     try {
       // const response = await fetch("http://localhost:5173/api/v1/user/users", {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -144,7 +157,7 @@ export const AuthProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
-             Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           // credentials: "include",
@@ -166,6 +179,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // utils/auth.js
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const expiry = payload.exp; // in seconds
+      const now = Date.now() / 1000; // in seconds
+
+      return expiry < now;
+    } catch (error) {
+      return true; // invalid token
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -178,6 +206,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         updateUser,
         allUser,
+        isTokenExpired,
       }}
     >
       {children}

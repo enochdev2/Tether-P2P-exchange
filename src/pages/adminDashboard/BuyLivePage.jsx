@@ -5,6 +5,7 @@ import LoadingSpiner from "../../components/LoadingSpiner";
 import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
 import { SuccessToast } from "../../utils/Success";
+import NotificationPopup from "../../components/NotificationPopup";
 
 const BuyLivePage = () => {
   const [buyOrders, setBuyOrders] = useState([]);
@@ -308,31 +309,11 @@ const BuyLivePage = () => {
           </div>
         </div>
       </div>
-      {!loadingNotifications && notifications.length > 0 && (
-        <div
-          className="fixed bottom-5 right-5 w-80 max-w-full bg-white  border-2 border-red-700 rounded-lg  shadow-lg p-4 z-50"
-          style={{ maxHeight: "400px", overflowY: "auto" }}
-        >
-          <h3 className="font-semibold mb-2 text-red-600 text-lg">
-            Unread Notifications
-          </h3>
-          {notifications.map((notif) => (
-            <div
-              key={notif._id}
-              className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
-            >
-              <p className="text-sm mb-2">{notif.message}</p>
-              <button
-                onClick={() => markNotificationRead(notif._id)}
-                className="text-xs bg-green-600 hover:bg-green-700 cursor-pointer text-white py-1 px-3 rounded"
-                type="button"
-              >
-                Mark as Read
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+       <NotificationPopup
+        loading={loadingNotifications}
+        notifications={notifications}
+        onMarkRead={markNotificationRead}
+      />
     </div>
   );
 };

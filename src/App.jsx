@@ -1,35 +1,33 @@
-import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import AccountSettings from "./pages/dashboard/AccountSetting";
-import BalanceOverview from "./pages/dashboard/BalanceOverview";
-import Dashboard from "./pages/dashboard/Dashboard";
-import ProfileOverview from "./pages/dashboard/ProfileOverview";
-import TransactionOverview from "./pages/dashboard/TransactionOverview";
-import TradingOffers from "./pages/dashboard/TradingOffers";
-import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
-import TransactionDetails from "./pages/adminDashboard/TransactionDetails";
-import AdminTransactions from "./pages/adminDashboard/AdminTransactions";
-import UserDetails from "./pages/adminDashboard/UserDetails";
-import AllUsers from "./pages/adminDashboard/AllUsers";
-import TradingPage from "./pages/Exchange";
-import SellOfferPage from "./components/SellOfferPage";
-import Home from "./pages/Home";
-import TransactionHistory from "./pages/TransactionHistory";
-import History from "./components/History";
+import AdminRoute from "./components/AdminRoute";
 import Footers from "./components/Footers";
-import Support from "./pages/Support";
-import SystemAlert from "./pages/adminDashboard/SystemAlert";
-import BuyFormInput from "./pages/dashboard/BuyFormInput";
-import AccountSetting from "./components/AccountSetting";
-import InquiryHistory from "./pages/dashboard/InquiryHistory";
+import History from "./components/History";
+import Navbar from "./components/Navbar";
+import PublicRoute from "./components/PublicRoute";
+import UserProtectedRoute from "./components/UserProtectedRoute";
+import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
+import AdminTransactions from "./pages/adminDashboard/AdminTransactions";
+import AllChatPage from "./pages/adminDashboard/AllChatPage";
+import AllUsers from "./pages/adminDashboard/AllUsers";
+import BuyLivePage from "./pages/adminDashboard/BuyLivePage";
 import Dashboards from "./pages/adminDashboard/Dashboard";
 import SellLivePage from "./pages/adminDashboard/SellLivePage";
-import BuyLivePage from "./pages/adminDashboard/BuyLivePage";
+import TransactionDetails from "./pages/adminDashboard/TransactionDetails";
+import UserDetails from "./pages/adminDashboard/UserDetails";
+import ChatRoom from "./pages/ChatRoom";
+import AccountSettings from "./pages/dashboard/AccountSetting";
+import BuyFormInput from "./pages/dashboard/BuyFormInput";
+import Dashboard from "./pages/dashboard/Dashboard";
+import InquiryHistory from "./pages/dashboard/InquiryHistory";
+import ProfileOverview from "./pages/dashboard/ProfileOverview";
+import TradingOffers from "./pages/dashboard/TradingOffers";
+import TradingPage from "./pages/Exchange";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Support from "./pages/Support";
+import TransactionHistory from "./pages/TransactionHistory";
 
 function App() {
   return (
@@ -37,13 +35,37 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route
+          path="/signin"
+          element={
+            <PublicRoute>
+              <SignIn />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
+
         <Route path="/" element={<Home />} />
+        <Route path="/chat/:orderId" element={<ChatRoom />} />
+
         {/* <Route path="/trade-listings" element={<TradingPage />} /> */}
         <Route path="/post-offer" element={<TransactionHistory />} />
 
-        <Route path="/dashboard" element={<Dashboard />}>
+        <Route
+          path="/dashboard"
+          element={
+            <UserProtectedRoute>
+              <Dashboard />
+            </UserProtectedRoute>
+          }
+        >
           <Route path="profile" element={<ProfileOverview />} />
           <Route path="sell-order" element={<TradingOffers />} />
           <Route path="sell-history" element={<History />} />
@@ -53,13 +75,18 @@ function App() {
           <Route path="support" element={<Support />} />
           <Route path="one-on-one" element={<Support />} />
           <Route path="inquiry-history" element={<InquiryHistory />} />
-          {/* <Route path="sell-history" element={<TradingOffers />} /> */}
           <Route path="edit-info" element={<AccountSettings />} />
           {/* <Route path="support" element={<Support />} /> */}
         </Route>
 
-        <Route path="/admin" element={<AdminDashboard />}>
-          {/* Nested Routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        >
           <Route path="dashboard" element={<Dashboards />} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
           {/* Embedded in Admin Dashboard */}
@@ -71,7 +98,7 @@ function App() {
           <Route path="user" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
           </Route>
-          <Route path="alerts" element={<SystemAlert />} />{" "}
+          <Route path="chat" element={<AllChatPage />} />{" "}
           {/* You can customize this */}
         </Route>
       </Routes>

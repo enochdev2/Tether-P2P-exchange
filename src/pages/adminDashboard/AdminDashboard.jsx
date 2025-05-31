@@ -28,11 +28,11 @@ const AdminDashboard = () => {
 
       // Redirect non-admin users
       if (!parsedUser.admin) {
-        navigate("/"); // redirect to homepage or unauthorized page
+        navigate("/"); 
       }
     } else {
       // Not logged in
-      navigate("/login"); // redirect to login or homepage
+      navigate("/login"); 
     }
   }, [navigate]);
 

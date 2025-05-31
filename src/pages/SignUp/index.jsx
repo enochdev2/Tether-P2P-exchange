@@ -21,6 +21,26 @@ const SignUp = () => {
     referralCode: "",
   });
 
+  const validateForm = () => {
+    const errors = [];
+
+    if (!formData.username.trim()) errors.push("Username is required.");
+    if (!formData.nickname.trim()) errors.push("Nickname is required.");
+    if (!formData.fullName.trim()) errors.push("Full name is required.");
+    if (!formData.password || formData.password.length < 6)
+      errors.push("Password must be at least 6 characters.");
+    if (!formData.dob) errors.push("Date of birth is required.");
+    if (!formData.phone || !/^\d{10,15}$/.test(formData.phone))
+      errors.push("Enter a valid phone number.");
+    if (!formData.bankName.trim()) errors.push("Bank name is required.");
+    if (!formData.bankAccount || isNaN(formData.bankAccount))
+      errors.push("Valid bank account number is required.");
+    if (!formData.tetherAddress.trim())
+      errors.push("Tether address is required.");
+
+    return errors;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -32,7 +52,13 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true); // Show loading state
+    setIsLoading(true);
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      errors.forEach((err) => ErrorToast(err)); 
+      return;
+    }
 
     // Create the new user data
     const newUser = {
@@ -271,7 +297,7 @@ const SignUp = () => {
 
           <button
             type="submit"
-            className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md transition duration-200"
+            className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white cursor-pointer font-semibold rounded-md transition duration-200"
           >
             {isLoading ? <LoadingSpinner /> : "Sign Up"}
           </button>

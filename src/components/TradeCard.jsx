@@ -1,5 +1,6 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
+import { Link, useNavigate } from "react-router-dom";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -8,6 +9,7 @@ const statusColors = {
 };
 
 const TradeCard = ({ offer, sell }) => {
+  const navigate = useNavigate();
   const isPending = sell ? offer.status === " " : offer.status === " ";
 
   const timestamp = offer.createdAt;
@@ -34,22 +36,40 @@ const TradeCard = ({ offer, sell }) => {
       {/* Center Left Section */}
       <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
         <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
-        <span className="font-medium text-xs sm:text-xl text-gray-900 truncate">
-          {offer.amount} USDT
+        <div className="flex flex-col">
+        <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
+        Total: {parseFloat(offer.amount).toFixed(4)} USDT
         </span>
+        <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
+          Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+        </span>
+        </div>
       </div>
 
       {/* Center Right Section */}
-      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-lg mb-4 sm:mb-0 text-center sm:text-left truncat">
+      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-base mb-4 sm:mb-0 text-center sm:text-left truncat">
         {offer.krwAmount
           ? `₩${offer.krwAmount.toLocaleString()} KRW`
           : `₩${offer.price.toLocaleString()} KRW`}
       </div>
 
+      <div>
+          {/* Chat button for buy orders waiting for buy */}
+          {offer.status !== "Pending Approval" && (
+            <button 
+            // to={`chat/${offer._id}`}
+              onClick={() => navigate(`/chat/${offer._id}`)}
+              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+            >
+              1:1 Chat
+            </button>
+          )}
+        </div>
+
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">
-        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
-          {offer._id.slice(0, 10)}
+        <div className="break-words text-center sm:text-right w-full font-bold sm:w-auto truncate">
+          {offer._id}
         </div>
         <div className="flex items-center space-x-2">
           <div
@@ -57,7 +77,7 @@ const TradeCard = ({ offer, sell }) => {
             style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
           />
           <span
-            className={`font-semibold select-none truncate max-w-[8rem] ${
+            className={`font-semibold md:text-base select-none truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
                 ? "text-gray-400"
                 : offer.status === "Sell completed" ||
