@@ -61,8 +61,10 @@ export default function AdminSidebar() {
 
   const Section = ({ title, children }) => (
     <div className="mt-6 px-4">
-      <h3 className={` uppercase ${collapsed && title ? 'text-[10px] font-[500] text-shadow-white' : 'text-gray-400 text-xs font-semibold'}`}>{title}</h3>
-      <div className="h-px bg-blue-500 w-10 my-2"></div>
+      <div className="flex gap-2 items-center">
+          <h3 className={` uppercase ${collapsed && title ? 'text-[10px] font-[500] text-shadow-white' : 'text-gray-400 text-xs font-semibold'}`}>{title}</h3>
+      <div className={`h-px bg-blue-500 w-full my-2 ${collapsed ? 'hidden' : 'block'}`}></div>
+      </div>
       <ul className="space-y-1">{children}</ul>
     </div>
   );
