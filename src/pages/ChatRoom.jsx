@@ -36,6 +36,7 @@ const ChatRoom = () => {
   };
 
   useEffect(() => {
+    // const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
     const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
       withCredentials: true,
