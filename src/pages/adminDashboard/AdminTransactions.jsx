@@ -152,7 +152,7 @@ export default function AdminTransactions() {
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
-  const url = "http://localhost:3000/api/v1/sell/allmatched-orders";
+  const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
   async function fetchSellOrders() {
   try {
     // const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";

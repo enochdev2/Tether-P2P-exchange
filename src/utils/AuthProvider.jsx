@@ -143,6 +143,11 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json();
       console.log("Users fetched successfully 12345667", data);
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
       return data; // return parsed user data
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -150,9 +155,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (updatedData) => {
+    console.log("........................", updatedData)
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
-        // `http://localhost:5173/api/v1/user/users/${updatedData.nickname}`,
+        // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${updatedData.nickname}`,
         {
           method: "PUT",

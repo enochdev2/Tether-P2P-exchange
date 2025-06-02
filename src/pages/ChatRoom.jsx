@@ -80,7 +80,7 @@ const ChatRoom = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        "http://localhost:3000/api/v1/chat",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
         {
           method: "POST",
           headers: {
