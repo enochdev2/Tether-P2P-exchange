@@ -35,6 +35,16 @@ const sidebarSections = [
       },
     ],
   },
+  // {
+  //   title: "User",
+  //   items: [{ label: "User Management", to: "/admin/users", icon: <FaUserCog /> }],
+  // },
+  // {
+  //   title: "Inquiry",
+  //   items: [{ label: "1:1 Inquiry Box (Live)", to: "/admin/inquiries", icon: <HelpCircle />, }],
+  // },
+];
+const sidebarSections2 = [
   {
     title: "User",
     items: [{ label: "User Management", to: "/admin/users", icon: <FaUserCog /> }],
@@ -63,7 +73,7 @@ export default function AdminSidebar() {
     <div className="mt-6 px-4">
       <div className="flex gap-2 items-center">
           <h3 className={` uppercase ${collapsed && title ? 'text-[10px] font-[500] text-shadow-white' : 'text-gray-400 text-xs font-semibold'}`}>{title}</h3>
-      <div className={`h-px bg-blue-500 w-full my-2 ${collapsed ? 'hidden' : 'block'}`}></div>
+      <div className={`h-px bg-blue-500 w-[60%] my-2 ${collapsed ? 'hidden' : 'block'}`}></div>
       </div>
       <ul className="space-y-1">{children}</ul>
     </div>
@@ -114,13 +124,27 @@ export default function AdminSidebar() {
         </button>
       </div>
 
-      <div>
+      <div className="">
         {sidebarSections.map((section) => (
           <Section key={section.title} title={section.title}>
             <ul className="space-y-1">
               {section.items.map((item) => (
                 <Item key={item.to} to={item.to}>
-                  {item.icon}
+                  {item.icon} 
+                  {!collapsed && <span>{item.label}</span>}
+                </Item>
+              ))}
+            </ul>
+          </Section>
+        ))}
+      </div>
+      <div className="mt-20">
+        {sidebarSections2.map((section) => (
+          <Section key={section.title} title={section.title}>
+            <ul className="space-y-1">
+              {section.items.map((item) => (
+                <Item key={item.to} to={item.to}>
+                  {item.icon} 
                   {!collapsed && <span>{item.label}</span>}
                 </Item>
               ))}
@@ -130,7 +154,7 @@ export default function AdminSidebar() {
       </div>
 
       {/* spacer + logout */}
-      <div className="mt-auto px-4 pb-6">
+      <div className="mt-aut px-4 mt-10 pb-6">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 px-4 py-2 rounded hover:bg-red-600 transition"

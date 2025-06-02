@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
+import { SuccessToast } from "../../utils/Success";
 
 function ProfileOverview() {
   const { user, setIsLoggedIn, setUser } = useAuth();
@@ -44,7 +45,7 @@ function ProfileOverview() {
       const token = localStorage.getItem("token");
       console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/buyOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/registration",
         {
           method: "GET",
           headers: {
@@ -58,6 +59,9 @@ function ProfileOverview() {
 
       const data = await response.json();
       console.log("🚀 ~ fetchNotifications ~ data:", data);
+      if(data){
+        SuccessToast("you have a new notification message")
+      }
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);

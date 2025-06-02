@@ -54,6 +54,7 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/chat/:orderId" element={<ChatRoom />} />
+        <Route path="/adnin/users/:userId" element={<UserDetails />} />
 
         {/* <Route path="/trade-listings" element={<TradingPage />} /> */}
         <Route path="/post-offer" element={<TransactionHistory />} />
@@ -95,7 +96,7 @@ function App() {
           <Route path="buy-orders" element={<BuyLivePage />} />
           {/* <Route path="users" element={<AdminUsers />} />{" "} */}
           {/* User Registration page */}
-          <Route path="user" element={<AllUsers />}>
+          <Route path="users" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
           </Route>
           <Route path="chat" element={<AllChatPage />} />{" "}

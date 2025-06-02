@@ -104,7 +104,7 @@ const AllInquiries = () => {
       const token = localStorage.getItem("token");
       console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/buyOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/inquiry",
         {
           method: "GET",
           headers: {
