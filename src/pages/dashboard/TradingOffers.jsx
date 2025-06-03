@@ -87,8 +87,10 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
-    setWonAmount(value.toString());
-    const calculatedUSDT = (value / rate).toFixed(4);
+    const currentWon = Number(wonAmount) || 0;
+    const newWonAmount = currentWon + value;
+    setWonAmount(newWonAmount.toString());
+    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
   };
 
@@ -128,21 +130,25 @@ const Modal = ({ isModalOpen, closeModal }) => {
     }
 
     try {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Add auth tokens here if needed, e.g.:
-          // "Authorization": `Bearer ${token}`
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          amount: Number(usdtAmount),
-          price: Number(rate),
-          krwAmount: Number(wonAmount),
-          // Add other data fields you want to submit
-        }),
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+            // Add auth tokens here if needed, e.g.:
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            amount: Number(usdtAmount),
+            price: Number(rate),
+            krwAmount: Number(wonAmount),
+            // Add other data fields you want to submit
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -299,7 +305,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+              className={`text-xs cursor-pointer sm:text-sm py-2 px-3 rounded select-none transition 
           ${
             val === 1000000
               ? "bg-gray-300 text-black"
@@ -314,7 +320,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition cursor-pointer"
             title="정정"
           >
             Clear
@@ -367,7 +373,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               onChange={(e) => setDepositNetwork(e.target.value)}
               aria-label="Select deposit network"
             >
-              <option value="SOL">  Solana (SOL)</option>
+              <option value="SOL"> Solana (SOL)</option>
             </select>
             <ArrowDown
               size={18}

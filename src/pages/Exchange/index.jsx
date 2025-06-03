@@ -290,6 +290,9 @@ const TradingPage = () => {
             </div>
           ) : (
             <div className="space-y-4">
+              <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                My Orders
+              </h2>
               {orders.map((offer, index) => (
                 <TradeCard key={index} offer={offer} />
               ))}

@@ -92,14 +92,11 @@ function App() {
         >
           <Route path="dashboard" element={<Dashboards />} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
-          {/* Embedded in Admin Dashboard */}
           <Route path="transaction/:id" element={<TransactionDetails />} />
           <Route path="sell-orders" element={<SellLivePage />} />
           <Route path="buy-orders" element={<BuyLivePage />} />
           <Route path="users" element={<UserManagement />}></Route>
           <Route path="inquiries" element={<InquiryManagement />}></Route>
-          {/* <Route path="users" element={<AdminUsers />} />{" "} */}
-          {/* User Registration page */}
           {/* <Route path="users" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
           </Route> */}

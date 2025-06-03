@@ -91,8 +91,10 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
-    setWonAmount(value.toString());
-    const calculatedUSDT = (value / rate).toFixed(4);
+    const currentWon = Number(wonAmount) || 0;
+    const newWonAmount = currentWon + value;
+    setWonAmount(newWonAmount.toString());
+    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
   };
 
@@ -126,14 +128,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy",
         {
           method: "POST",
           headers: {
+            "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
-            // Add auth tokens here if needed, e.g.:
-            // "Authorization": `Bearer ${token}`
           },
           credentials: "include",
           body: JSON.stringify({
@@ -286,17 +288,18 @@ const Modal = ({ isModalOpen, closeModal }) => {
               value={wonAmount}
               onChange={(e) => setWonAmount(e.target.value)}
               placeholder="0"
-                            className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
-
+              className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
               aria-label="Enter amount in won"
             />
-            <span className="ml-2 text-white select-none text-sm sm:text-base">KRW</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">
+              KRW
+            </span>
           </div>
         </div>
 
         {/* Korean currency buttons + orange "정정" button */}
         <div className="flex flex-wrap gap-2 px-2 lg:px-6 mb-3">
-         {krwButtons.map((val) => (
+          {krwButtons.map((val) => (
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
