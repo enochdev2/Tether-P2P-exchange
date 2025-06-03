@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
 import { SuccessToast } from "../../utils/Success";
+import { ErrorToast } from "../../utils/Error";
 
 function ProfileOverview() {
   const { user, setIsLoggedIn, setUser } = useAuth();
@@ -43,7 +44,13 @@ function ProfileOverview() {
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
-      console.log("🚀 ~ fetchNotifications ~ token:", token);
+
+      if (!token) {
+      window.location.href = "/signin"; // Redirect to the sign-in page
+      return;
+    }
+
+  
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/registration",
         {
@@ -55,12 +62,22 @@ function ProfileOverview() {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
+      // Handle error response with invalid or expired token
+      if (!response.ok) {
+        const data = await response.json();
+        if (data.message === "Invalid or expired token") {
+          // Redirect to sign-in page if token is invalid or expired
+          window.location.href = "/signin"; // Adjust path as needed
+          return;
+        }
+        ErrorToast(data.message);
+        return;
+      }
 
       const data = await response.json();
       console.log("🚀 ~ fetchNotifications ~ data:", data);
-      if(data){
-        SuccessToast("you have a new notification message")
+      if (data) {
+        SuccessToast("you have a new notification message");
       }
       setNotifications(data);
     } catch (error) {
@@ -100,7 +117,7 @@ function ProfileOverview() {
   const tether = `Wallet Address:  ${user?.tetherAddress}`;
 
   return (
-    <div className="w-full space-y-6">
+    <div className=" relative w-full space-y-6">
       <div className="w-full md:w-[90%] mx-auto space-y-6">
         <div className=" mt-4 "></div>
 

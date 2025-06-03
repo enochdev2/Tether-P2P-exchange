@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
+import { ErrorToast } from "../../utils/Error";
 
 const SignUp = () => {
   const { signUp } = useAuth();
@@ -27,8 +28,8 @@ const SignUp = () => {
     if (!formData.username.trim()) errors.push("Username is required.");
     if (!formData.nickname.trim()) errors.push("Nickname is required.");
     if (!formData.fullName.trim()) errors.push("Full name is required.");
-    if (!formData.password || formData.password.length < 6)
-      errors.push("Password must be at least 6 characters.");
+    if (!formData.password || formData.password.length < 5)
+      errors.push("Password must be at least 5 characters.");
     if (!formData.dob) errors.push("Date of birth is required.");
     if (!formData.phone || !/^\d{10,15}$/.test(formData.phone))
       errors.push("Enter a valid phone number.");
@@ -57,6 +58,7 @@ const SignUp = () => {
     const errors = validateForm();
     if (errors.length > 0) {
       errors.forEach((err) => ErrorToast(err)); 
+       setIsLoading(false); 
       return;
     }
 
@@ -65,14 +67,13 @@ const SignUp = () => {
       ...formData,
       bankAccount: Number(formData.bankAccount),
       status: "inactive", // Set initial status as inactive
-      admin: true, // Defaulting admin to false
     };
 
     try {
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await signUp(newUser);
 
-      if (response) {
+      if (response.ok) {
         SuccessToast(" you have successfully registered");
         navigate("/signin");
       } else {
@@ -297,6 +298,7 @@ const SignUp = () => {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white cursor-pointer font-semibold rounded-md transition duration-200"
           >
             {isLoading ? <LoadingSpinner /> : "Sign Up"}

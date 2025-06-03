@@ -41,7 +41,7 @@ const SignIn = () => {
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await login(user);
 
-      if (response) {
+      if (response.ok) {
         SuccessToast(" Login successfully");
         navigate("/dashboard/profile");
       } else {

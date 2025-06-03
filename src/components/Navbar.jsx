@@ -10,9 +10,9 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../utils/AuthProvider";
 import logo2 from "../assets/Tether2.png";
 import logo from "../assets/Tether.png";
+import { useAuth } from "../utils/AuthProvider";
 
 const Navbar = () => {
   const { isLoggedIn, user } = useAuth();

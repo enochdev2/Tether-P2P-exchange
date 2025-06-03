@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ErrorToast } from "./Error";
 
 // Create the context
 const AuthContext = createContext();
@@ -13,7 +14,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null); // State to hold user data
-  
+
   // console.log("🚀 ~ AuthProvider ~ user:", user);
 
   useEffect(() => {
@@ -25,8 +26,6 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
     }
   }, []);
-
-  
 
   const login = async (userData) => {
     try {
@@ -40,14 +39,15 @@ export const AuthProvider = ({ children }) => {
           credentials: "include",
         }
       );
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error("Failed to log in");
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
-      const data = await response.json();
       localStorage.setItem("token", data.token);
-      console.log("checking it out", data.token);
 
       setIsLoggedIn(true);
       setUser(data.user);
@@ -55,8 +55,6 @@ export const AuthProvider = ({ children }) => {
       // Save user data to localStorage (could be just user object or a token)
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("isLoggedIn", "true");
-
-      console.log("User successfully logged in", data);
       return response;
     } catch (error) {
       console.error("Error during login:", error);
@@ -96,7 +94,6 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (newUser) => {
     try {
-      // Send the POST request to your API
       // const response = await fetch("http://localhost:5173/api/v1/user/users", {
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
@@ -108,14 +105,15 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify(newUser), // Sending the new user data to the backend
         }
       );
+      const data = await response.json();
 
       // Check if the response is successful
       if (!response.ok) {
-        throw new Error("Failed to register user");
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
-      // If the registration is successful, update the state
-      const data = await response.json();
       console.log("User successfully registered", data);
       return response;
     } catch (error) {
@@ -143,11 +141,11 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json();
       console.log("Users fetched successfully 12345667", data);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData)
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
+      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
       return data; // return parsed user data
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -155,7 +153,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (updatedData) => {
-    console.log("........................", updatedData)
+    console.log("........................", updatedData);
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
