@@ -5,6 +5,7 @@ import TradeCard from "./TradeCard";
 import { useEffect } from "react";
 import LoadingSpiner from "./LoadingSpiner";
 import NotificationPopup from "./NotificationPopup";
+import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
 
 const History = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
@@ -12,8 +13,10 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [inProgressOrders, setInProgressOrders] = useState([]);
 
   useEffect(() => {
+    fetchInProgressOrders();
     fetchSellOrders();
   }, []);
 
@@ -79,6 +82,36 @@ const History = () => {
   useEffect(() => {
     fetchNotifications();
   }, []);
+
+  async function fetchInProgressOrders() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/user/inProgress-orders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const sellInProgressOrders = await response.json();
+      console.log("🚀 INPROGRESSsaleOrders:", sellInProgressOrders);
+
+      setInProgressOrders(sellInProgressOrders);
+      //   return sellOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    }
+  }
 
   async function fetchNotifications() {
     try {
@@ -171,6 +204,25 @@ const History = () => {
               </button>
             </div>
           </div>
+
+          <div className="mb-10">
+            {inProgressOrders.length !== 0 && (
+              <div className="">
+                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  My Orders In Progress
+                </h2>
+                {inProgressOrders.map((offer) => (
+                  <UserTradeInProgressCard
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    showChatButton={offer.status === "On Sale"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
           {/* Map Over Offers Data */}
 
           {loading == false && !orders ? (
@@ -184,6 +236,9 @@ const History = () => {
             </div>
           ) : (
             <div className="space-y-4">
+              <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  My Orders
+                </h2>
               {orders.map((offer, index) => (
                 <TradeCard key={index} offer={offer} sell={Sell} />
               ))}

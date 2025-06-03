@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
-import logo2 from "../assets/Tether2.png";
+import logo2 from "../../assets/Tether2.png";
 import { useState } from "react";
 
 const statusColors = {
@@ -11,7 +11,7 @@ const statusColors = {
 
 // import your logo and statusColors accordingly
 
-const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
+const UserTradeInProgressCard = ({ offer, sell }) => {
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
@@ -30,19 +30,6 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
 
   const handleCloseModal = () => {
     setIsMatchModalOpen(false);
-  };
-
-  const handleMatchSubmit = () => {
-    onMatch(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
-    setIsMatchModalOpen(false); // Close the modal
-    setBuyerOrderId(""); // Reset the input field
-  };
-  const handleMatchCancel = () => {
-    console.log("🚀 ~ handleMatchSubmit ~ offer.currentBuyOrderInProgress:", offer.currentBuyOrderInProgress)
-    const currentOrderInProgress = sell ? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress 
-    onCancel(currentOrderInProgress, offer._id); // Trigger matching in the parent component
-    setIsMatchModalOpen(false); // Close the modal
-    setBuyerOrderId(""); // Reset the input field
   };
 
   const statusColors = {
@@ -86,40 +73,27 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
       </div>
 
       {/* Center Right Section */}
-    
+      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-base mb-4 sm:mb-0 text-center sm:text-left truncat">
+        {offer.krwAmount
+          ? `₩${offer.krwAmount.toLocaleString()} KRW`
+          : `₩${offer.price.toLocaleString()} KRW`}
+      </div>
+
 
       <div className="flex flex-wrap space-x-5 space-y-3 items-center">
         <div className="space-x-3">
           {/* Chat button for buy orders waiting for buy */}
-           <button
-              onClick={() => navigate(`/chat/${offer._id}`)}
-              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              1:1 Chat
-            </button>
           <button
-            onClick={handleMatchCancel}
-            className="mt-2 px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+            onClick={() => navigate(`/chat/${offer._id}`)}
+            className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
           >
-            Cancel
+            1:1 Chat
           </button>
-
         </div>
-
-        {sell && (
-          <div className="">
-            <button
-              onClick={handleMatchSubmit}
-              className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              Complete-Match
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col flex-wrap sm:flex-nowrap mdflex-2 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
+      <div className="flex flex-col flex-wrap sm:flex-nowrap md:flex-2 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
         <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
           {offer._id}
         </div>
@@ -178,4 +152,4 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
   );
 };
 
-export default AdminTradeInProgressCard;
+export default UserTradeInProgressCard;

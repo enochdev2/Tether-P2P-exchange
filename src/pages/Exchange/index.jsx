@@ -6,6 +6,7 @@ import BuyTetherComponent from "../../components/BuyTetherComponent";
 import { useEffect } from "react";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
+import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
 
 const TradingPage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
@@ -13,6 +14,7 @@ const TradingPage = () => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [inProgressOrders, setInProgressOrders] = useState([]);
 
   // Example data for trading offers
   const offers = [
@@ -73,6 +75,7 @@ const TradingPage = () => {
   ];
 
   useEffect(() => {
+    fetchInProgressOrders();
     fetchBuyOrders();
   }, []);
 
@@ -125,6 +128,40 @@ const TradingPage = () => {
       return null;
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchInProgressOrders() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/user/inProgress-orders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          // credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const buyInProgressOrders = await response.json();
+      console.log("🚀 INPROGRESSsaleOrders:", buyInProgressOrders);
+
+      //   // Sort oldest date first
+      //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+      setInProgressOrders(buyInProgressOrders);
+      //   return sellOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
     }
   }
 
@@ -221,6 +258,25 @@ const TradingPage = () => {
               </button>
             </div>
           </div>
+
+          <div className="mb-10">
+            {inProgressOrders.length !== 0 && (
+              <div className="">
+                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  My Orders In Progress
+                </h2>
+                {inProgressOrders.map((offer) => (
+                  <UserTradeInProgressCard
+                    key={offer._id}
+                    offer={offer}
+                    showChatButton={offer.status === "On Sale"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Map Over Offers Data */}
 
           {loading == false && !orders ? (
@@ -241,7 +297,7 @@ const TradingPage = () => {
           )}
         </div>
       </div>
-       <NotificationPopup
+      <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}

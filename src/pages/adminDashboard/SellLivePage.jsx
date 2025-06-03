@@ -48,18 +48,17 @@ const SellLivePage = () => {
       if (!response.ok) {
         throw new Error(`Failed to match orders: ${response.status}`);
       }
-      fetchSellOrders();
-      fetchSellPendingOrders();
-      fetchInProgressOrders();
-
       const result = await response.json();
       console.log("Orders matched successfully:", result);
+      await fetchInProgressOrders();
       await fetchSellOrders();
+      await fetchSellPendingOrders();
       SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
     }
   };
+
   const handleCompleteMatch = async (buyerOrderId, sellerOrderId) => {
     try {
       if (!buyerOrderId || !sellerOrderId)
@@ -84,12 +83,15 @@ const SellLivePage = () => {
 
       const result = await response.json();
       console.log("Orders matched successfully:", result);
+      await fetchInProgressOrders();
       await fetchSellOrders();
+      await fetchSellPendingOrders();
       SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
     }
   };
+
   const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
     console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId)
     try {
@@ -114,8 +116,11 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
+
       console.log("Orders matched successfully:", result);
+      await fetchInProgressOrders();
       await fetchSellOrders();
+      await fetchSellPendingOrders();
       SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
@@ -199,6 +204,7 @@ const SellLivePage = () => {
       return null;
     }
   }
+
   async function fetchInProgressOrders() {
     try {
       const token = localStorage.getItem("token");
@@ -470,7 +476,7 @@ const SellLivePage = () => {
           </div>
 
           <div>
-            {!pendingOrders && (
+            {pendingOrders.length !== 0 && (
               <div>
                 <h2 className="text-xl font-semibold mb-4">
                   All Pending Sell Orders

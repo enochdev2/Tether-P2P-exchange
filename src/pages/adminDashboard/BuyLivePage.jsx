@@ -6,11 +6,14 @@ import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
 import { SuccessToast } from "../../utils/Success";
 import NotificationPopup from "../../components/NotificationPopup";
+import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
+import { ErrorToast } from "../../utils/Error";
 
 const BuyLivePage = () => {
   const [buyOrders, setBuyOrders] = useState([]);
   const [loadingBuy, setLoadingBuy] = useState(true);
   const [pendingOrders, setPendingOrders] = useState([]);
+  const [inProgressOrders, setInProgressOrders] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
 
@@ -18,8 +21,9 @@ const BuyLivePage = () => {
   const [buyAmountFilter, setBuyAmountFilter] = useState("all");
 
   useEffect(() => {
-    fetchBuyOrders();
+    fetchInProgressOrders();
     fetchBuyPendingOrders();
+    fetchBuyOrders();
   }, []);
 
   async function fetchBuyOrders() {
@@ -84,6 +88,78 @@ const BuyLivePage = () => {
       return null;
     }
   }
+
+  async function fetchInProgressOrders() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/inProgress-orders",
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          // credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const buyInProgressOrders = await response.json();
+      console.log("🚀 INPROGRESSsaleOrders:", buyInProgressOrders);
+
+      //   // Sort oldest date first
+      //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+      setInProgressOrders(buyInProgressOrders);
+      // You can now render buyOrders in your UI
+      //   return sellOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    }
+  }
+
+  const handleCancleMatch = async ( sellerOrderId, buyerOrderId) => {
+    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
+    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", buyerOrderId);
+    try {
+      if (!buyerOrderId || !sellerOrderId)
+        return ErrorToast("input buyer Order ID");
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/cancel-orders`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to match orders: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      console.log("Orders cancelled successfully:", result);
+      await fetchInProgressOrders();
+      await fetchBuyOrders();
+      await fetchBuyPendingOrders();
+      SuccessToast("Orders Cancelled successfully!");
+    } catch (error) {
+      console.error("Error cancelling orders:", error);
+    }
+  };
 
   async function approveOrders(orderId) {
     try {
@@ -276,6 +352,27 @@ const BuyLivePage = () => {
             ))}
           </div>
 
+          {/* Render Sell Orders In Progress */}
+          <div className="mb-5">
+            {inProgressOrders.length !== 0 && (
+              <div className="">
+                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  All In Progress Orders
+                </h2>
+                {inProgressOrders.map((offer) => (
+                  <AdminTradeInProgressCard
+                    key={offer._id}
+                    offer={offer}
+                    sell={false}
+                    onCancel={handleCancleMatch}
+                    showChatButton={offer.status === "On Sale"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <div>
             {pendingOrders &&
               pendingOrders?.map((offer) => (
@@ -309,7 +406,7 @@ const BuyLivePage = () => {
           </div>
         </div>
       </div>
-       <NotificationPopup
+      <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}
