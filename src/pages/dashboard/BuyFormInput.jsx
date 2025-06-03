@@ -303,7 +303,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+              className={`text-xs sm:text-sm py-2 px-3 rounded select-none cursor-pointer transition 
           ${
             val === 1000000
               ? "bg-gray-300 text-black"
@@ -318,7 +318,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none cursor-pointer transition"
             title="정정"
           >
             Clear
