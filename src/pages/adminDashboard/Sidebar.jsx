@@ -65,15 +65,10 @@ export default function AdminSidebar() {
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = async () => {
-
-    await logout();
-    navigate("/login");
-
     const res = await logout();
     if(res){
       navigate("/");
     }
-
   };
 
   const Section = ({ title, children }) => (
@@ -92,7 +87,7 @@ export default function AdminSidebar() {
         to={to}
         className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
           isActive(to)
-            ? "a text-white"
+            ? "bg-[#26a17b] text-white"
             : "hover:bg-gray-700 text-gray-300"
         }`}
       >
@@ -105,7 +100,7 @@ export default function AdminSidebar() {
     <aside
       className={` z-10 pt-4  bg-[#1f2937] text-white transition-all duration-300 ${
         collapsed ? "w-[75px]" : "lg:relative fixed w-[300px]"
-      }`}
+      } min-h-screen`}
     >
       {/* header */}
       <div className="flex items-center justify-between p-4">

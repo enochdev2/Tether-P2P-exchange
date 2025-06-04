@@ -156,86 +156,81 @@ export default function AdminTransactions() {
 
   // Function to fetch buy orders, optionally filtered by status
 
-  async function fetchSellOrders(status = "") {
-    try {
-      const url =
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
-      // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/all-orders";
   async function fetchSellOrders() {
-  try {
-    // const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+    const url =
+      "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+    try {
+      // const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
 
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const allOrders = await response.json();
-
-    const formatted = {
-      buy: [],
-      sell: [],
-    };
-
-    allOrders.forEach((order, index) => {
-      const isBuy = order.status === "Buy Completed";
-      const isSell = order.status === "Sale Completed";
-      const buyerName = order.userId?.nickname || "Unknown";
-      const sellerMatches = order.matchedSellOrders || [];
-      const buyerMatches = order.matchedBuyOrders || [];
-
-      const commonData = {
-        postingNumber: order._id.slice(-12), // or use index or generated code
-        buyer: isBuy ? buyerName : buyerMatches[0]?.nickname || "N/A",
-        seller: isSell ? buyerName : sellerMatches[0]?.nickname || "N/A",
-        amount: `${order.amount} USDT`,
-        status: "Completed",
-        details: {
-          buyerNickname: buyerName,
-          buyerPhone: order.userId?.phone || "N/A",
-          buyRequestAmount: `${order.amount} USDT`,
-          progressRecords: [
-            ...sellerMatches.map((match) => ({
-              type: "Sell",
-              amount: `${match.amount} USDT`,
-              nickname: match.nickname || "N/A",
-              fee: null,
-            })),
-            ...buyerMatches.map((match) => ({
-              type: "Buy",
-              amount: `${match.amount} USDT`,
-              nickname: match.nickname || "N/A",
-              fee: order.fee ? `${order.fee} USDT` : null,
-            })),
-          ],
-          registrationDate: new Date(order.createdAt).toLocaleString(),
-          completionDate: new Date(order.updatedAt).toLocaleString(),
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const allOrders = await response.json();
+
+      const formatted = {
+        buy: [],
+        sell: [],
       };
 
-      if (isBuy) formatted.buy.push(commonData);
-      if (isSell) formatted.sell.push(commonData);
-    });
+      allOrders.forEach((order, index) => {
+        const isBuy = order.status === "Buy Completed";
+        const isSell = order.status === "Sale Completed";
+        const buyerName = order.userId?.nickname || "Unknown";
+        const sellerMatches = order.matchedSellOrders || [];
+        const buyerMatches = order.matchedBuyOrders || [];
 
-    setOrders(allOrders);
-    setFilteredData(formatted[activeTab]);
-    return formatted;
-  } catch (error) {
-    console.error("Failed to fetch sell orders:", error);
-    return null;
-  } finally {
-    setLoading(false);
+        const commonData = {
+          postingNumber: order._id.slice(-12), // or use index or generated code
+          buyer: isBuy ? buyerName : buyerMatches[0]?.nickname || "N/A",
+          seller: isSell ? buyerName : sellerMatches[0]?.nickname || "N/A",
+          amount: `${order.amount} USDT`,
+          status: "Completed",
+          details: {
+            buyerNickname: buyerName,
+            buyerPhone: order.userId?.phone || "N/A",
+            buyRequestAmount: `${order.amount} USDT`,
+            progressRecords: [
+              ...sellerMatches.map((match) => ({
+                type: "Sell",
+                amount: `${match.amount} USDT`,
+                nickname: match.nickname || "N/A",
+                fee: null,
+              })),
+              ...buyerMatches.map((match) => ({
+                type: "Buy",
+                amount: `${match.amount} USDT`,
+                nickname: match.nickname || "N/A",
+                fee: order.fee ? `${order.fee} USDT` : null,
+              })),
+            ],
+            registrationDate: new Date(order.createdAt).toLocaleString(),
+            completionDate: new Date(order.updatedAt).toLocaleString(),
+          },
+        };
+
+        if (isBuy) formatted.buy.push(commonData);
+        if (isSell) formatted.sell.push(commonData);
+      });
+
+      setOrders(allOrders);
+      setFilteredData(formatted[activeTab]);
+      return formatted;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
   }
-}
-
 
   const handleSearch = () => {
     const data = activeTab === "buy" ? mockData.buy : mockData.sell;
