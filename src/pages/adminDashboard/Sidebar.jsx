@@ -65,10 +65,15 @@ export default function AdminSidebar() {
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = async () => {
+
+    await logout();
+    navigate("/login");
+
     const res = await logout();
     if(res){
       navigate("/");
     }
+
   };
 
   const Section = ({ title, children }) => (
@@ -87,7 +92,7 @@ export default function AdminSidebar() {
         to={to}
         className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
           isActive(to)
-            ? "bg-[#26a17b] text-white"
+            ? "a text-white"
             : "hover:bg-gray-700 text-gray-300"
         }`}
       >

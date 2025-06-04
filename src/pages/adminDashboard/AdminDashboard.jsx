@@ -44,20 +44,24 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-gray-100 pt-18">
-      <Sidebar />
+   <div className="flex mt-19 min-h-screen bg-gray-100 overflow-x-auto">
+  {/* Sidebar Section */}
+  <div className=" bg-white shadow-md">
+    <Sidebar />
+  </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 p-8 space-y-5">
-        <div className="border-b flex px-3  items-center border-slate-300 shadow-xs">
-        <h1 className="text-3xl font-bold mb-6 ">Admin Dashboard</h1>
-        </div>
-        {/* <UsersCard users={users} Icon={User2} /> */}
-        {/* Dynamic Content Rendering */}
-        <Outlet />{" "}
-        {/* This is where the child routes' components will be rendered */}
-      </div>
+  {/* Main Content Area */}
+  <div className="flex-1  p-4 sm:p-6 lg:p-8 space-y-4 overflow-y-auto">
+    {/* Header */}
+    <div className="border-b flex items-center px-2 sm:px-3 py-3 border-slate-300 shadow-sm">
+      <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
     </div>
+
+    {/* Dynamic Content Rendering */}
+    <Outlet />
+  </div>
+</div>
+
   );
 };
 
