@@ -56,7 +56,7 @@ export default function AdminSidebar() {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/");
+    navigate("/login");
   };
 
   const Section = ({ title, children }) => (
@@ -75,7 +75,7 @@ export default function AdminSidebar() {
         to={to}
         className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
           isActive(to)
-            ? "bg-[#26a17b] text-white"
+            ? "a text-white"
             : "hover:bg-gray-700 text-gray-300"
         }`}
       >

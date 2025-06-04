@@ -55,81 +55,84 @@ const mockData = {
 
 function TransactionDetails({ details }) {
   return (
-    <div className="border border-slate-400 rounded-md py-4 px-2 mt-2 space-y-3 bg-slate-50">
-      <div className="border px-3 space-y-3 text-base py-2 border-slate-400 rounded-2xl">
-        <div className="">
+    <div className="border border-[#26a17b] rounded-lg p-4 mt-4 bg-white shadow-md text-sm sm:text-base">
+      {/* Buyer Info */}
+      <div className="bg-[#f4fdf9] border border-[#26a17b] rounded-lg p-4 space-y-3">
+        <div>
           <strong>Buyer Nickname:</strong> {details.buyerNickname}
         </div>
-        <div className="">
-          <strong>Buyer Phone number:</strong> {details.buyerPhone}
+        <div>
+          <strong>Buyer Phone Number:</strong> {details.buyerPhone}
         </div>
-        <div className="">
+        <div>
           <strong>Buy Request Amount:</strong> {details.buyRequestAmount}
         </div>
       </div>
-      <div className="border border-gray-400 px-3 rounded-2xl py-2">
-        <div className="border border-slate-400 rounded-md p-2 mt-4 bg-slate-200 text-sm font-semibold w-max select-none">
-          Buy progress record
+
+      {/* Progress Header */}
+      <div className="border border-[#26a17b] rounded-lg p-4 mt-4 bg-[#f4fdf9]">
+        <div className="text-[#26a17b] font-semibold text-sm uppercase bg-[#e2f7f1] rounded px-3 py-1 w-fit">
+          Buy Progress Record
         </div>
 
-        <div className="border-t border-slate-400 mt-4">
+        {/* Progress List */}
+        <div className="mt-4 divide-y divide-[#cdeee2]">
           {details.progressRecords.map((record, idx) => (
             <div
               key={idx}
-              className={`flex justify-between py-2 border-b ${
-                idx !== details.progressRecords.length - 1
-                  ? "border-slate-400"
-                  : "border-none"
-              }`}
+              className="py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
             >
-              <div className="flex gap-3 items-center">
-                <div
-                  className={`px-2 rounded text-xs font-semibold capitalize ${
+              {/* Type & Amount */}
+              <div className="flex gap-3 items-start">
+                <span
+                  className={`px-2 py-1 rounded text-xs font-semibold capitalize ${
                     record.type === "Sell"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-blue-200 text-blue-800"
+                      ? "bg-[#dcfce7] text-[#166534]"
+                      : "bg-[#e0f2fe] text-[#1e40af]"
                   }`}
                 >
                   {record.type.toLowerCase()}
-                </div>
+                </span>
+
                 <div>
-                  <div className="bg-yellow-200 px-2 rounded text-xs font-semibold">
+                  <div className="text-xs text-[#4B5563] font-semibold">
                     Amount
                   </div>
-                  <div className="font-semibold text-sm">{record.amount}</div>
+                  <div className="font-semibold">{record.amount}</div>
                 </div>
               </div>
 
-              <div className="">
-                <div className="bg-yellow-200 px-2 rounded text-xs font-semibold flex items-center">
+              {/* Nickname */}
+              <div>
+                <div className="text-xs text-[#4B5563] font-semibold">
                   Nickname
                 </div>
-                <div className="font-semibold text-sm flex items-center">
-                  {record.nickname}
-                </div>
+                <div className="font-semibold">{record.nickname}</div>
               </div>
 
+              {/* Fee (Optional) */}
               {record.fee && (
-                <div className="">
-                  <div className="bg-yellow-200 px-2 rounded text-xs font-semibold flex items-center">
+                <div>
+                  <div className="text-xs text-[#4B5563] font-semibold">
                     Fee
                   </div>
-                  <div className="font-semibold text-sm flex items-center">
-                    {record.fee}
-                  </div>
+                  <div className="font-semibold">{record.fee}</div>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        <div className="mt-4 flex justify-between font-semibold text-sm">
+        {/* Dates Footer */}
+        <div className="mt-6 flex flex-col sm:flex-row justify-between gap-2 text-gray-700 font-medium">
           <div>
-            <span className="font-normal">Buy Post Registration Date: </span>
+            <span className="text-gray-500 font-normal">
+              Registration Date:{" "}
+            </span>
             {details.registrationDate}
           </div>
           <div>
-            <span className="font-normal">Buy Completed Date: </span>
+            <span className="text-gray-500 font-normal">Completed Date: </span>
             {details.completionDate}
           </div>
         </div>
@@ -154,7 +157,8 @@ export default function AdminTransactions() {
   // Function to fetch buy orders, optionally filtered by status
   async function fetchSellOrders(status = "") {
     try {
-      const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+      const url =
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
       // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/all-orders";
 
       // Assuming you have an auth token stored in localStorage or cookie
@@ -214,26 +218,31 @@ export default function AdminTransactions() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-6 font-sans text-slate-900 text-sm">
-      <h2 className="mb-4 text-sm md:text-3xl font-semibold">Transactions</h2>
-      <div className="flex items-center gap-2 mb-3">
+    <div className=" lg:mx-auto mt-8 px-4 font-sans text-gray-900 text-sm">
+      {/* Heading */}
+      <h2 className="mb-6 text-xl md:text-3xl font-bold text-center md:text-left text-[#26a17b]">
+        Transactions
+      </h2>
+
+      {/* Search Bar */}
+      <div className="flex flex-row sm:flex-row items-stretch sm:items-center gap-3 mb-6">
         <input
           type="text"
-          placeholder="Posting Unique Number"
+          placeholder="Search by Posting Number"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="px-2 py-1 border border-slate-600 rounded text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#26a17b] text-sm"
         />
         <button
           onClick={handleSearch}
-          className="px-4 py-1 bg-slate-600 text-white rounded hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+          className="px-5 py-2 bg-[#26a17b] text-white rounded-md font-medium hover:bg-emerald-700 transition"
         >
           Enter
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-600 rounded-b-lg overflow-hidden">
+      <div className="flex rounded-lg overflow-hidden shadow-sm mb-4 border border-gray-200">
         {["sell", "buy"].map((tab) => (
           <button
             key={tab}
@@ -243,10 +252,10 @@ export default function AdminTransactions() {
               setExpandedPost(null);
               setSearchInput("");
             }}
-            className={`flex-1 py-2 text-center font-semibold cursor-pointer ${
+            className={`w-1/2 py-2 text-sm sm:text-base font-semibold transition ${
               activeTab === tab
-                ? "bg-slate-700 text-white"
-                : "bg-slate-300 text-slate-700 hover:bg-slate-400"
+                ? "bg-[#26a17b] text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -255,71 +264,74 @@ export default function AdminTransactions() {
       </div>
 
       {/* Table */}
-      <table className="w-full border-separate border-spacing-y-2 mt-3">
-        <thead>
-          <tr className="bg-slate-200 text-left text-slate-700 font-semibold text-sm rounded-lg">
-            <th className="px-3 py-2 rounded-tl-md">Posting Number</th>
-            <th>Buyer</th>
-            <th>Seller</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th className="text-center rounded-tr-md">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.length === 0 && (
-            <tr>
-              <td colSpan={6} className="text-center py-5 text-slate-400">
-                No transactions found.
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm text-left table-auto">
+          <thead>
+            <tr className="bg-[#26a17b] text-white">
+              <th className="px-4 py-3 rounded-tl-md">Posting Number</th>
+              <th className="px-4 py-3">Buyer</th>
+              <th className="px-4 py-3">Seller</th>
+              <th className="px-4 py-3">Amount</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3 text-center rounded-tr-md">Actions</th>
             </tr>
-          )}
-          {filteredData.map(
-            ({ postingNumber, buyer, seller, amount, status }) => (
-              <React.Fragment key={postingNumber}>
-                <tr className="bg-white shadow rounded-lg align-middle">
-                  <td className="px-3 py-2">{postingNumber}</td>
-                  <td>{buyer}</td>
-                  <td>{seller}</td>
-                  <td>{amount}</td>
-                  <td
-                    className={`font-semibold ${
-                      status === "Completed"
-                        ? "text-green-600"
-                        : "text-orange-600"
-                    }`}
-                  >
-                    {status}
-                  </td>
-                  <td className="text-center">
-                    <button
-                      onClick={() => toggleExpand(postingNumber)}
-                      className="text-blue-600 font-semibold underline cursor-pointer hover:text-blue-800"
-                      aria-label={`View details for ${postingNumber}`}
+          </thead>
+          <tbody>
+            {filteredData.length === 0 && (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="text-center py-6 text-gray-400 italic bg-white"
+                >
+                  No transactions found.
+                </td>
+              </tr>
+            )}
+            {filteredData.map(
+              ({ postingNumber, buyer, seller, amount, status }) => (
+                <React.Fragment key={postingNumber}>
+                  <tr className="bg-white border-b border-gray-200 hover:bg-gray-50">
+                    <td className="px-4 py-3">{postingNumber}</td>
+                    <td className="px-4 py-3">{buyer}</td>
+                    <td className="px-4 py-3">{seller}</td>
+                    <td className="px-4 py-3">${amount}</td>
+                    <td
+                      className={`px-4 py-3 font-semibold ${
+                        status === "Completed"
+                          ? "text-emerald-600"
+                          : "text-yellow-600"
+                      }`}
                     >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-
-                {expandedPost === postingNumber && (
-                  <tr>
-                    <td colSpan={6} className="p-0">
-                      <TransactionDetails
-                        details={
-                          filteredData.find(
-                            (t) => t.postingNumber === postingNumber
-                          ).details
-                        }
-                      />
+                      {status}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => toggleExpand(postingNumber)}
+                        className="text-[#26a17b] cursor-pointer font-medium hover:underline"
+                      >
+                        View Details
+                      </button>
                     </td>
                   </tr>
-                )}
-              </React.Fragment>
-            )
-          )}
-        </tbody>
-      </table>
+                  {expandedPost === postingNumber && (
+                    <tr>
+                      <td colSpan={6} className="p-4 bg-gray-50">
+                        <TransactionDetails
+                          details={
+                            filteredData.find(
+                              (t) => t.postingNumber === postingNumber
+                            ).details
+                          }
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
