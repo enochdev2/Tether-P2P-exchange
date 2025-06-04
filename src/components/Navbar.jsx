@@ -20,6 +20,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Manage mobile menu visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown visibility
   const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+
   // const [isLoggedIn, setIsLoggedIn] = useState(false); // Check if the user is logged in
 
   const navLinks = [
@@ -272,9 +273,23 @@ const Navbar = () => {
             {isLoggedIn ? (
               <Link
                 to="/logout"
-                className="bg-gray-800 text-white px-4 py-2 rounded-md text-lg font-medium"
+                className="logout-button inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white px-5 py-2.5 rounded-full text-base font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out"
                 onClick={() => handleLinkClick("logout")}
               >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10v1"
+                  />
+                </svg>
                 Sign Out
               </Link>
             ) : (
