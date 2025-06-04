@@ -31,7 +31,6 @@ const AdminUserCard = ({ offer, sell, handleSubmit, setChange }) => {
   const handleOnChange = (change) => {
     setChange(change)
     handleSubmit()
-    console.log("🚀 ~ handleOnChange ~ change:", change)
   }
 
   const statusColors = {
@@ -84,7 +83,7 @@ const AdminUserCard = ({ offer, sell, handleSubmit, setChange }) => {
           ) : (
             <button
               onClick={() => handleOnChange(true)}
-              className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+              className="mt- px-2 py-2 cursor-pointer bg-[#e70d0d] hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
             >
               set to active
             </button>

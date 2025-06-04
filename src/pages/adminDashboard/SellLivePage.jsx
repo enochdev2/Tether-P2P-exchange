@@ -6,6 +6,7 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
@@ -46,10 +47,14 @@ const SellLivePage = () => {
       );
 
       if (!response.ok) {
-        throw new Error(`Failed to match orders: ${response.status}`);
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
+
       const result = await response.json();
-      console.log("Orders matched successfully:", result);
+
       await fetchInProgressOrders();
       await fetchSellOrders();
       await fetchSellPendingOrders();
@@ -93,7 +98,7 @@ const SellLivePage = () => {
   };
 
   const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
-    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId)
+    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
     try {
       if (!buyerOrderId || !sellerOrderId)
         return ErrorToast("input buyer Order ID");
@@ -211,7 +216,6 @@ const SellLivePage = () => {
 
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
           headers: {
@@ -223,17 +227,15 @@ const SellLivePage = () => {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
       const sellInProgressOrders = await response.json();
-      console.log("🚀 INPROGRESSsaleOrders:", sellInProgressOrders);
-
-      //   // Sort oldest date first
-      //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       setInProgressOrders(sellInProgressOrders);
-      // You can now render buyOrders in your UI
       //   return sellOrders;
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
@@ -329,10 +331,17 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message on sell order");
+      }
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -356,10 +365,13 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to mark notification as read");
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
-      // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
       );
@@ -458,7 +470,7 @@ const SellLivePage = () => {
             {inProgressOrders.length !== 0 && (
               <div className="">
                 <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All In Progress Orders
+                  All Order In Progress 
                 </h2>
                 {inProgressOrders.map((offer) => (
                   <AdminTradeInProgressCard
@@ -500,7 +512,7 @@ const SellLivePage = () => {
           {/* Render Sell Orders */}
           <div className="mb-5">
             <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-              All Sell Orders
+              All Live Sell Orders
             </h2>
             {filteredSellOrders.length === 0 ? (
               <p className="text-gray-500">No sell orders match the filter.</p>

@@ -1,14 +1,13 @@
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
 import BuyTetherComponent from "./BuyTetherComponent";
-import TradeCard from "./TradeCard";
-import { useEffect } from "react";
 import LoadingSpiner from "./LoadingSpiner";
 import NotificationPopup from "./NotificationPopup";
-import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
+import TradeCard from "./TradeCard";
+import { ErrorToast } from "../utils/Error";
+import { LongSuccessToast } from "../utils/LongSuccess";
 
 const History = () => {
-  const [activeLink, setActiveLink] = useState("findOffers");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
@@ -31,9 +30,6 @@ const History = () => {
         : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
       // "http://localhost:5173/api/v1/sell/sell-orders";
 
-      // Assuming you have an auth token stored in localStorage or cookie
-      // const token = localStorage.getItem("authToken");
-
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -44,21 +40,22 @@ const History = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          // credentials: "include",
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
       const sellOrders = await response.json();
-      console.log("Fetched sell orders:", sellOrders);
+
+      if (!response.ok) {
+        const errorMsg =
+          sellOrders.error || sellOrders.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const statusPriority = {
         "Pending Approval": 1,
         "On Sale": 2,
         "Sale Completed": 3,
+        "In Progress": 4,
       };
 
       sellOrders.sort((a, b) => {
@@ -103,7 +100,6 @@ const History = () => {
       }
 
       const sellInProgressOrders = await response.json();
-      console.log("🚀 INPROGRESSsaleOrders:", sellInProgressOrders);
 
       setInProgressOrders(sellInProgressOrders);
       //   return sellOrders;
@@ -114,9 +110,9 @@ const History = () => {
   }
 
   async function fetchNotifications() {
+    // "http://localhost:3000/api/v1/notification/unread/user/sellOrders",
     try {
       const token = localStorage.getItem("token");
-      console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/sellOrders",
         {
@@ -128,10 +124,17 @@ const History = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
-
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message on Sell order");
+      }
+
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -157,7 +160,6 @@ const History = () => {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
       // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
@@ -225,20 +227,19 @@ const History = () => {
           </div>
           {/* Map Over Offers Data */}
 
-          {loading == false && !orders ? (
+          {loading == false && orders.length === 0 ? (
             <div className="bg-white p-6 rounded-lg shadow-md">
               {/* My Past Trades */}
-              <h2 className="text-xl font-semibold mb-4">My Past Trades</h2>
-              <div className="text-center text-gray-500">
-                <p>You haven’t traded yet.</p>
+              <div className="text-center text-gray-500 text-2xl">
+                <p>You haven’t traded yet or you don't have any sell Order.</p>
                 <p className="mt-2 text-gray-600">Start trading now!</p>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  My Orders
-                </h2>
+                My Orders
+              </h2>
               {orders.map((offer, index) => (
                 <TradeCard key={index} offer={offer} sell={Sell} />
               ))}

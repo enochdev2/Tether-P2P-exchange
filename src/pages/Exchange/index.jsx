@@ -1,78 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { CheckCircle, Clock, ChevronDown, Star } from "lucide-react";
-import TradeCard from "../../components/TradeCard";
+import { useEffect, useState } from "react";
 import BuyTetherComponent from "../../components/BuyTetherComponent";
-import { useEffect } from "react";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
+import TradeCard from "../../components/TradeCard";
 import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
+import { ErrorToast } from "../../utils/Error";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 const TradingPage = () => {
-  const [activeLink, setActiveLink] = useState("findOffers");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
-
-  // Example data for trading offers
-  const offers = [
-    {
-      id: 1,
-      action: "Buy",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      ordernumber: "12545",
-      status: "On Buy",
-      statusDate: "2025-05-20",
-    },
-    {
-      id: 2,
-      action: "Buy",
-      usdtAmount: 510.12,
-      krwAmount: 705000,
-      ordernumber: "12348",
-      status: "Pending Approval",
-      statusDate: "2025-05-19",
-    },
-    {
-      id: 3,
-      action: "Buy",
-      usdtAmount: 499.98,
-      krwAmount: 695000,
-      ordernumber: "12375",
-      status: "Buy completed",
-      statusDate: "2025-05-13",
-    },
-    {
-      id: 4,
-      action: "Buy",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      ordernumber: "12348",
-      status: "Buy completed",
-      statusDate: "2025-04-28",
-    },
-    {
-      id: 5,
-      action: "Buy",
-      usdtAmount: 502.34,
-      krwAmount: 699000,
-      ordernumber: "12345",
-      status: "Buy completed",
-      statusDate: "2025-04-20",
-    },
-    {
-      id: 6,
-      action: "Buy",
-      usdtAmount: 508.44,
-      krwAmount: 702000,
-      ordernumber: "12345",
-      status: "On Buy",
-      statusDate: "2025-05-20",
-    },
-  ];
 
   useEffect(() => {
     fetchInProgressOrders();
@@ -98,19 +38,21 @@ const TradingPage = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        // credentials: "include",
       });
 
+      const buyOrders = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
-      const buyOrders = await response.json();
-      console.log("Fetched buy orders:", buyOrders);
-
       const statusPriority = {
-        "Waiting for Buy": 1,
-        "Buy Completed": 2,
+        "Pending Approval": 1,
+        "Waiting for Buy": 2,
+        "Buy Completed": 3,
+        "In Progress": 4,
       };
 
       buyOrders.sort((a, b) => {
@@ -143,19 +85,16 @@ const TradingPage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          // credentials: "include",
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
       const buyInProgressOrders = await response.json();
-      console.log("🚀 INPROGRESSsaleOrders:", buyInProgressOrders);
 
-      //   // Sort oldest date first
-      //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       setInProgressOrders(buyInProgressOrders);
       //   return sellOrders;
@@ -172,7 +111,6 @@ const TradingPage = () => {
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
-      console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/buyOrders",
         {
@@ -183,11 +121,21 @@ const TradingPage = () => {
           },
         }
       );
-
-      if (!response.ok) throw new Error("Failed to fetch notifications");
-
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+
+      if (!response.ok) {
+        const data = await response.json();
+        if (data.message === "Invalid or expired token") {
+          window.location.href = "/signin"; // Adjust path as needed
+          return;
+        }
+        ErrorToast(data.message);
+        return;
+      }
+
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message on buy order");
+      }
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -211,10 +159,12 @@ const TradingPage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
-      // Remove the marked notification from state so the card disappears
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
       );
@@ -279,12 +229,11 @@ const TradingPage = () => {
 
           {/* Map Over Offers Data */}
 
-          {loading == false && !orders ? (
+          {loading == false && orders.length === 0 ? (
             <div className="bg-white p-6 rounded-lg shadow-md">
               {/* My Past Trades */}
-              <h2 className="text-xl font-semibold mb-4">My Past Trades</h2>
-              <div className="text-center text-gray-500">
-                <p>You haven’t traded yet.</p>
+              <div className="text-center text-gray-500 text-2xl">
+                <p>You haven’t traded yet or you don't have any sell Order.</p>
                 <p className="mt-2 text-gray-600">Start trading now!</p>
               </div>
             </div>

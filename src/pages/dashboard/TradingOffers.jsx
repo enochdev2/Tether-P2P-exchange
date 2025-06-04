@@ -18,6 +18,8 @@ import logo2 from "../../assets/Tether2.png";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/SolanaLogo.png";
+import { ErrorToast } from "../../utils/Error";
+import { useAuth } from "../../utils/AuthProvider";
 
 const TradingOffers = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -60,10 +62,11 @@ export default TradingOffers;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
+  const { priceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
-  const [rate, setRate] = useState("1435.5");
+  const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [walletAddress, setWalletAddress] = useState(
@@ -136,11 +139,11 @@ const Modal = ({ isModalOpen, closeModal }) => {
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             // Add auth tokens here if needed, e.g.:
           },
-          credentials: "include",
+          // credentials: "include",
           body: JSON.stringify({
             amount: Number(usdtAmount),
             price: Number(rate),
@@ -149,21 +152,23 @@ const Modal = ({ isModalOpen, closeModal }) => {
           }),
         }
       );
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
-      const data = await response.json();
-      console.log("Order submitted successfully:", data);
 
       // Optionally clear input or close modal
-      setWonAmount("");
-      setUsdtAmount("");
-      SuccessToast("Successfully placed a sell order");
-      closeModal();
+      if(response.ok){
+        setWonAmount("");
+        setUsdtAmount("");
+        SuccessToast("Successfully placed a sell order");
+        closeModal();
+      }
     } catch (err) {
-      console.error("Failed to submit order:", err);
       setError("Failed to submit order. Please try again.");
     } finally {
       setLoading(false);

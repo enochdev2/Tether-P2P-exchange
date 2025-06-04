@@ -15,6 +15,7 @@ import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
 import { SuccessToast } from "../../utils/Success";
 import { ErrorToast } from "../../utils/Error";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 function ProfileOverview() {
   const { user, setIsLoggedIn, setUser } = useAuth();
@@ -37,20 +38,53 @@ function ProfileOverview() {
     }
   }, [navigate]);
 
+  const getUserProfile = async () => {
+    if(user) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user.nickname}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
+        // const data = await response.json();
+  
+        if (!response.ok) {
+          const data = await response.json();
+          if (data.message === "Invalid or expired token") {
+            // Redirect to sign-in page if token is invalid or expired
+            window.location.href = "/signin"; // Adjust path as needed
+            return;
+          }
+          ErrorToast(data.message);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
-  }, []);
+    getUserProfile();
+  }, [user]);
 
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
 
       if (!token) {
-      window.location.href = "/signin"; // Redirect to the sign-in page
-      return;
-    }
+        window.location.href = "/signin"; // Redirect to the sign-in page
+        return;
+      }
 
-  
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/registration",
         {
@@ -75,9 +109,8 @@ function ProfileOverview() {
       }
 
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
-      if (data) {
-        SuccessToast("you have a new notification message");
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message");
       }
       setNotifications(data);
     } catch (error) {
@@ -90,7 +123,6 @@ function ProfileOverview() {
   async function markNotificationRead(notificationId) {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
@@ -104,7 +136,6 @@ function ProfileOverview() {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
       // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)

@@ -14,8 +14,12 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null); // State to hold user data
+  const [priceKRW, setPriceKRW] = useState(null);
+  console.log("🚀 ~ priceKRW:", priceKRW);
 
-  // console.log("🚀 ~ AuthProvider ~ user:", user);
+  useEffect(() => {
+    fetchPrice();
+  }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -26,6 +30,23 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(true);
     }
   }, []);
+
+  const fetchPrice = async () => {
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setPriceKRW(data.tether.krw);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const login = async (userData) => {
     try {
@@ -64,7 +85,10 @@ export const AuthProvider = ({ children }) => {
   // Handle logout
   const logout = async () => {
     try {
-      localStorage.setItem("token", " ");
+      localStorage.removeItem("token");
+      // Clear localStorage on logout
+      localStorage.removeItem("user");
+      localStorage.removeItem("isLoggedIn");
       // const response = await fetch("http://localhost:5173/api/v1/user/logout", {
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout",
@@ -73,6 +97,7 @@ export const AuthProvider = ({ children }) => {
           credentials: "include",
         }
       );
+      localStorage.removeItem("token");
 
       if (!response.ok) {
         throw new Error("Failed to log out");
@@ -81,11 +106,6 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(false);
       setUser(null);
 
-      // Clear localStorage on logout
-      localStorage.removeItem("user");
-      localStorage.removeItem("isLoggedIn");
-
-      console.log("User successfully logged out");
       return response;
     } catch (error) {
       console.error("Error during logout:", error);
@@ -153,7 +173,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = async (updatedData) => {
-    console.log("........................", updatedData);
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -176,7 +195,6 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json();
 
-      console.log("User successfully updated", data);
       return data; // Return updated user data
     } catch (error) {
       console.error("Error during user update:", error);
@@ -211,6 +229,8 @@ export const AuthProvider = ({ children }) => {
         setUser,
         updateUser,
         allUser,
+        priceKRW,
+        fetchPrice,
         isTokenExpired,
       }}
     >

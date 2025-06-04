@@ -141,10 +141,12 @@ const AllInquiries = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
-      // Remove the marked notification from state so the card disappears
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
       );

@@ -1,21 +1,11 @@
-import React, { useState } from "react";
-import SellOfferPage from "../../components/SellOfferPage";
-import {
-  ArrowDown,
-  ArrowDownNarrowWide,
-  Copy,
-  Equal,
-  Icon,
-  PiIcon,
-  RefreshCcw,
-  X,
-} from "lucide-react";
-import { useEffect } from "react";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import { SuccessToast } from "../../utils/Success";
-import logo2 from "../../assets/Tether2.png";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import { Equal, RefreshCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo2 from "../../assets/Tether2.png";
+import LoadingSpiner from "../../components/LoadingSpiner";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,9 +49,6 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [rate, setRate] = useState("1435.5");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [walletAddress, setWalletAddress] = useState(
-    "0x1234346yr5t64rabcd5678ef9012" // Dummy admin wallet address
-  );
   const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [agreed, setAgreed] = useState(false);
 
@@ -134,7 +121,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -147,18 +134,20 @@ const Modal = ({ isModalOpen, closeModal }) => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("Order submitted successfully:", data);
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       // Optionally clear input or close modal
       setWonAmount("");
       setUsdtAmount("");
       SuccessToast("Successfully placed a buy order");
-      closeModal();
+      if(response.ok){
+        closeModal();
+      }
     } catch (err) {
       console.error("Failed to submit order:", err);
       setError("Failed to submit order. Please try again.");

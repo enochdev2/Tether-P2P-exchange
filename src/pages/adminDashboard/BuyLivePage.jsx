@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import TradeCard from "../../components/TradeCard";
-import BuyTetherComponent from "../../components/BuyTetherComponent";
-import LoadingSpiner from "../../components/LoadingSpiner";
+import { useEffect, useState } from "react";
 import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
-import { SuccessToast } from "../../utils/Success";
-import NotificationPopup from "../../components/NotificationPopup";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
+import LoadingSpiner from "../../components/LoadingSpiner";
+import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 const BuyLivePage = () => {
   const [buyOrders, setBuyOrders] = useState([]);
@@ -29,19 +28,26 @@ const BuyLivePage = () => {
   async function fetchBuyOrders() {
     try {
       setLoadingBuy(true);
+      const token = localStorage.getItem("token");
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/onbuy-orders",
         {
           method: "GET",
           headers: {
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
-      if (!response.ok) throw new Error("Failed to fetch buy orders");
+
       const data = await response.json();
-      console.log("🚀 ~ fetchBuyOrders ~ data:", data);
+
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
       data?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       const statusPriority = {
@@ -79,7 +85,6 @@ const BuyLivePage = () => {
       }
 
       const buyPendingOrders = await response.json();
-      console.log("🚀 ~ fetchSellOrders ~ buyOrders:", buyPendingOrders);
 
       setPendingOrders(buyPendingOrders);
       //   return sellOrders;
@@ -105,13 +110,14 @@ const BuyLivePage = () => {
           // credentials: "include",
         }
       );
+      const buyInProgressOrders = await response.json();
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
-
-      const buyInProgressOrders = await response.json();
-      console.log("🚀 INPROGRESSsaleOrders:", buyInProgressOrders);
 
       //   // Sort oldest date first
       //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -125,7 +131,7 @@ const BuyLivePage = () => {
     }
   }
 
-  const handleCancleMatch = async ( sellerOrderId, buyerOrderId) => {
+  const handleCancleMatch = async (sellerOrderId, buyerOrderId) => {
     console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
     console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", buyerOrderId);
     try {
@@ -250,10 +256,17 @@ const BuyLivePage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message on buy order");
+      }
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -279,7 +292,6 @@ const BuyLivePage = () => {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
       // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
@@ -356,8 +368,8 @@ const BuyLivePage = () => {
           <div className="mb-5">
             {inProgressOrders.length !== 0 && (
               <div className="">
-                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All In Progress Orders
+                <h2 className="text-xl text-green-700 rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  All  Orders In Progress
                 </h2>
                 {inProgressOrders.map((offer) => (
                   <AdminTradeInProgressCard
@@ -374,23 +386,31 @@ const BuyLivePage = () => {
           </div>
 
           <div>
-            {pendingOrders &&
-              pendingOrders?.map((offer) => (
-                <AdminTradeCard2
-                  key={offer._id}
-                  offer={offer}
-                  approveOrders={() => approveOrders(offer._id)}
-                  rejectOrders={() => rejectOrders(offer._id)}
-                  setPendingOrders={setPendingOrders}
-                  showChatButton={offer.status === "Pending Approval"}
-                  onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                />
-              ))}
+            {pendingOrders.length !== 0 && (
+              <div>
+                <h2 className="text-lg text-red-700 rounded-2xl shadow-lg py-1 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  All Pending Orders
+                </h2>
+                {pendingOrders?.map((offer) => (
+                  <AdminTradeCard2
+                    key={offer._id}
+                    offer={offer}
+                    approveOrders={() => approveOrders(offer._id)}
+                    rejectOrders={() => rejectOrders(offer._id)}
+                    setPendingOrders={setPendingOrders}
+                    showChatButton={offer.status === "Pending Approval"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Render Buy Orders */}
           <div>
-            <h2 className="text-xl font-semibold mb-4">Buy Orders</h2>
+            <h2 className="text-lg text-black rounded-2xl shadow-lg py-1 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+              All Live Buy Orders
+            </h2>
             {filteredBuyOrders.length === 0 ? (
               <p className="text-gray-500">No buy orders found.</p>
             ) : (

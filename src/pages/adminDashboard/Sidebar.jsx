@@ -65,13 +65,15 @@ export default function AdminSidebar() {
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = async () => {
-    await logout();
-    navigate("/");
+    const res = await logout();
+    if(res){
+      navigate("/");
+    }
   };
 
   const Section = ({ title, children }) => (
     <div className="mt-6 px-4">
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center mb-2">
           <h3 className={` uppercase ${collapsed && title ? 'text-[10px] font-[500] text-shadow-white' : 'text-gray-400 text-xs font-semibold'}`}>{title}</h3>
       <div className={`h-px bg-blue-500 w-[60%] my-2 ${collapsed ? 'hidden' : 'block'}`}></div>
       </div>
@@ -154,10 +156,10 @@ export default function AdminSidebar() {
       </div>
 
       {/* spacer + logout */}
-      <div className="mt-aut px-4 mt-10 pb-6">
+      <div className="mt-aut px-4 mt-8 pb-6">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-4 py-2 rounded hover:bg-red-600 transition"
+          className="w-full flex items-center cursor-pointer gap-2 px-4 py-2 rounded hover:bg-red-600 transition"
         >
           <LogOutIcon size={16} />
          {!collapsed &&  <span className="text-white">Log out</span>}
