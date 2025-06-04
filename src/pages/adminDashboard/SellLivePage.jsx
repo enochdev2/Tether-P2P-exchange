@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import BuyTetherComponent from "../../components/BuyTetherComponent";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import TradeCard from "../../components/TradeCard";
 import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
-import { SuccessToast } from "../../utils/Success";
-import { ErrorToast } from "../../utils/Error";
+import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
+import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
+import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
   const [pendingOrders, setPendingOrders] = useState([]);
+  const [inProgressOrders, setInProgressOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
@@ -24,16 +25,53 @@ const SellLivePage = () => {
   useEffect(() => {
     fetchSellOrders();
     fetchSellPendingOrders();
+    fetchInProgressOrders();
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
     try {
-
-      if(!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID")
+      if (!buyerOrderId || !sellerOrderId)
+        return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/match-orders`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+        }
+      );
+
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
+      const result = await response.json();
+
+      await fetchInProgressOrders();
+      await fetchSellOrders();
+      await fetchSellPendingOrders();
+      SuccessToast("Orders matched successfully!");
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
+  };
+
+  const handleCompleteMatch = async (buyerOrderId, sellerOrderId) => {
+    try {
+      if (!buyerOrderId || !sellerOrderId)
+        return ErrorToast("input buyer Order ID");
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/complete-orders`,
         {
           method: "POST",
           headers: {
@@ -50,7 +88,44 @@ const SellLivePage = () => {
 
       const result = await response.json();
       console.log("Orders matched successfully:", result);
-       await fetchSellOrders();
+      await fetchInProgressOrders();
+      await fetchSellOrders();
+      await fetchSellPendingOrders();
+      SuccessToast("Orders matched successfully!");
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
+  };
+
+  const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
+    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
+    try {
+      if (!buyerOrderId || !sellerOrderId)
+        return ErrorToast("input buyer Order ID");
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/cancel-orders`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to match orders: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      console.log("Orders matched successfully:", result);
+      await fetchInProgressOrders();
+      await fetchSellOrders();
+      await fetchSellPendingOrders();
       SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
@@ -122,13 +197,45 @@ const SellLivePage = () => {
       }
 
       const sellPendingOrders = await response.json();
-      console.log("🚀 ~ fetchSellOrders ~ sellOrders:", sellPendingOrders);
 
       //   // Sort oldest date first
       //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       setPendingOrders(sellPendingOrders);
       // You can now render buyOrders in your UI
+      //   return sellOrders;
+    } catch (error) {
+      console.error("Failed to fetch sell orders:", error);
+      return null;
+    }
+  }
+
+  async function fetchInProgressOrders() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          // credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
+      const sellInProgressOrders = await response.json();
+
+      setInProgressOrders(sellInProgressOrders);
       //   return sellOrders;
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
@@ -224,10 +331,17 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+      if (Array.isArray(data) && data.length > 0) {
+        LongSuccessToast("You have a new notification message on sell order");
+      }
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -251,10 +365,13 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to mark notification as read");
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
-      // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
       );
@@ -286,8 +403,6 @@ const SellLivePage = () => {
     <div>
       <div className="flex bg-gray-100 pt-2 min-h-screen">
         <div className="flex-1 p-6 overflow-y-auto">
-          {/* <BuyTetherComponent /> */}
-
           <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
             <div className=" px-5 py-2 rounded-2xl ">
               <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text ">
@@ -350,25 +465,55 @@ const SellLivePage = () => {
             </button>
           </div>
 
+          {/* Render Sell Orders In Progress */}
+          <div className="mb-5">
+            {inProgressOrders.length !== 0 && (
+              <div className="">
+                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  All Order In Progress 
+                </h2>
+                {inProgressOrders.map((offer) => (
+                  <AdminTradeInProgressCard
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    onMatch={handleCompleteMatch}
+                    onCancel={handleCancleMatch}
+                    showChatButton={offer.status === "On Sale"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <div>
-            {pendingOrders &&
-              pendingOrders?.map((offer) => (
-                <AdminTradeCard2
-                  key={offer._id}
-                  offer={offer}
-                  sell={Sell}
-                  approveOrders={() => approveOrders(offer._id)}
-                  rejectOrders={() => rejectOrders(offer._id)}
-                  setPendingOrders={setPendingOrders}
-                  showChatButton={offer.status === "Pending Approval"}
-                  onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                />
-              ))}
+            {pendingOrders.length !== 0 && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">
+                  All Pending Sell Orders
+                </h2>
+                {pendingOrders?.map((offer) => (
+                  <AdminTradeCard2
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    approveOrders={() => approveOrders(offer._id)}
+                    rejectOrders={() => rejectOrders(offer._id)}
+                    setPendingOrders={setPendingOrders}
+                    showChatButton={offer.status === "Pending Approval"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Render Sell Orders */}
           <div className="mb-5">
-            <h2 className="text-xl font-semibold mb-4">Sell Orders</h2>
+            <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+              All Live Sell Orders
+            </h2>
             {filteredSellOrders.length === 0 ? (
               <p className="text-gray-500">No sell orders match the filter.</p>
             ) : (

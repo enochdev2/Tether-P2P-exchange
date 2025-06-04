@@ -74,7 +74,7 @@ const AllUsers = () => {
 
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
-    navigate(`/admin/user/${userId}`);
+    navigate(`/adnin/users/${userId}`);
   };
 
   if (!allUsers || allUsers.length === 0) {

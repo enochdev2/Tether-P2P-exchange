@@ -28,6 +28,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
+import UserManagement from "./pages/adminDashboard/UserManagement";
+import InquiryManagement from "./pages/adminDashboard/InquiryManagement";
 
 function App() {
   return (
@@ -54,6 +56,7 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/chat/:orderId" element={<ChatRoom />} />
+        <Route path="/adnin/users/:userId" element={<UserDetails />} />
 
         {/* <Route path="/trade-listings" element={<TradingPage />} /> */}
         <Route path="/post-offer" element={<TransactionHistory />} />
@@ -89,15 +92,14 @@ function App() {
         >
           <Route path="dashboard" element={<Dashboards />} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
-          {/* Embedded in Admin Dashboard */}
           <Route path="transaction/:id" element={<TransactionDetails />} />
           <Route path="sell-orders" element={<SellLivePage />} />
           <Route path="buy-orders" element={<BuyLivePage />} />
-          {/* <Route path="users" element={<AdminUsers />} />{" "} */}
-          {/* User Registration page */}
-          <Route path="user" element={<AllUsers />}>
+          <Route path="users" element={<UserManagement />}></Route>
+          <Route path="inquiries" element={<InquiryManagement />}></Route>
+          {/* <Route path="users" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
-          </Route>
+          </Route> */}
           <Route path="chat" element={<AllChatPage />} />{" "}
           {/* You can customize this */}
         </Route>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom"; 
+import { Outlet, useNavigate } from "react-router-dom";
 import DashboardMetrics from "../../components/DashboardMetrics";
 import { useAuth } from "../../utils/AuthProvider";
 import Sidebar from "./Sidebar";
@@ -13,32 +13,49 @@ const Dashboards = () => {
     totalBuys: 6557,
     totalFees: 45345,
   });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
-
-    if (storedUser && storedIsLoggedIn === "true") {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setIsLoggedIn(true);
-
-      // Redirect non-admin users
-      if (!parsedUser.admin) {
-        navigate("/"); // redirect to homepage or unauthorized page
-      }
-    } else {
-      // Not logged in
-      navigate("/login"); // redirect to login or homepage
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    // Replace with real-time fetch or WebSocket subscription
-    fetch("/api/admin/metrics")
-      .then((res) => res.json())
-      .then((data) => setStats(data));
+    fetchStats();
   }, []);
+
+  async function fetchStats() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/getallstats",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const stats = await response.json();
+
+      // Optional: You can set this to state if using inside a component
+      setStats({
+        users: stats.users || 0,
+        totalSales: stats.totalSales || 0,
+        totalBuys: stats.totalBuys || 0,
+        totalFees: stats.totalFees || 0,
+      });
+
+      return stats;
+    } catch (error) {
+      console.error("Failed to fetch dashboard stats:", error);
+      return null;
+    } finally {
+      setLoadingStats(false);
+    }
+  }
 
   return (
     <div className="flex-1 p-2 space-y-5 ">

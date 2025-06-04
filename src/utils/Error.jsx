@@ -2,6 +2,15 @@ import { toast } from "react-hot-toast";
 
 const ErrorToast = (message) =>
   toast.custom((t) => (
+     <div
+      style={{
+        position: "fixed",
+        top: "70px", // Adjust this to your navbar height
+        right: "20%",
+        // transform: "translateX(-50%)",
+        zIndex: 9999,
+      }}
+    >
     <div
       id="toast-default"
       className={`${
@@ -22,6 +31,7 @@ const ErrorToast = (message) =>
         <span className="sr-only">Error icon</span>
       </div>
       <div className="ms-3 text-medium font-bold text-gray-200">{message}</div>
+    </div>
     </div>
   ));
 

@@ -18,6 +18,8 @@ import logo2 from "../../assets/Tether2.png";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/SolanaLogo.png";
+import { ErrorToast } from "../../utils/Error";
+import { useAuth } from "../../utils/AuthProvider";
 
 const TradingOffers = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -60,11 +62,16 @@ export default TradingOffers;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
+  const { priceKRW, setPriceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
-  const [rate, setRate] = useState("1435.5");
+  const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
+  const [refreshed, setRefreshed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(new Date());
+
   const [error, setError] = useState(null);
   const [walletAddress, setWalletAddress] = useState(
     "0x1234a0x1234346yr5t64rabcd5678ef901f9012" // Dummy admin wallet address
@@ -87,9 +94,49 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
-    setWonAmount(value.toString());
-    const calculatedUSDT = (value / rate).toFixed(4);
+    const currentWon = Number(wonAmount) || 0;
+    const newWonAmount = currentWon + value;
+    setWonAmount(newWonAmount.toString());
+    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
+  };
+
+  useEffect( () => {
+  if (!refreshing) return;
+  const fetchPrice = async () => {
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setRate(data.tether.krw);
+      setPriceKRW(data.tether.krw)
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    } 
+  };
+    
+  fetchPrice().then(() => {
+    setLastRefreshed(new Date());
+    setRefreshing(false);
+  });
+}, [refreshing]);
+
+
+  
+  const handleRefresh = async () => {
+     if (refreshing) return; 
+    setRefreshing(true);
+    
+    // Simulate refresh action (e.g., fetching new rate)
+    setTimeout(() => {
+      setLastRefreshed(new Date());
+      setRefreshing(false);
+    }, 1000); // 2 seconds delay to simulate loading
   };
 
   // Copy wallet address to clipboard
@@ -128,36 +175,41 @@ const Modal = ({ isModalOpen, closeModal }) => {
     }
 
     try {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Add auth tokens here if needed, e.g.:
-          // "Authorization": `Bearer ${token}`
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          amount: Number(usdtAmount),
-          price: Number(rate),
-          krwAmount: Number(wonAmount),
-          // Add other data fields you want to submit
-        }),
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            // Add auth tokens here if needed, e.g.:
+          },
+          // credentials: "include",
+          body: JSON.stringify({
+            amount: Number(usdtAmount),
+            price: Number(rate),
+            krwAmount: Number(wonAmount),
+            // Add other data fields you want to submit
+          }),
+        }
+      );
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
-      const data = await response.json();
-      console.log("Order submitted successfully:", data);
-
       // Optionally clear input or close modal
-      setWonAmount("");
-      setUsdtAmount("");
-      SuccessToast("Successfully placed a sell order");
-      closeModal();
+      if (response.ok) {
+        setWonAmount("");
+        setUsdtAmount("");
+        SuccessToast("Successfully placed a sell order");
+        closeModal();
+      }
     } catch (err) {
-      console.error("Failed to submit order:", err);
       setError("Failed to submit order. Please try again.");
     } finally {
       setLoading(false);
@@ -177,14 +229,17 @@ const Modal = ({ isModalOpen, closeModal }) => {
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
             <span className="text-[0.8rem]  leading-tight break-words">
               Tether Rate Calculator: <br className="block sm:hidden" />
-              As of May 19, 2025, 11:41 PM
+              As of {lastRefreshed.toLocaleString()} {refreshing && "Refreshing..."}
             </span>
             <button
-              className="hover:text-white transition flex items-center gap-1 self-end"
+              className="hover:text-white transition cursor-pointer flex items-center gap-1 self-end"
               aria-label="Refresh rate"
-              onClick={() => alert("Refresh clicked")}
+              onClick={handleRefresh}
             >
-              <RefreshCcw size={14} />
+              <RefreshCcw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
               <span className="hidden sm:inline">Refresh</span>
             </button>
           </div>
@@ -299,7 +354,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+              className={`text-xs cursor-pointer sm:text-sm py-2 px-3 rounded select-none transition 
           ${
             val === 1000000
               ? "bg-gray-300 text-black"
@@ -314,7 +369,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition cursor-pointer"
             title="정정"
           >
             Clear
@@ -367,7 +422,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               onChange={(e) => setDepositNetwork(e.target.value)}
               aria-label="Select deposit network"
             >
-              <option value="SOL">  Solana (SOL)</option>
+              <option value="SOL"> Solana (SOL)</option>
             </select>
             <ArrowDown
               size={18}

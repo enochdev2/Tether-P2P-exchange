@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaArrowRight, FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../../components/NotificationPopup";
+import { ErrorToast } from "../../utils/Error";
 
 const AllChatPage = () => {
   const navigate = useNavigate();
@@ -11,17 +12,24 @@ const AllChatPage = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/allchat`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch chat sessions");
+      const res = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/allchat`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await res.json();
-      console.log("🚀 ~ fetchMessages ~ data:", data);
+      if (!res.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
       setMessages(data);
     } catch (err) {
       console.error(err.message);
@@ -36,7 +44,6 @@ const AllChatPage = () => {
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
-      console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/chatSession",
         {
@@ -47,11 +54,15 @@ const AllChatPage = () => {
           },
         }
       );
-
-      if (!response.ok) throw new Error("Failed to fetch notifications");
-
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
+
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
+
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -77,7 +88,6 @@ const AllChatPage = () => {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      console.log("🚀 ~ markNotificationRead ~ response:", response);
       // Remove the marked notification from state so the card disappears
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)

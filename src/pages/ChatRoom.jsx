@@ -11,7 +11,6 @@ import { SuccessToast } from "../utils/Success";
 
 const ChatRoom = () => {
   const { user, setIsLoggedIn, setUser } = useAuth();
-  console.log("🚀 ~ ChatRoom ~ user:", user);
   const { orderId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -36,6 +35,7 @@ const ChatRoom = () => {
   };
 
   useEffect(() => {
+    // const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
     const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
       withCredentials: true,
@@ -46,7 +46,6 @@ const ChatRoom = () => {
     fetchMessages();
 
     newSocket.on("connect", () => {
-      console.log("✅ Socket connected");
       setIsConnected(true);
       newSocket.emit("joinRoom", orderId); // emit only after connect
     });
@@ -89,7 +88,6 @@ const ChatRoom = () => {
           body: JSON.stringify(messageData),
         }
       );
-      console.log("🚀 ~ handleSendMessage ~ res:", res);
       setNewMessage("");
     }
   };

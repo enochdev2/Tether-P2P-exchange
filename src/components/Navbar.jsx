@@ -10,12 +10,12 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../utils/AuthProvider";
 import logo2 from "../assets/Tether2.png";
 import logo from "../assets/Tether.png";
+import { useAuth } from "../utils/AuthProvider";
 
 const Navbar = () => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, priceKRW } = useAuth();
   const [activeLink, setActiveLink] = useState(""); // Track the active link
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Manage mobile menu visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown visibility
@@ -80,7 +80,7 @@ const Navbar = () => {
               <span>
                 <img src={logo2} alt="" className="w-8 h-8" />
               </span>
-              <span className="text-sm">USDT/₩1,435.5</span>
+              <span className="text-sm">USDT/₩{priceKRW}</span>
             </div>
 
             {isLoggedIn ? (

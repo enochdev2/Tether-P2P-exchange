@@ -47,7 +47,7 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
 
   return (
     <div
-      className={`relative flex flex-col sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-3 md:py-1 mb-4 border border-gray-200 shadow-sm
+      className={`relative flex flex-col sm:flex-row items-center bg-red-50 rounded-lg py-2 px-2 sm:py-3 md:py-1 mb-4 border border-red-500 shadow-sm
         ${isPending ? "opacity-90 filter grayscale" : ""}
       `}
     >

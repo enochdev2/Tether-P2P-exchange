@@ -12,6 +12,9 @@ const TradeCard = ({ offer, sell }) => {
   const navigate = useNavigate();
   const isPending = sell ? offer.status === " " : offer.status === " ";
 
+  // If this offer is "In Progress", don't render anything
+  if (offer.status === "In Progress") return null;
+
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
 
@@ -20,13 +23,13 @@ const TradeCard = ({ offer, sell }) => {
   return (
     <div
       className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm
-        ${isPending ? "opacity-90 filter grayscale" : ""}
+        ${offer.status === 'Pending Approval' ? "border border-red-700" : ""}
       `}
     >
       {/* Left Section */}
       <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr-6 justify-center sm:justify-start">
         <div className="flex items-center space-x-1 md:space-x-2">
-          <div className="bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap">
+          <div className={`bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap ${offer.status === 'Pending Approval' ? "filter grayscale" : ""} `}>
             {sell ? "Sell" : "Buy"}
           </div>
           <div className="w-3 h-3 hidden sm:block bg-green-700 rounded-full mt-1" />
@@ -35,14 +38,18 @@ const TradeCard = ({ offer, sell }) => {
 
       {/* Center Left Section */}
       <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
+        <img
+          src={logo2}
+          alt="Tether logo"
+          className="w-5 h-5 md:w-7 md:h-7 mr-3"
+        />
         <div className="flex flex-col">
-        <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
-        Total: {parseFloat(offer.amount).toFixed(4)} USDT
-        </span>
-        <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
-          Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
-        </span>
+          <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
+            Total: {parseFloat(offer.amount).toFixed(4)} USDT
+          </span>
+          <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
+            Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+          </span>
         </div>
       </div>
 
@@ -54,17 +61,17 @@ const TradeCard = ({ offer, sell }) => {
       </div>
 
       <div>
-          {/* Chat button for buy orders waiting for buy */}
-          {offer.status !== "Pending Approval" && (
-            <button 
+        {/* Chat button for buy orders waiting for buy */}
+        {offer.status !== "Pending Approval" && (
+          <button
             // to={`chat/${offer._id}`}
-              onClick={() => navigate(`/chat/${offer._id}`)}
-              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              1:1 Chat
-            </button>
-          )}
-        </div>
+            onClick={() => navigate(`/chat/${offer._id}`)}
+            className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+          >
+            1:1 Chat
+          </button>
+        )}
+      </div>
 
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">

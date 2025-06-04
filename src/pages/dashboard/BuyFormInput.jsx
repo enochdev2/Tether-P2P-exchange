@@ -1,21 +1,11 @@
-import React, { useState } from "react";
-import SellOfferPage from "../../components/SellOfferPage";
-import {
-  ArrowDown,
-  ArrowDownNarrowWide,
-  Copy,
-  Equal,
-  Icon,
-  PiIcon,
-  RefreshCcw,
-  X,
-} from "lucide-react";
-import { useEffect } from "react";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import { SuccessToast } from "../../utils/Success";
-import logo2 from "../../assets/Tether2.png";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import { Equal, RefreshCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo2 from "../../assets/Tether2.png";
+import LoadingSpiner from "../../components/LoadingSpiner";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,9 +49,6 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [rate, setRate] = useState("1435.5");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [walletAddress, setWalletAddress] = useState(
-    "0x1234346yr5t64rabcd5678ef9012" // Dummy admin wallet address
-  );
   const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [agreed, setAgreed] = useState(false);
 
@@ -91,8 +78,10 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
-    setWonAmount(value.toString());
-    const calculatedUSDT = (value / rate).toFixed(4);
+    const currentWon = Number(wonAmount) || 0;
+    const newWonAmount = currentWon + value;
+    setWonAmount(newWonAmount.toString());
+    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
   };
 
@@ -126,14 +115,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy",
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-            // Add auth tokens here if needed, e.g.:
-            // "Authorization": `Bearer ${token}`
           },
           credentials: "include",
           body: JSON.stringify({
@@ -145,18 +134,20 @@ const Modal = ({ isModalOpen, closeModal }) => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("Order submitted successfully:", data);
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       // Optionally clear input or close modal
       setWonAmount("");
       setUsdtAmount("");
       SuccessToast("Successfully placed a buy order");
-      closeModal();
+      if(response.ok){
+        closeModal();
+      }
     } catch (err) {
       console.error("Failed to submit order:", err);
       setError("Failed to submit order. Please try again.");
@@ -286,21 +277,22 @@ const Modal = ({ isModalOpen, closeModal }) => {
               value={wonAmount}
               onChange={(e) => setWonAmount(e.target.value)}
               placeholder="0"
-                            className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
-
+              className="bg-transparent w-full text-right text-white placeholder-gray-400 text-sm sm:text-base focus:outline-none"
               aria-label="Enter amount in won"
             />
-            <span className="ml-2 text-white select-none text-sm sm:text-base">KRW</span>
+            <span className="ml-2 text-white select-none text-sm sm:text-base">
+              KRW
+            </span>
           </div>
         </div>
 
         {/* Korean currency buttons + orange "정정" button */}
         <div className="flex flex-wrap gap-2 px-2 lg:px-6 mb-3">
-         {krwButtons.map((val) => (
+          {krwButtons.map((val) => (
             <button
               key={val}
               onClick={() => handleKRWButtonClick(val)}
-              className={`text-xs sm:text-sm py-2 px-3 rounded select-none transition 
+              className={`text-xs sm:text-sm py-2 px-3 rounded select-none cursor-pointer transition 
           ${
             val === 1000000
               ? "bg-gray-300 text-black"
@@ -315,7 +307,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               setWonAmount("");
               setUsdtAmount("");
             }}
-            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none transition"
+            className="ml-auto bg-green-700 hover:bg-green-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded select-none cursor-pointer transition"
             title="정정"
           >
             Clear
