@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
-import AdminTradeCard2 from "../../components/AdminTradeCard2";
-import AdminUserCard from "../../components/AdminUserCard";
+import AdminInquiryCard from "../../components/AdminInquiryCard";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
-import { SuccessToast } from "../../utils/Success";
 
 const InquiryManagement = () => {
   const [pendingOrders, setPendingOrders] = useState([]);
@@ -26,7 +24,7 @@ const InquiryManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry/all/active",
         {
           method: "GET",
           headers: {
@@ -56,7 +54,7 @@ const InquiryManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/sellOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/inquiry",
         {
           method: "GET",
           headers: {
@@ -86,7 +84,6 @@ const InquiryManagement = () => {
   async function markNotificationRead(notificationId) {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
@@ -104,7 +101,6 @@ const InquiryManagement = () => {
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
-
       setNotifications((prev) =>
         prev.filter((notif) => notif._id !== notificationId)
       );
@@ -140,7 +136,7 @@ const InquiryManagement = () => {
               <p className="text-gray-500">No  User Available.</p>
             ) : (
               allUsers?.map((offer) => (
-                <AdminUserCard
+                <AdminInquiryCard
                   key={offer._id}
                   offer={offer}
                   sell={Sell}

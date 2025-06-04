@@ -39,7 +39,7 @@ export default function InquiryHistory() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -55,54 +55,57 @@ export default function InquiryHistory() {
 
 const AllInquiries = () => {
   const [allInquiry, setAllInquiry] = useState([]);
-  const { allUser } = useAuth();
+  // const { allUser } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
   // const navigate = useNavigate();
 
-  useEffect(() => {
-    const allUser = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry/user",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log("🚀 ~ allUser ~ response:", response);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
+  const allUsers = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry/user",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+     if (!response.ok) {
+      const data = await res.json();
+      const errorMsg =
+        data.error || data.message || "Failed to register user";
+      ErrorToast(errorMsg);
+    }
 
-        const data = await response.json();
-        console.log("Users fetched successfully 12345667", data);
-        setAllInquiry(data); // return parsed user data
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    allUser();
-  }, []);
-
+      const data = await response.json();
+      console.log("🚀 ~ allUsers ~ data:", data)
+      
+      setAllInquiry(data); // return parsed user data
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally  {
+      setIsLoading(false);
+    }
+  };
+  
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
     // navigate(`/`);
   };
 
   useEffect(() => {
+    allUsers();
     fetchNotifications();
   }, []);
 
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
-      console.log("🚀 ~ fetchNotifications ~ token:", token);
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/inquiry",
         {
@@ -114,10 +117,14 @@ const AllInquiries = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch notifications");
+       if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const data = await response.json();
-      console.log("🚀 ~ fetchNotifications ~ data:", data);
       setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -129,7 +136,6 @@ const AllInquiries = () => {
   async function markNotificationRead(notificationId) {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
@@ -140,9 +146,10 @@ const AllInquiries = () => {
           },
         }
       );
+      const data = await response.json();
 
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -155,10 +162,10 @@ const AllInquiries = () => {
     }
   }
 
-  if (!allInquiry || allInquiry.length === 0) {
+  if ( !isLoading && allInquiry.length === 0) {
     return (
       <div className=" flex items-center justify-center p-8 bg-gray-50">
-        <p className="text-gray-500 text-lg">No users found.</p>
+        <p className="text-gray-500 text-lg">No new inquiry made yet</p>
       </div>
     );
   }
@@ -176,9 +183,6 @@ const AllInquiries = () => {
             <tr>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Title
-              </th>
-              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Username
               </th>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 Description
@@ -199,25 +203,22 @@ const AllInquiries = () => {
             {allInquiry?.map((user, idx) => (
               <tr
                 key={user.id}
-                className={`cursor-pointer hover:bg-indigo-50 transition-colors ${
+                className={`cursor-pointer border-b border-gray-400 hover:bg-green-100 transition-colors ${
                   idx % 2 === 0 ? "bg-white" : "bg-indigo-50/50"
                 }`}
                 onClick={() => handleViewUser(user.id)}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap  text-gray-900">
                   {user.title}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user.username}
-                </td>
-                <td className="px-6 py-4 text-gray-700 max-w-sm break-words">
+                <td className="px-6 py-4 text-gray-700 bg-slate-100 max-w-sm break-words">
                   {user.description}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-700 truncate max-w-xs">
-                  {user.comment || "No comment yet"}
+                  {user?.comment || "No comment yet"}
                 </td>
                 <td
-                  className={`px-6 py-4 whitespace-nowrap font-semibold ${
+                  className={`px-6 py-4 whitespace-nowrap bg-slate-100 font-semibold ${
                     user.status?.toLowerCase() === "active"
                       ? "text-green-600"
                       : user.status?.toLowerCase() === "pending"
@@ -227,7 +228,7 @@ const AllInquiries = () => {
                 >
                   {user.status}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                <td className="px-3 text-xs py-4 whitespace-nowrap text-gray-700">
                   {formatDateTime(user.date) || "Unknown"}
                 </td>
               </tr>
@@ -247,9 +248,6 @@ const AllInquiries = () => {
             <h2 className="text-lg font-semibold text-gray-900 mb-2">
               {user.title}
             </h2>
-            <p className="text-sm text-gray-600 mb-1">
-              <span className="font-semibold">Username:</span> {user.username}
-            </p>
             <p className="text-sm text-gray-700 mb-1">
               <span className="font-semibold">Description:</span>{" "}
               {user.description}

@@ -45,20 +45,19 @@ const SellLivePage = () => {
           body: JSON.stringify({ buyerOrderId, sellerOrderId }),
         }
       );
+      const result = await response.json();
 
       if (!response.ok) {
         const data = await res.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
+      } else {
+        await fetchInProgressOrders();
+        await fetchSellOrders();
+        await fetchSellPendingOrders();
+        SuccessToast("Orders matched successfully!");
       }
-
-      const result = await response.json();
-
-      await fetchInProgressOrders();
-      await fetchSellOrders();
-      await fetchSellPendingOrders();
-      SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
     }
@@ -82,12 +81,14 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Failed to match orders: ${response.status}`);
+       if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
       const result = await response.json();
-      console.log("Orders matched successfully:", result);
       await fetchInProgressOrders();
       await fetchSellOrders();
       await fetchSellPendingOrders();
@@ -115,18 +116,19 @@ const SellLivePage = () => {
           body: JSON.stringify({ buyerOrderId, sellerOrderId }),
         }
       );
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`Failed to match orders: ${response.status}`);
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      } else {
+        await fetchInProgressOrders();
+        await fetchSellOrders();
+        await fetchSellPendingOrders();
+        SuccessToast("Orders matched successfully!");
       }
-
-      const result = await response.json();
-
-      console.log("Orders matched successfully:", result);
-      await fetchInProgressOrders();
-      await fetchSellOrders();
-      await fetchSellPendingOrders();
-      SuccessToast("Orders matched successfully!");
     } catch (error) {
       console.error("Error matching orders:", error);
     }
@@ -155,8 +157,11 @@ const SellLivePage = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+       if (!response.ok) {
+        const data = await res.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
       const sellOrders = await response.json();
@@ -470,7 +475,7 @@ const SellLivePage = () => {
             {inProgressOrders.length !== 0 && (
               <div className="">
                 <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All Order In Progress 
+                  All Order In Progress
                 </h2>
                 {inProgressOrders.map((offer) => (
                   <AdminTradeInProgressCard

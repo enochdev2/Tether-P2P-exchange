@@ -88,7 +88,7 @@ const UserManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/sellOrders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/registration",
         {
           method: "GET",
           headers: {
@@ -112,7 +112,6 @@ const UserManagement = () => {
   async function markNotificationRead(notificationId) {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
