@@ -62,12 +62,16 @@ export default TradingOffers;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
-  const { priceKRW } = useAuth();
+  const { priceKRW, setPriceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
   const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
+  const [refreshed, setRefreshed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(new Date());
+
   const [error, setError] = useState(null);
   const [walletAddress, setWalletAddress] = useState(
     "0x1234a0x1234346yr5t64rabcd5678ef901f9012" // Dummy admin wallet address
@@ -95,6 +99,44 @@ const Modal = ({ isModalOpen, closeModal }) => {
     setWonAmount(newWonAmount.toString());
     const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
+  };
+
+  useEffect( () => {
+  if (!refreshing) return;
+  const fetchPrice = async () => {
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setRate(data.tether.krw);
+      setPriceKRW(data.tether.krw)
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    } 
+  };
+    
+  fetchPrice().then(() => {
+    setLastRefreshed(new Date());
+    setRefreshing(false);
+  });
+}, [refreshing]);
+
+
+  
+  const handleRefresh = async () => {
+     if (refreshing) return; 
+    setRefreshing(true);
+    
+    // Simulate refresh action (e.g., fetching new rate)
+    setTimeout(() => {
+      setLastRefreshed(new Date());
+      setRefreshing(false);
+    }, 1000); // 2 seconds delay to simulate loading
   };
 
   // Copy wallet address to clipboard
@@ -160,9 +202,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
         ErrorToast(errorMsg);
       }
 
-
       // Optionally clear input or close modal
-      if(response.ok){
+      if (response.ok) {
         setWonAmount("");
         setUsdtAmount("");
         SuccessToast("Successfully placed a sell order");
@@ -188,14 +229,17 @@ const Modal = ({ isModalOpen, closeModal }) => {
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
             <span className="text-[0.8rem]  leading-tight break-words">
               Tether Rate Calculator: <br className="block sm:hidden" />
-              As of May 19, 2025, 11:41 PM
+              As of {lastRefreshed.toLocaleString()} {refreshing && "Refreshing..."}
             </span>
             <button
-              className="hover:text-white transition flex items-center gap-1 self-end"
+              className="hover:text-white transition cursor-pointer flex items-center gap-1 self-end"
               aria-label="Refresh rate"
-              onClick={() => alert("Refresh clicked")}
+              onClick={handleRefresh}
             >
-              <RefreshCcw size={14} />
+              <RefreshCcw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
               <span className="hidden sm:inline">Refresh</span>
             </button>
           </div>

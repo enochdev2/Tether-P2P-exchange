@@ -41,11 +41,10 @@ export const AuthProvider = ({ children }) => {
       }
       const data = await response.json();
       setPriceKRW(data.tether.krw);
+      return response;
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+      console.log(err.message);
+    } 
   };
 
   const login = async (userData) => {
@@ -230,6 +229,7 @@ export const AuthProvider = ({ children }) => {
         updateUser,
         allUser,
         priceKRW,
+        setPriceKRW,
         fetchPrice,
         isTokenExpired,
       }}
