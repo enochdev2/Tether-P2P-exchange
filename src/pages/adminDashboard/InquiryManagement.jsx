@@ -11,7 +11,7 @@ const InquiryManagement = () => {
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
-   const [allUsers, setAllUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
   const [sellAmountFilter, setSellAmountFilter] = useState("all");
 
@@ -109,7 +109,6 @@ const InquiryManagement = () => {
     }
   }
 
-
   if (loadingSell) return <LoadingSpiner />;
 
   const Sell = true;
@@ -128,12 +127,27 @@ const InquiryManagement = () => {
           </div>
 
           {/* Render Sell Orders */}
-          <div className="mb-5 md:text-xl">
+          <div className="mb-5 md:text-xl ">
             <h2 className="text-xl md:text-2xl font-bold mb-4">
               All Inquiries
             </h2>
-             {allUsers?.length === 0 ? (
-              <p className="text-gray-500">No  User Available.</p>
+            <div className="flex justify-between sm:space-x-1 items-center text-white bg-[#26a17b] px-5 py-2">
+              <div className="">
+                Title
+              </div>
+              <div className="">
+                Nickname
+              </div>
+
+              <div className="">
+                Description
+              </div>
+              <div>Comment</div>
+              <div className="">Action...</div>
+              <div>status</div>
+            </div>
+            {allUsers?.length === 0 ? (
+              <p className="text-gray-500">No User Available.</p>
             ) : (
               allUsers?.map((offer) => (
                 <AdminInquiryCard

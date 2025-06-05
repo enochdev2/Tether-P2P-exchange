@@ -64,9 +64,9 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
 
   return (
     <div
-      className={`relative  bg-white rounded-lg py-2 px-4 sm:py-1 md:py-1 mb-4 border border-gray-200 shadow-sm`}
+      className={`relative  rounded-lg py-2 px-4 sm:py-1 md:py-1 mb-4 border border-gray-200 shadow-sm`}
     >
-      <div className="flex flex-col sm:flex-row sm:space-x-1 items-center">
+      <div className="flex flex-col  bg-white sm:flex-row sm:space-x-1 items-center">
         {/* Center Left Section */}
         <div className="flex-col md:flex-row md:flex- w-full sm:w-auto flex items-center mb-4 sm:mb-0">
           <div className="flex flex-col space-y-2 ..bg-slate-200 px-4 py-1 rounded-2xl">
