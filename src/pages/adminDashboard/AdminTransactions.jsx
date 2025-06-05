@@ -1,5 +1,77 @@
 import React, { useEffect, useState } from "react";
 
+// [
+//   {
+//     postingNumber: "SL-81C2D1",
+//     buyer: "user",
+//     seller: "admin",
+//     phone: "12345",
+//     amount: "503.56 USDT",
+//     status: "Completed",
+//     details: {
+//       buyerNickname: "user",
+//       buyerPhone: "12345678",
+//       buyRequestAmount: "503.56 USDT",
+//       progressRecords: [
+//         {
+//           type: "Buy",
+//           amount: "69.6621 USDT",
+//           nickname: "user",
+//           phone: "12345678",
+//           fee: null,
+//         },
+//         {
+//           type: "Buy",
+//           amount: "20.898599999999988 USDT",
+//           nickname: "admin",
+//           phone: "12345",
+//           fee: "0.208986 USDT",
+//         },
+//         {
+//           type: "Buy",
+//           amount: "412.9993 USDT",
+//           nickname: "admin",
+//           phone: "12345",
+//           fee: "4.129993 USDT",
+//         },
+//       ],
+//       registrationDate: "21/05/2025, 13:37:16",
+//       completionDate: "02/06/2025, 18:26:30",
+//     },
+//   },
+//   {
+//     postingNumber: "SL-625A93",
+//     buyer: "newuser",
+//     seller: "user",
+//     phone: "12345678909",
+//     amount: "503.56 USDT",
+//     status: "Completed",
+//     details: {
+//       buyerNickname: "newuser",
+//       buyerPhone: "1234",
+//       buyRequestAmount: "503.56 USDT",
+//       progressRecords: [
+//         {
+//           type: "Buy",
+//           amount: "20.8986 USDT",
+//           nickname: "newuser",
+//           phone: "1234",
+//           fee: "0.2 USDT",
+//         },
+//         {
+//           type: "Buy",
+//           amount: "482.6614 USDT",
+//           nickname: "admin",
+//           phone: "12345",
+//           fee: "0.208986 USDT",
+//         },
+//       ],
+//       registrationDate: "21/05/2025, 13:35:59",
+//       completionDate: "30/05/2025, 03:51:34",
+//     },
+//   },
+// ];
+
 const mockData = {
   sell: [
     {
@@ -157,14 +229,17 @@ export default function AdminTransactions() {
   // Function to fetch buy orders, optionally filtered by status
 
   async function fetchSellOrders() {
-    const url =
-      "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+    // const url =
+    // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+
     try {
-      // const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+      const url = "http://localhost:3000/api/v1/sell/allmatched-orders";
+      const token = localStorage.getItem("token");
 
       const response = await fetch(url, {
         method: "GET",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
@@ -175,54 +250,11 @@ export default function AdminTransactions() {
       }
 
       const allOrders = await response.json();
-
-      const formatted = {
-        buy: [],
-        sell: [],
-      };
-
-      allOrders.forEach((order, index) => {
-        const isBuy = order.status === "Buy Completed";
-        const isSell = order.status === "Sale Completed";
-        const buyerName = order.userId?.nickname || "Unknown";
-        const sellerMatches = order.matchedSellOrders || [];
-        const buyerMatches = order.matchedBuyOrders || [];
-
-        const commonData = {
-          postingNumber: order._id.slice(-12), // or use index or generated code
-          buyer: isBuy ? buyerName : buyerMatches[0]?.nickname || "N/A",
-          seller: isSell ? buyerName : sellerMatches[0]?.nickname || "N/A",
-          amount: `${order.amount} USDT`,
-          status: "Completed",
-          details: {
-            buyerNickname: buyerName,
-            buyerPhone: order.userId?.phone || "N/A",
-            buyRequestAmount: `${order.amount} USDT`,
-            progressRecords: [
-              ...sellerMatches.map((match) => ({
-                type: "Sell",
-                amount: `${match.amount} USDT`,
-                nickname: match.nickname || "N/A",
-                fee: null,
-              })),
-              ...buyerMatches.map((match) => ({
-                type: "Buy",
-                amount: `${match.amount} USDT`,
-                nickname: match.nickname || "N/A",
-                fee: order.fee ? `${order.fee} USDT` : null,
-              })),
-            ],
-            registrationDate: new Date(order.createdAt).toLocaleString(),
-            completionDate: new Date(order.updatedAt).toLocaleString(),
-          },
-        };
-
-        if (isBuy) formatted.buy.push(commonData);
-        if (isSell) formatted.sell.push(commonData);
-      });
+      console.log("🚀 ~ fetchSellOrders ~ allOrders:", allOrders);
 
       setOrders(allOrders);
-      setFilteredData(formatted[activeTab]);
+      // Automatically set initial filteredData to the default tab
+      setFilteredData(allOrders[activeTab]);
       return formatted;
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
@@ -233,7 +265,7 @@ export default function AdminTransactions() {
   }
 
   const handleSearch = () => {
-    const data = activeTab === "buy" ? mockData.buy : mockData.sell;
+    const data = orders[activeTab] || [];
     if (!searchInput.trim()) {
       setFilteredData(data);
       setExpandedPost(null);
@@ -283,7 +315,7 @@ export default function AdminTransactions() {
             key={tab}
             onClick={() => {
               setActiveTab(tab);
-              setFilteredData(mockData[tab]);
+              setFilteredData(orders[tab] || []);
               setExpandedPost(null);
               setSearchInput("");
             }}
