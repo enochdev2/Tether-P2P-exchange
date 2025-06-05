@@ -165,6 +165,7 @@ const UserManagement = () => {
                   offer={offer}
                   handleSubmit={() => handleSubmit(offer.nickname)}
                   setChange={setChange}
+                  handleUpdate={allUser}
                 />
               ))
             )}

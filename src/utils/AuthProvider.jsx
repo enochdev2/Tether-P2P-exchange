@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null); // State to hold user data
   const [priceKRW, setPriceKRW] = useState(null);
-  console.log("🚀 ~ priceKRW:", priceKRW);
 
   useEffect(() => {
     fetchPrice();
@@ -133,7 +132,6 @@ export const AuthProvider = ({ children }) => {
         ErrorToast(errorMsg);
       }
 
-      console.log("User successfully registered", data);
       return response;
     } catch (error) {
       console.error("Error during sign-up:", error);
@@ -159,12 +157,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log("Users fetched successfully 12345667", data);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
-      console.log("🚀 ~ updateUser ~ updatedData:", updatedData);
+   
       return data; // return parsed user data
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -189,7 +182,10 @@ export const AuthProvider = ({ children }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update user");
+        const data = await response.json();
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
       }
 
       const data = await response.json();
@@ -197,7 +193,6 @@ export const AuthProvider = ({ children }) => {
       return data; // Return updated user data
     } catch (error) {
       console.error("Error during user update:", error);
-      // Handle error, e.g., show error message to user
     }
   };
 

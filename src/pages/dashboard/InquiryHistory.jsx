@@ -83,7 +83,6 @@ const AllInquiries = () => {
     }
 
       const data = await response.json();
-      console.log("🚀 ~ allUsers ~ data:", data)
       
       setAllInquiry(data); // return parsed user data
     } catch (error) {
@@ -214,7 +213,7 @@ const AllInquiries = () => {
                 <td className="px-6 py-4 text-gray-700 bg-slate-100 max-w-sm break-words">
                   {user.description}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700 truncate max-w-xs">
+               <td className="px-6 py-4 text-gray-700  max-w-sm break-words">
                   {user?.comment || "No comment yet"}
                 </td>
                 <td
