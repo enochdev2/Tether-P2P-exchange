@@ -125,19 +125,19 @@ const mockData = {
   ],
 };
 
-function TransactionDetails({ details }) {
+function TransactionDetails({ details, activeTab }) {
   return (
     <div className="border border-[#26a17b] rounded-lg p-4 mt-4 bg-white shadow-md text-sm sm:text-base">
       {/* Buyer Info */}
       <div className="bg-[#f4fdf9] border border-[#26a17b] rounded-lg p-4 space-y-3">
         <div>
-          <strong>Buyer Nickname:</strong> {details.buyerNickname}
+          <strong> {activeTab === "buy" ? "Buyer Nickname" : "Seller Nickname"}:</strong> {details.buyerNickname}
         </div>
         <div>
-          <strong>Buyer Phone Number:</strong> {details.buyerPhone}
+          <strong>{activeTab === "buy" ? "Buyer Number" : "Seller Number"}:</strong> {details.buyerPhone}
         </div>
         <div>
-          <strong>Buy Request Amount:</strong> {details.buyRequestAmount}
+          <strong>{activeTab === "buy" ? "Buy Request Amount" : "Sell Request Amount"}:</strong> {details.buyRequestAmount}
         </div>
       </div>
 
@@ -249,12 +249,11 @@ export default function AdminTransactions() {
       }
 
       const allOrders = await response.json();
-      console.log("🚀 ~ fetchSellOrders ~ allOrders:", allOrders);
 
       setOrders(allOrders);
       // Automatically set initial filteredData to the default tab
       setFilteredData(allOrders[activeTab]);
-      return formatted;
+      // return allOrders;
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
       return null;
@@ -388,6 +387,7 @@ export default function AdminTransactions() {
                               (t) => t.postingNumber === postingNumber
                             ).details
                           }
+                          activeTab={activeTab}
                         />
                       </td>
                     </tr>
