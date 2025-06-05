@@ -78,9 +78,9 @@ const Navbar = () => {
             {/* USDT Price Section */}
             <div className="flex items-center space-x-2 bg-tea-500 rounded-full px-3 py-1 text-white">
               <span>
-                <img src={logo2} alt="" className="w-8 h-8" />
+                <img src={logo2} alt="" className="md:w-8 md:h-8 w-6 h-6" />
               </span>
-              <span className="text-sm">USDT/₩{priceKRW}</span>
+              <span className="text-xs md:text-sm">USDT/₩{priceKRW}</span>
             </div>
 
             {isLoggedIn ? (
@@ -216,7 +216,7 @@ const Navbar = () => {
           {user && user.admin && (
             <Link
               to="/admin/dashboard"
-              className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl py-3 rounded-xl text-[15px] font-bold "
+              className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
               onClick={() => handleLinkClick("admin-dashboard")}
             >
               Admin

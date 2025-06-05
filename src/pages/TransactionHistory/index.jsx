@@ -127,7 +127,7 @@ const TransactionHistory = () => {
   return (
    <div className="flex mt-19 flex-col lg:flex-row bg-gray-100 min-h-screen">
   {/* Sidebar Section */}
-  <aside className="w-full lg:w-1/4 bg-white p-4 sm:p-6 shadow-lg space-y-6">
+  <aside className="w-full hidden md:block lg:w-1/4 bg-white p-4 sm:p-6 shadow-lg space-y-6">
     <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
       Find Transaction History
     </h2>
@@ -147,19 +147,10 @@ const TransactionHistory = () => {
         />
       </div>
 
-      <div className="flex items-center justify-between">
-        <span>Trader Location</span>
-        <ChevronDown className="w-4 h-4" />
-      </div>
 
       <div className="flex items-center justify-between">
         <label htmlFor="recent-trade">Recently Traded</label>
         <input id="recent-trade" type="checkbox" className="accent-green-500" />
-      </div>
-
-      <div className="flex items-center justify-between">
-        <label htmlFor="pending-offers">Pending Offers</label>
-        <input id="pending-offers" type="checkbox" className="accent-green-500" />
       </div>
     </div>
 

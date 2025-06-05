@@ -53,7 +53,12 @@ const sidebarData = [
     id: "buy",
     title: "Buy",
     links: [
-      { id: "buy-order", label: "Buy Order", to: "buy-order", icon: <TrendingUp /> },
+      {
+        id: "buy-order",
+        label: "Buy Order",
+        to: "buy-order",
+        icon: <TrendingUp />,
+      },
       {
         id: "buy-history",
         label: "Buy History",
@@ -85,6 +90,7 @@ const inquiryData = {
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { logout, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,9 +100,12 @@ function Sidebar() {
 
   const handleLogout = async () => {
     try {
+      setIsLoading(true);
+      localStorage.removeItem("token");
       const response = await logout();
       if (response) {
         SuccessToast("You have just logged out successfully");
+        setIsLoading(false);
         navigate("/");
       }
     } catch (error) {
@@ -134,9 +143,8 @@ function Sidebar() {
                 alt=""
               />
               <span className="text-white uppercase text-sm md:text-base font-semibold">
-              {user?.fullName
-                }
-            </span> 
+                {user?.fullName}
+              </span>
             </div>
           </div>
         )}
@@ -207,10 +215,37 @@ function Sidebar() {
         <div className="p-4 border-t border-gray-700">
           <button
             onClick={handleLogout}
+            disabled={isLoading}
             className="flex items-center cursor-pointer gap-3 py-2 px-3 rounded-md hover:bg-red-600 w-full"
           >
             <LogOutIcon size={18} />
-            {!collapsed && <span>Sign Out</span>}
+            {isLoading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Siging Out...
+              </>
+            ) : (
+              <>{!collapsed && <span>Sign Out</span>}</>
+            )}
           </button>
         </div>
       </div>

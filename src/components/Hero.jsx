@@ -70,7 +70,7 @@ const Hero = () => {
                 </Link>
               </>
             ) : (
-              <Link to="/trade-listings">
+              <Link to="/post-offer">
                 <button className="bg-green-600 hover:bg-green-700 transition text-white py-3 px-6 rounded-xl font-bold text-lg w-full sm:w-auto">
                   Explore Trade Offers
                 </button>
