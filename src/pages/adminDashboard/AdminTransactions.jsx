@@ -302,7 +302,7 @@ export default function AdminTransactions() {
           onClick={handleSearch}
           className="px-5 py-2 bg-[#26a17b] text-white rounded-md font-medium hover:bg-emerald-700 transition"
         >
-          Enter
+          Search
         </button>
       </div>
 
