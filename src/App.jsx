@@ -30,6 +30,7 @@ import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
 import UserManagement from "./pages/adminDashboard/UserManagement";
 import InquiryManagement from "./pages/adminDashboard/InquiryManagement";
+import ChatRoom2 from "./pages/ChatRoom2";
 
 function App() {
   return (
@@ -55,7 +56,8 @@ function App() {
         />
 
         <Route path="/" element={<Home />} />
-        <Route path="/chat/:orderId" element={<ChatRoom />} />
+        <Route path="/chats/:orderType/:offerId/" element={<ChatRoom />} />
+        <Route path="/chat/:offerId" element={<ChatRoom2 />} />
         <Route path="/adnin/users/:userId" element={<UserDetails />} />
 
         {/* <Route path="/trade-listings" element={<TradingPage />} /> */}

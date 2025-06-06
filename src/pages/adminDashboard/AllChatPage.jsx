@@ -7,8 +7,11 @@ import { ErrorToast } from "../../utils/Error";
 const AllChatPage = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
+  const [filteredMessages, setFilteredMessages] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [selectedTab, setSelectedTab] = useState('Seller'); // State for Seller/Buyer tab
+  const [searchQuery, setSearchQuery] = useState(''); // State for search input
 
   const fetchMessages = async () => {
     try {
@@ -24,15 +27,15 @@ const AllChatPage = () => {
 
       const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to fetch messages";
         ErrorToast(errorMsg);
+        return;
       }
 
       setMessages(data);
+      setFilteredMessages(data); // Initially show all messages
     } catch (err) {
-      console.error(err.message);
+      console.error("Error fetching messages:", err.message);
     }
   };
 
@@ -57,10 +60,9 @@ const AllChatPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to fetch notifications";
         ErrorToast(errorMsg);
+        return;
       }
 
       setNotifications(data);
@@ -71,10 +73,32 @@ const AllChatPage = () => {
     }
   }
 
-  async function markNotificationRead(notificationId) {
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    filterMessages(tab); // Filter messages when tab changes
+  };
+
+  const filterMessages = (tab) => {
+    // Filter based on orderType (buy or sell)
+    if (tab === 'Seller') {
+      setFilteredMessages(messages.filter((msg) => msg.orderType === 'sell')); // Filter for sell orders
+    } else {
+      setFilteredMessages(messages.filter((msg) => msg.orderType === 'buy')); // Filter for buy orders
+    }
+  };
+
+  const handleSearch = () => {
+    if (searchQuery) {
+      const filtered = messages.filter((msg) => msg.orderId.includes(searchQuery));
+      setFilteredMessages(filtered); // Show messages that match the order number
+    } else {
+      setFilteredMessages(messages); // Show all messages if search query is empty
+    }
+  };
+
+  const markNotificationRead = async (notificationId) => {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
         {
@@ -88,50 +112,70 @@ const AllChatPage = () => {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      // Remove the marked notification from state so the card disappears
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 py-10 px-6">
       <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md shadow-xl rounded-3xl p-8 border border-green-200">
         <div className="flex items-center gap-3 mb-6">
           <FaComments className="text-green-600 text-3xl" />
-          <h2 className="text-3xl font-bold text-green-800">
-            Open Chat Sessions
-          </h2>
+          <h2 className="text-3xl font-bold text-green-800">Open Chat Sessions</h2>
         </div>
 
         <p className="text-gray-700 mb-6">
-          Click any active Order ID below to jump into its chatroom and continue
-          the conversation.
+          Click any active Order ID below to jump into its chatroom and continue the conversation.
         </p>
 
-        {messages.length === 0 ? (
+        <div className="flex gap-4 mb-6">
+          <div className="flex flex-1 space-x-3">
+            <button
+              onClick={() => handleTabChange('Seller')}
+              className={`px-4 w-[50%] h-12 cursor-pointer py-2 rounded-lg text-white ${selectedTab === 'Seller' ? 'bg-green-600' : 'bg-green-300'}`}
+            >
+              Seller
+            </button>
+            <button
+              onClick={() => handleTabChange('Buyer')}
+              className={`px-4 w-[50%] h-12 cursor-pointer py-2 rounded-lg text-white ${selectedTab === 'Buyer' ? 'bg-green-600' : 'bg-green-300'}`}
+            >
+              Buyer
+            </button>
+          </div>
+          <div className="flex flex-1 items-center mb-6">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Enter Order Number"
+              className="p-2 border rounded-lg w-full mr-2"
+            />
+            <button onClick={handleSearch} className="bg-green-600 text-white px-4 py-2 rounded-lg">
+              Search
+            </button>
+          </div>
+        </div>
+
+        {filteredMessages.length === 0 ? (
           <div className="text-center py-20 text-gray-500">
             <p className="text-lg">🚫 No active chat sessions yet.</p>
-            <p className="mt-2">
-              Once an order is active, chats will show here.
-            </p>
+            <p className="mt-2">Once an order is active, chats will show here.</p>
           </div>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-1 gap-4">
-            {messages.map((chat) => (
+            {filteredMessages.map((chat) => (
               <li
                 key={chat._id}
-                onClick={() => navigate(`/chat/${chat.orderId}`)}
+                onClick={() => navigate(`/chats/${chat.orderType}/${chat.orderId}`)}
                 className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
+                {console.log(chat.orderType)}
                 <div>
                   <p className="text-sm text-gray-500">Order ID</p>
-                  <p className="text-lg font-semibold text-green-800">
-                    {chat.orderId}
-                  </p>
+                  <p className="text-lg font-semibold text-green-800">{chat.orderId}</p>
                 </div>
                 <FaArrowRight className="text-green-600 text-xl" />
               </li>
@@ -139,7 +183,6 @@ const AllChatPage = () => {
           </ul>
         )}
 
-        {/* Optional static footer or notice */}
         <div className="mt-10 text-center text-sm text-gray-500">
           <p>Need help? Contact support or visit the admin panel.</p>
         </div>

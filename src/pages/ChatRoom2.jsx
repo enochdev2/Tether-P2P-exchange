@@ -9,9 +9,9 @@ import { SuccessToast } from "../utils/Success";
 //   withCredentials: true, // To handle cookies and CORS
 // });
 
-const ChatRoom = () => {
+const ChatRoom2 = () => {
   const { user, setIsLoggedIn, setUser } = useAuth();
-  const { offerId, orderType } = useParams();
+  const { orderId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -19,36 +19,6 @@ const ChatRoom = () => {
   const [userRole, setUserRole] = useState(null);
   const [userOrderId, setUserOrderId] = useState(null);
   const navigate = useNavigate();
- const orderId = offerId
-   useEffect(() => {
-    // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
-      path: "/socket.io",
-      withCredentials: true,
-    });
-
-    setSocket(newSocket);
-
-    fetchMessages();
-
-    newSocket.on("connect", () => {
-      setIsConnected(true);
-      newSocket.emit("joinRoom", offerId); // emit only after connect
-    });
-
-    newSocket.on("connect_error", (err) => {
-      console.error("❌ Socket connect error:", err.message);
-    });
-
-    newSocket.on("message", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-
-    return () => {
-      newSocket.emit("leaveRoom", offerId);
-      newSocket.disconnect();
-    };
-  }, [offerId]);
 
   const fetchMessages = async () => {
     const res = await fetch(
@@ -64,7 +34,35 @@ const ChatRoom = () => {
     setMessages(data);
   };
 
- 
+  useEffect(() => {
+    // const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+      path: "/socket.io",
+      withCredentials: true,
+    });
+
+    setSocket(newSocket);
+
+    fetchMessages();
+
+    newSocket.on("connect", () => {
+      setIsConnected(true);
+      newSocket.emit("joinRoom", orderId); // emit only after connect
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("❌ Socket connect error:", err.message);
+    });
+
+    newSocket.on("message", (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      newSocket.emit("leaveRoom", orderId);
+      newSocket.disconnect();
+    };
+  }, [orderId]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
@@ -80,14 +78,13 @@ const ChatRoom = () => {
       const messageData = {
       content: newMessage,
       sender: user.nickname,
-      orderId: orderId,
-      orderType: orderType, // Pass orderType as well
+      orderId,
+      orderType : message[0].orderType, // Pass orderType as well
       timestamp: new Date().toISOString(),
     };
 
       const token = localStorage.getItem("token");
 
-      // "http://localhost:3000/api/v1/chat",
       const res = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
         {
@@ -209,4 +206,4 @@ const ChatRoom = () => {
   );
 };
 
-export default ChatRoom;
+export default ChatRoom2;
