@@ -20,6 +20,8 @@ const TradeCard = ({ offer, sell }) => {
 
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
+   const orderType = sell ? "sell" : "buy";
+
   return (
     <div
       className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm
@@ -65,7 +67,7 @@ const TradeCard = ({ offer, sell }) => {
         {offer.status !== "Pending Approval" && (
           <button
             // to={`chat/${offer._id}`}
-            onClick={() => navigate(`/chat/${offer._id}`)}
+            onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
             className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
           >
             1:1 Chat

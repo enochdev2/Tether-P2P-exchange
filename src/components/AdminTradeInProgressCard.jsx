@@ -38,12 +38,13 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
     setBuyerOrderId(""); // Reset the input field
   };
   const handleMatchCancel = () => {
-    console.log("🚀 ~ handleMatchSubmit ~ offer.currentBuyOrderInProgress:", offer.currentBuyOrderInProgress)
     const currentOrderInProgress = sell ? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress 
     onCancel(currentOrderInProgress, offer._id); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
+
+  const orderType = sell ? "sell" : "buy";
 
   const statusColors = {
     "On sell": "#26a17b", // Green
@@ -92,7 +93,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
         <div className="space-x-3">
           {/* Chat button for buy orders waiting for buy */}
            <button
-              onClick={() => navigate(`/chat/${offer._id}`)}
+              onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
               className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               1:1 Chat

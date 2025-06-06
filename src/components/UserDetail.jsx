@@ -10,7 +10,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const [phone, setPhone] = useState(user?.phone);
   const [username, setUsername] = useState(user?.username);
   const [currency, setCurrency] = useState("KRW");
-  const [bio, setBio] = useState("");
+  const [referralCode, setReferralCode] = useState(user?.referralCode);
   const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
   const [fullName, setFullName] = useState(user?.fullName);
@@ -58,11 +58,14 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       case "bankAccount":
         setBankAccount(value);
         break;
+      case "referralCode":
+        setReferralCode(value);
+        break;
       case "tetherAddress":
         setTetherAddress(value);
         break;
       case "status":
-         setStatus(value); // Convert string to boolean
+        setStatus(value); // Convert string to boolean
         break;
       default:
         break;
@@ -94,18 +97,18 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
     try {
       const response = await updateUser(updatedUser);
       if (response.nickname) {
-         await handleUpdate();
+        await handleUpdate();
         SuccessToast("You have successfully updated your data");
         setIsSaving(false);
-         setPhone(phone)
-      setUsername(username)
-      setNickname(nickname)
-      setFullName(fullName)
-      setDob(dob)
-      setBankName(bankName)
-      setBankAccount(bankAccount)
-      setTetherAddress(tetherAddress)
-      setStatus(status)
+        setPhone(phone);
+        setUsername(username);
+        setNickname(nickname);
+        setFullName(fullName);
+        setDob(dob);
+        setBankName(bankName);
+        setBankAccount(bankAccount);
+        setTetherAddress(tetherAddress);
+        setStatus(status);
       }
     } catch (error) {
       console.error("Error during sign-up:", error);
@@ -144,6 +147,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             { label: "Bank Name", name: "bankName", type: "text" },
             { label: "Bank Account", name: "bankAccount", type: "text" },
             { label: "Tether Address", name: "tetherAddress", type: "text" },
+            { label: "Referral Code", name: "referralCode", type: "text" },
             {
               label: "Status",
               name: "status",
@@ -195,6 +199,8 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                       ? fullName
                       : name === "dob"
                       ? dob
+                      : name === "referralCode"
+                      ? referralCode
                       : name === "bankName"
                       ? bankName
                       : name === "bankAccount"
@@ -206,10 +212,18 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                       : ""
                   }
                   onChange={handleChange}
-                  disabled={name === "nickname"}
+                  disabled={
+                    name === "nickname" ||
+                    name === "username" ||
+                    name === "fullName" ||
+                    name === "dob"
+                  } // Disable these fields
                   className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${
-                    name === "nickname"
-                      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    name === "username" ||
+                    name === "nickname" ||
+                    name === "fullName" ||
+                    name === "dob"
+                      ? "bg-gray-100 text-gray-500 cursor-not-allowed" // Apply different style when disabled
                       : "focus:ring-indigo-500 focus:border-indigo-500"
                   }`}
                 />

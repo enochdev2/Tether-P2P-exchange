@@ -16,6 +16,8 @@ const SellLivePage = () => {
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
+
+  const [selectedFilters, setSelectedFilters] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   // Amount filter state for sell orders: "all", "lt500", "500to1000", "gt1000"
@@ -26,6 +28,7 @@ const SellLivePage = () => {
     fetchSellOrders();
     fetchSellPendingOrders();
     fetchInProgressOrders();
+    fetchNotifications();
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
@@ -81,7 +84,7 @@ const SellLivePage = () => {
         }
       );
 
-       if (!response.ok) {
+      if (!response.ok) {
         const data = await res.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
@@ -99,7 +102,6 @@ const SellLivePage = () => {
   };
 
   const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
-    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
     try {
       if (!buyerOrderId || !sellerOrderId)
         return ErrorToast("input buyer Order ID");
@@ -157,7 +159,7 @@ const SellLivePage = () => {
         }
       );
 
-       if (!response.ok) {
+      if (!response.ok) {
         const data = await res.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
@@ -270,7 +272,6 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Sell Order Approve Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -305,7 +306,6 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Buy Order Rejected Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -317,10 +317,6 @@ const SellLivePage = () => {
       return null;
     }
   }
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
 
   async function fetchNotifications() {
     try {
@@ -385,19 +381,106 @@ const SellLivePage = () => {
     }
   }
 
-  // Handle amount filter button clicks
   const handleAmountFilterChange = (filter) => {
-    setSellAmountFilter(filter);
+    if (filter === "all") {
+      // If "All" is clicked, reset the filters
+      setSelectedFilters([]);
+    } else {
+      // Toggle the filter
+      setSelectedFilters((prevFilters) =>
+        prevFilters.includes(filter)
+          ? prevFilters.filter((item) => item !== filter)
+          : [...prevFilters, filter]
+      );
+    }
   };
 
-  // Filter sell orders based on amount
+  // Filter sell orders based on selected filters
   const filteredSellOrders = sellOrders.filter((order) => {
-    if (sellAmountFilter === "all") return true;
-    if (sellAmountFilter === "lt500") return order.amount < 500;
-    if (sellAmountFilter === "500to1000")
-      return order.amount >= 500 && order.amount <= 1000;
-    if (sellAmountFilter === "gt1000") return order.amount > 1000;
-    return true;
+    if (selectedFilters.length === 0) return true;
+    // Check if any selected filters match the order amount
+    // if (selectedFilters.includes("lt500") && order.amount < 500) return true;
+    if (
+      selectedFilters.includes("500to1000") &&
+      order.krwAmount >= 500 &&
+      order.krwAmount <= 1000
+    )
+      return true;
+    if (
+      selectedFilters.includes("10000to30000") &&
+      order.krwAmount >= 10000 &&
+      order.krwAmount <= 30000
+    )
+      return true;
+    if (
+      selectedFilters.includes("30000to50000") &&
+      order.krwAmount >= 30000 &&
+      order.krwAmount <= 50000
+    )
+      return true;
+    if (
+      selectedFilters.includes("50000to100000") &&
+      order.krwAmount >= 50000 &&
+      order.krwAmount <= 100000
+    )
+      return true;
+    if (
+      selectedFilters.includes("100000to200000") &&
+      order.krwAmount >= 100000 &&
+      order.krwAmount <= 200000
+    )
+      return true;
+    if (
+      selectedFilters.includes("200000to300000") &&
+      order.krwAmount >= 200000 &&
+      order.krwAmount <= 300000
+    )
+      return true;
+    if (
+      selectedFilters.includes("300000to500000") &&
+      order.krwAmount >= 300000 &&
+      order.krwAmount <= 500000
+    )
+      return true;
+    if (
+      selectedFilters.includes("500000to1000000") &&
+      order.krwAmount >= 500000 &&
+      order.krwAmount <= 1000000
+    )
+      if (
+        selectedFilters.includes("50000to100000") &&
+        order.krwAmount >= 50000 &&
+        order.krwAmount <= 100000
+      )
+        return true;
+    if (
+      selectedFilters.includes("100000to200000") &&
+      order.krwAmount >= 100000 &&
+      order.krwAmount <= 200000
+    )
+      return true;
+    if (
+      selectedFilters.includes("200000to300000") &&
+      order.krwAmount >= 200000 &&
+      order.krwAmount <= 300000
+    )
+      return true;
+    if (
+      selectedFilters.includes("300000to500000") &&
+      order.krwAmount >= 300000 &&
+      order.krwAmount <= 500000
+    )
+      return true;
+    if (
+      selectedFilters.includes("500000to1000000") &&
+      order.amount >= 500000 &&
+      order.amount <= 1000000
+    )
+      return true;
+    if (selectedFilters.includes("gt1000000") && order.amount > 1000000)
+      return true;
+
+    return false;
   });
 
   if (loadingSell) return <LoadingSpiner />;
@@ -427,11 +510,12 @@ const SellLivePage = () => {
           </div>
 
           {/* Amount Filter Buttons for Sell Orders */}
-          <div className="mb-6 space-x-3">
+          <div className="mb-6 space-x-2 space-y-3 text-base flex flex-wrap items-center">
+            {/* Amount Filter Buttons */}
             <button
               onClick={() => handleAmountFilterChange("all")}
-              className={`px-4 py-2 rounded-md font-semibold ${
-                sellAmountFilter === "all"
+              className={`px-5 py-2 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.length === 0
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"
               }`}
@@ -439,34 +523,84 @@ const SellLivePage = () => {
               All
             </button>
             <button
-              onClick={() => handleAmountFilterChange("lt500")}
-              className={`px-4 py-2 rounded-md font-semibold ${
-                sellAmountFilter === "lt500"
+              onClick={() => handleAmountFilterChange("10000to30000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("10000to30000")
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"
               }`}
             >
-              &lt; 500
+              10,000 ↑ <br /> 30,000 ↓
             </button>
             <button
-              onClick={() => handleAmountFilterChange("500to1000")}
-              className={`px-4 py-2 rounded-md font-semibold ${
-                sellAmountFilter === "500to1000"
+              onClick={() => handleAmountFilterChange("30000to50000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("30000to50000")
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"
               }`}
             >
-              500 - 1000
+              30,000 ↑ <br /> 50,000 ↓
             </button>
             <button
-              onClick={() => handleAmountFilterChange("gt1000")}
-              className={`px-4 py-2 rounded-md font-semibold ${
-                sellAmountFilter === "gt1000"
+              onClick={() => handleAmountFilterChange("50000to100000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("50000to100000")
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"
               }`}
             >
-              &gt; 1000
+              50,000 ↑ <br /> 100,000 ↓
+            </button>
+            <button
+              onClick={() => handleAmountFilterChange("100000to200000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("100000to200000")
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              100,000 ↑ <br /> 200,000 ↓
+            </button>
+            <button
+              onClick={() => handleAmountFilterChange("200000to300000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("200000to300000")
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              200,000 ↑ <br /> 300,000 ↓
+            </button>
+            <button
+              onClick={() => handleAmountFilterChange("300000to500000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("300000to500000")
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              300,000 ↑ <br /> 500,000 ↓
+            </button>
+            <button
+              onClick={() => handleAmountFilterChange("500000to1000000")}
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("500000to1000000")
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              500,000 ↑ <br /> 1,000,000 ↓
+            </button>
+            <button
+              onClick={() => handleAmountFilterChange("gt1000000")}
+              className={`px-6 py-2 cursor-pointer rounded-md font-semibold ${
+                selectedFilters.includes("gt1000000")
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              1,000,000 ↑
             </button>
           </div>
 
