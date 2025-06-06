@@ -161,6 +161,8 @@ function ProfileOverview() {
           // actionText="Set answers"
           // onAction={() => console.log("Navigate to security questions")}
         />
+        
+        
         <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
@@ -178,6 +180,7 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
+         
     
           {/* <InfoCard /> */}
         </div>
