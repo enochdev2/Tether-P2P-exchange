@@ -156,7 +156,6 @@ const BuyLivePage = () => {
 
       const result = await response.json();
 
-      console.log("Orders cancelled successfully:", result);
       await fetchInProgressOrders();
       await fetchBuyOrders();
       await fetchBuyPendingOrders();
@@ -188,7 +187,6 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Buy Order Approve Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -224,7 +222,6 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Buyer Order Rejected Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -444,7 +441,7 @@ const BuyLivePage = () => {
             </button>
             <button
               onClick={() => handleAmountFilterChange("10000to30000")}
-              className={`px-6 cursor-pointer text-sm rounded-md font-semibold ${
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
                 selectedFilters.includes("10000to30000")
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"

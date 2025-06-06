@@ -102,7 +102,6 @@ const SellLivePage = () => {
   };
 
   const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
-    console.log("🚀 ~ handleCancleMatch ~ sellerOrderId:", sellerOrderId);
     try {
       if (!buyerOrderId || !sellerOrderId)
         return ErrorToast("input buyer Order ID");
@@ -273,7 +272,6 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Sell Order Approve Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -308,7 +306,6 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      console.log("Order approved:", result);
       SuccessToast("Buy Order Rejected Successful");
 
       // Remove the approved order from the current pendingOrders state
@@ -527,7 +524,7 @@ const SellLivePage = () => {
             </button>
             <button
               onClick={() => handleAmountFilterChange("10000to30000")}
-              className={`px-6 cursor-pointer text-sm rounded-md font-semibold ${
+              className={`px-6 cursor-pointer rounded-md font-semibold ${
                 selectedFilters.includes("10000to30000")
                   ? "bg-[#26a17b] text-white"
                   : "bg-gray-200 text-gray-700"
