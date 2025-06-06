@@ -80,30 +80,16 @@ function Dashboard() {
       <div className="lg:w-3/4 lg:p-6 overflow-y-hidden ">
         {/* Dashboard Header */}
         <div className="w-full px-4 py-6 bg-gray-50">
-          <div className="flex sm:grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto overflow-x-auto sm:overflow-visible">
-            <div className="min-w-[280px] sm:min-w-0">
-              <InfoCard
-                icon={<CheckCircle className="w-6 h-6" />}
-                title="Account Level: 1"
-              />
-            </div>
-
-            <div className="min-w-[280px] sm:min-w-0">
-              <InfoCard
-                icon={<Phone className="w-6 h-6" />}
-                title="You're Phone Verified"
-                actionText="Phone Number Verified"
-                onAction={() => console.log("Redirect to phone setup")}
-              />
-            </div>
-
-            <div className="min-w-[280px] sm:min-w-0">
-              <InfoCard
-                icon={<Shield className="w-6 h-6" />}
-                title="2FA Not Enabled"
-                actionText="Setup 2FA"
-                onAction={() => console.log("Redirect to 2FA setup")}
-              />
+          <div className="w-full flex justify-center">
+            <div className="flex justify-center ">
+              <div className=" min-w-0 mx-auto">
+                <InfoCard
+                  icon={<CheckCircle className="w-6 h-6" />}
+                  title="Account Level: 1"
+                  children="The level is currently being prepared"
+                />
+                
+              </div>
             </div>
           </div>
         </div>

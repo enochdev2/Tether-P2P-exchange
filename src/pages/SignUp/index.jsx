@@ -213,7 +213,8 @@ const SignUp = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                placeholder="Please enter only the number without dashes"
+                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic"
                 required
               />
             </div>
@@ -226,15 +227,21 @@ const SignUp = () => {
               >
                 Bank Name <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="bankName"
-                name="bankName"
-                value={formData.bankName}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                required
-              />
+
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  id="bankName"
+                  name="bankName"
+                  value={formData.bankName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 pr-16 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                  required
+                />
+                <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 text-sm pointer-events-none">
+                  Bank
+                </span>
+              </div>
             </div>
 
             {/* Bank Account */}

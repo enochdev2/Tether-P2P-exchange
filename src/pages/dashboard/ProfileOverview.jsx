@@ -178,14 +178,7 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
-          <div className="min-w-[280px] sm:min-w-0 flex-1">
-            <InfoCard
-              icon={<BanknoteIcon size={24} />}
-              title=""
-              // actionText={user?.bankAccount}
-              onAction={() => console.log("Navigate to security questions")}
-            />
-          </div>
+    
           {/* <InfoCard /> */}
         </div>
       </div>

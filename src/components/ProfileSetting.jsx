@@ -96,7 +96,7 @@ export default function ProfileSetting({user}) {
       </div>
 
       {/* Preferred Currency */}
-      <div>
+      {/* <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Preferred Currency
         </label>
@@ -106,15 +106,15 @@ export default function ProfileSetting({user}) {
           className="w-full max-w-xs px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#26a17b] bg-white"
         >
           <option value="KRW">Korea (KRW)</option>
-          {/* Add more options if needed */}
+          
         </select>
         <p className="mt-1 text-xs text-gray-500">
           This will determine how values are displayed in your account.
         </p>
-      </div>
+      </div> */}
 
       {/* Security Questions */}
-      <InfoCard
+      {/* <InfoCard
         icon={<FaShieldAlt className="text-[#26a17b]" size={20} />}
         title="Security Questions Required"
         actionText="Set answers"
@@ -122,7 +122,7 @@ export default function ProfileSetting({user}) {
       >
         It is mandatory to set answers to your security questions in case you
         have to reset or change the phone number.
-      </InfoCard>
+      </InfoCard> */}
     </div>
   );
 }

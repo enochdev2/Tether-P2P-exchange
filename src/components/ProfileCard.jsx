@@ -29,7 +29,7 @@ const ProfileCard = ({ user }) => {
           <h2 className="font-bold text-lg capitalize sm:text-xl text-gray-800">
             {user?.fullName || 'Anonymous User'}
           </h2>
-          <p className="text-sm text-gray-500">Seen 50 minutes ago</p>
+          {/* <p className="text-sm text-gray-500">Seen 50 minutes ago</p> */}
         </div>
       </div>
 
@@ -45,7 +45,7 @@ const ProfileCard = ({ user }) => {
       </div>
 
       {/* Social Media Section */}
-      <div className="flex flex-col items-center sm:items-end">
+      {/* <div className="flex flex-col items-center sm:items-end">
         <span className="text-xs text-gray-500 mb-2">Connect</span>
         <div className="flex space-x-3">
           <a
@@ -73,7 +73,7 @@ const ProfileCard = ({ user }) => {
             <Mail size={18} />
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import logo2 from "../assets/Tether2.png";
 import logo from "../assets/Tether.png";
 import { useAuth } from "../utils/AuthProvider";
+import { FaGlobe } from "react-icons/fa";
 
 const Navbar = () => {
   const { isLoggedIn, user, priceKRW } = useAuth();
@@ -39,13 +40,22 @@ const Navbar = () => {
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Toggle the profile dropdown
   const togglePasswordVisibility = () => setShowPassword(!showPassword); // Toggle password visibility
 
+  const [language, setLanguage] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdownLan = () => setIsOpen(!isOpen);
+
+  const selectLanguage = (lang) => {
+    setLanguage(lang);
+    setIsOpen(false);
+  };
   useEffect(() => {
     // Check if the user is an admin and handle accordingly
   }, [user]);
 
   return (
-    <nav className="bg-black  fixed  text-white  w-full transition-all duration-300 ease-linear z-50 shadow-lg py-2 px-4 border-b border-b-gray-500 overflow-x-hidden overflow-y-hidden">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-black  fixed  text-white  w-full transition-all duration-300 ease-linear z-50 h- shadow-lg py-2 px-4 border-b border-b-gray-500 ">
+      <div className="max-w-screen-xl  mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/">
@@ -86,25 +96,25 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 {/* Display Username (Mobile & Desktop) */}
-                <div className="hidden md:flex flex-col items-end text-sm text-gray-200 font-medium mb-1">
+                {/* <div className="hidden md:flex flex-col items-end text-sm text-gray-200 font-medium mb-1">
                   <span>{user?.username}</span>
-                </div>
+                </div> */}
 
                 {/* Profile Icon and Dropdown */}
                 <div className="relative z-50 hidden md:flex ">
-                  {/* Profile Button */}
-                  <button
+                  
+                  {/* <button
                     // onClick={toggleDropdown}
                     className="flex items-center gap-2 text-white hover:text-gray-300 transition duration-200"
-                  >
-                    {/* <User className="w-8 h-8 rounded-full bg-gray-600 p-1" /> */}
-                    <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+                  > */}
+                   
+                    {/* <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
                       <img
                         src="https://i.pravatar.cc/150?img=43"
                         className="rounded-full"
                         alt=""
                       />
-                    </div>
+                    </div> */}
                     {/* <svg
                       className="w-4 h-4"
                       fill="none"
@@ -118,7 +128,7 @@ const Navbar = () => {
                         d="M19 9l-7 7-7-7"
                       />
                     </svg> */}
-                  </button>
+                  {/* </button> */}
 
                   {/* Dropdown Menu */}
                   {isDropdownOpen && (
@@ -214,13 +224,50 @@ const Navbar = () => {
           </div>
           {/* Render Admin Dashboard if user is admin */}
           {user && user.admin && (
-            <Link
-              to="/admin/dashboard"
-              className="text-white bg-green-800  px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
-              onClick={() => handleLinkClick("admin-dashboard")}
-            >
-              Admin
-            </Link>
+            <div className="flex items-center gap-5 justify-between">
+              <Link
+                to="/admin/dashboard"
+                className="text-white bg-green-800 hidden lg:block px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
+                onClick={() => handleLinkClick("admin-dashboard")}
+              >
+                Admin
+              </Link>
+
+              <div className="relative inline-block z-10000 text-left">
+                <button
+                  onClick={toggleDropdownLan}
+                  className="flex items-center  gap-2 px-4 py-2  text-white rounded-md  focus:outline-none"
+                >
+                  <FaGlobe className="text-lg" />
+                  <span>{language}</span>
+                </button>
+
+                {isOpen && (
+                  <div className="absolute -right-5 mt-2 w-28 bg-white rounded-md shadow-lg z-5000">
+                    <button
+                      onClick={() => selectLanguage("ENG")}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        language === "ENG"
+                          ? "font-semibold text-gray-900"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      ENG
+                    </button>
+                    <button
+                      onClick={() => selectLanguage("KOR")}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        language === "KOR"
+                          ? "font-semibold text-gray-900"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      KOR
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Mobile Navbar Hamburger */}
