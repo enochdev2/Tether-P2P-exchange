@@ -56,6 +56,10 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
     "Sell completed": "#f59e0b", // Amber
   };
 
+  const matchedOrders = sell
+    ? offer?.matchedBuyOrders
+    : offer?.matchedSellOrders;
+
   return (
     <div className="relative flex flex-col items-center rounded-lg px-2 py-2  mb-4 bg-slate-200 shadow-sm">
       <div className="flex flex-col w-full sm:flex-row  border-green-300 py-2 px-2  bg-green-100 border shadow-sm items-center rounded-lg cursor-pointer  ">
@@ -84,11 +88,11 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
         </div>
 
         <div className="flex items-center ml-auto space-x-2">
-           <button
-            onClick={()=> setIsDropdownOpen(!isDropdownOpen)}
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="bg-[#26a17b] text-white px-3 py-1 rounded text-sm"
           >
-            <FaChevronDown size={20}/>
+            <FaChevronDown size={20} />
           </button>
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
@@ -102,7 +106,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
           >
             Cancel
           </button>
-         
+
           {sell && (
             <button
               onClick={handleMatchSubmit}
@@ -131,20 +135,35 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="px-4 py-2">Sell 1</td>
-                <td className="px-4 py-2 font-medium">₩700,000 KRW</td>
-                <td className="px-4 py-2">User 1</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Buy 1</td>
-                <td className="px-4 py-2 font-medium">₩500,000 KRW</td>
-                <td className="px-4 py-2">User 2</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Remaining Amount</td>
-                <td className="px-4 py-2 font-medium">₩200,000 KRW</td>
-                <td className="px-4 py-2">User 3</td>
+              {matchedOrders?.length > 0 ? (
+                matchedOrders.map((match, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-2">{match.matchModel}</td>
+                    <td className="px-4 py-2 font-medium">
+                      {match.amount} USDT
+                    </td>
+                    <td className="px-4 py-2">{match.orderId}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="px-4 py-2 text-center text-gray-400"
+                  >
+                    No matched orders yet.
+                  </td>
+                </tr>
+              )}
+
+              <tr className="bg-slate-100 font-semibold">
+                <td className="px-4 py-2">Remaining</td>
+                <td className="px-4 py-2">
+                  {parseFloat(offer?.amountRemaining || 0).toFixed(4)} USDT
+                </td>
+                <td className="px-4 py-2">
+                  {offer?.userId?.nickname || "N/A"}
+                </td>
               </tr>
             </tbody>
           </table>

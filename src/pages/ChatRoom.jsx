@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
-import { FiImage } from "react-icons/fi";
+import { FiArrowLeft, FiImage } from "react-icons/fi";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -259,6 +259,15 @@ const ChatRoom = () => {
               })}
             </div>
           </div>
+          <div>
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-green-800 hover:text-green-700 font-bold px-4 py-2 rounded-lg transition duration-200"
+            >
+              <FiArrowLeft size={30} />
+              <span>Go back to the previous page</span>
+            </button>
+          </div>
         </div>
 
         {/* Input & Controls */}
@@ -325,75 +334,4 @@ const ChatRoom = () => {
 
 export default ChatRoom;
 
-const handleSendMessage = async () => {
-  if (!newMessage.trim() && !image) return;
 
-  const token = localStorage.getItem("token");
-
-  const commonMessageData = {
-    content: newMessage,
-    sender: user.nickname,
-    orderId,
-    orderType,
-    timestamp: new Date().toISOString(),
-  };
-
-  // Reset UI state first
-  setNewMessage("");
-
-  if (image) {
-    readImageAsDataURL(image, async (imageDataUrl) => {
-      const blobImage = dataURLtoBlob(imageDataUrl);
-
-      // Validate file type
-      if (!blobImage.type.includes("image/")) {
-        ErrorToast("Please upload a valid image file.");
-        return;
-      }
-
-      // Validate size (max 5MB)
-      if (blobImage.size > 5 * 1024 * 1024) {
-        ErrorToast("Image size must be less than 5MB.");
-        return;
-      }
-
-      // Send base64 (still not ideal, but validated)
-      const messageData = {
-        ...commonMessageData,
-        image: imageDataUrl, // This is safe and smaller now
-      };
-
-      socket.emit("sendMessage", messageData);
-
-      await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(messageData),
-        }
-      );
-
-      setImage(null); // Clear image after sending
-    });
-  } else {
-    const messageData = {
-      ...commonMessageData,
-      image: null,
-    };
-
-    socket.emit("sendMessage", messageData);
-
-    await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messageData),
-    });
-  }
-};
