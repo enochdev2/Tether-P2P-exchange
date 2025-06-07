@@ -109,6 +109,15 @@ const InquiryManagement = () => {
     }
   }
 
+   const sortedOffers = allUsers.sort((a, b) => {
+      // First, prioritize posts without comments
+      if (!a.comment && b.comment) return -1; // a should come first if a doesn't have a comment
+      if (a.comment && !b.comment) return 1; // b should come first if b doesn't have a comment
+
+      // If both have comments or both don't have comments, sort by creation date (oldest first)
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+
   if (loadingSell) return <LoadingSpiner />;
 
   const Sell = true;
@@ -149,7 +158,7 @@ const InquiryManagement = () => {
             {allUsers?.length === 0 ? (
               <p className="text-gray-500">No User Available.</p>
             ) : (
-              allUsers?.map((offer) => (
+              sortedOffers?.map((offer) => (
                 <AdminInquiryCard
                   key={offer._id}
                   offer={offer}

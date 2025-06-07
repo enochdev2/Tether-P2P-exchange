@@ -108,7 +108,7 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
         {/* Right Section */}
         <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-0 relative">
           <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
-            {offer._id.slice(0, 5)}
+            {offer._id.slice(0, 10)}
           </div>
           <div className="flex items-center md:text-[15px] space-x-2">
             <div className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0" />

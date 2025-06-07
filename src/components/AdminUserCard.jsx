@@ -46,11 +46,11 @@ const AdminUserCard = ({ offer, sell, handleSubmit, setChange, handleUpdate }) =
         ${isPending ? "opacity-90 filter grayscale" : ""}
       `}
     >
-      <div className="flex flex-col sm:flex-row items-center justify-center bg-white rounded-lg py-2 px-4 sm:py-1 md:py-1 mb-4 border space-x-2 border-gray-200">
+      <div className="flex flex-col sm:flex-row items-center justify-center bg-white rounded-lg py-2 px-4 sm:py-1 md:py-1 mb-4 border space-x-4 border-gray-200">
         <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0 bg-slate-200 ">
           <div className="flex flex-col space-y-2 px-2 py-1 rounded-2xl">
             <span className="font-semibold text-xs sm:text-[16px]  text-gray-900 truncate">
-              Username: <br /> {offer?.nickname}
+              Nickname: <br /> {offer?.nickname}
             </span>
           </div>
         </div>
@@ -71,9 +71,9 @@ const AdminUserCard = ({ offer, sell, handleSubmit, setChange, handleUpdate }) =
           Bank Name: <br /> {offer?.bankName}
         </div> */}
 
-        <div className="flex flex-wrap flex-col space-x-5 space-y-3 items-center">
-          <div>
-            <div className="text-xs mb-0">double click to change</div>
+        <div className="flex flex-wrap flex-col space-x-8 space-y-3 items-center">
+          <div className="space">
+            <div className="text-xs mb-0 text-center font-semibold">double click</div>
             {/* Chat button for buy orders waiting for buy */}
             {offer.status === "active" ? (
               <button

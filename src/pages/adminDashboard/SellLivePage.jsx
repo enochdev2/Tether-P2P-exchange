@@ -130,7 +130,7 @@ const SellLivePage = () => {
         await fetchInProgressOrders();
         await fetchSellOrders();
         await fetchSellPendingOrders();
-        SuccessToast("Orders matched successfully!");
+        SuccessToast("Orders Cancelled successfully!");
       }
     } catch (error) {
       console.error("Error matching orders:", error);
