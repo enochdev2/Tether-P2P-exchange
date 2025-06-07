@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
+import { FiImage, FiArrowLeft } from "react-icons/fi";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -18,9 +19,12 @@ const ChatRoom = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [userOrderId, setUserOrderId] = useState(null);
+  // const [newMessage, setNewMessage] = useState("");
+  const [image, setImage] = useState(null);
+
   const navigate = useNavigate();
- const orderId = offerId
-   useEffect(() => {
+  const orderId = offerId;
+  useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
     const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
@@ -64,12 +68,10 @@ const ChatRoom = () => {
     setMessages(data);
   };
 
- 
-
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       const message = { sender: user.nickname, content: newMessage, orderId };
-      
+
       socket.emit("sendMessage", message); // Emit message to the server
       // const messageData = {
       //   content: newMessage,
@@ -78,12 +80,12 @@ const ChatRoom = () => {
       //   timestamp: new Date().toISOString(),
       // };
       const messageData = {
-      content: newMessage,
-      sender: user.nickname,
-      orderId: orderId,
-      orderType: orderType, // Pass orderType as well
-      timestamp: new Date().toISOString(),
-    };
+        content: newMessage,
+        sender: user.nickname,
+        orderId: orderId,
+        orderType: orderType, // Pass orderType as well
+        timestamp: new Date().toISOString(),
+      };
 
       const token = localStorage.getItem("token");
 
@@ -125,8 +127,8 @@ const ChatRoom = () => {
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
-    <div className="min-h-screen mt-10 bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl bg-white shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden">
+    <div className="min-h-screen mt-20 bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full  max-w-5xl bg-white shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden">
         {/* Chat Area */}
         <div className="w-full md:w-2/3 flex flex-col border-r border-gray-200">
           <div className="bg-green-800 text-white text-center py-4 px-6">
@@ -137,7 +139,7 @@ const ChatRoom = () => {
 
           {/* Messages */}
           <div className="flex-1 bg-white rounded-lg shadow-lg p-4 mb-6">
-            <div className="h-[60vh] overflow-y-auto space-y-3 pr-2">
+            <div className="lg:h-[60vh] h-[40vh]  overflow-y-auto space-y-3 pr-2">
               {messages.map((message, index) => {
                 const isUser = message.sender === user.nickname;
 
@@ -167,11 +169,20 @@ const ChatRoom = () => {
               })}
             </div>
           </div>
+          <div>
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-gray-700 hover:text-green-700 font-medium px-4 py-2 rounded-lg transition duration-200"
+            >
+              <FiArrowLeft size={20} />
+              <span>Go back to the previous page</span>
+            </button>
+          </div>
         </div>
 
         {/* Input & Controls */}
         <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col justify-between">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -179,9 +190,30 @@ const ChatRoom = () => {
               rows={5}
               className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
             />
+
+            <div className="flex absolute top-27 left-3 items-center justify-between">
+              <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-green-700">
+                <FiImage size={27} />
+                {/* <span className="text-sm">Upload Image</span> */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                  className="hidden"
+                />
+              </label>
+
+              {image && (
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="Preview"
+                  className="max-h-20 rounded-md"
+                />
+              )}
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-col gap-3">
+          <div className="mt-1 flex flex-col gap-3">
             <button
               onClick={handleSendMessage}
               disabled={!isConnected}
