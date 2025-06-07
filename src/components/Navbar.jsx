@@ -102,20 +102,19 @@ const Navbar = () => {
 
                 {/* Profile Icon and Dropdown */}
                 <div className="relative z-50 hidden md:flex ">
-                  
                   {/* <button
                     // onClick={toggleDropdown}
                     className="flex items-center gap-2 text-white hover:text-gray-300 transition duration-200"
                   > */}
-                   
-                    {/* <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+
+                  {/* <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
                       <img
                         src="https://i.pravatar.cc/150?img=43"
                         className="rounded-full"
                         alt=""
                       />
                     </div> */}
-                    {/* <svg
+                  {/* <svg
                       className="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
@@ -232,43 +231,53 @@ const Navbar = () => {
               >
                 Admin
               </Link>
-
-              <div className="relative inline-block z-10000 text-left">
-                <button
-                  onClick={toggleDropdownLan}
-                  className="flex items-center  gap-2 px-4 py-2  text-white rounded-md  focus:outline-none"
-                >
-                  <FaGlobe className="text-lg" />
-                  <span>{language}</span>
-                </button>
-
-                {isOpen && (
-                  <div className="absolute -right-5 mt-2 w-28 bg-white rounded-md shadow-lg z-5000">
-                    <button
-                      onClick={() => selectLanguage("ENG")}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                        language === "ENG"
-                          ? "font-semibold text-gray-900"
-                          : "text-gray-600"
-                      }`}
-                    >
-                      ENG
-                    </button>
-                    <button
-                      onClick={() => selectLanguage("KOR")}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
-                        language === "KOR"
-                          ? "font-semibold text-gray-900"
-                          : "text-gray-600"
-                      }`}
-                    >
-                      KOR
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
           )}
+          <div className="relative inline-block z-100 text-left">
+            <button
+              onClick={toggleDropdownLan}
+              className="flex items-center bg-gradient-to-br from-[#26a17b] via-[#3b82f6] to-[#f59b0b] gap-0.5 px-4 py-2 text-white rounded-md focus:outline-none hover:from-[#3b82f6] hover:via-[#f59b0b] hover:to-[#26a17b] cursor-pointer"
+            >
+              <FaGlobe className="text-lg text-sky-900 mr-0" />
+              <span className="ml-0">{!language ? "ENG" : ""}</span>
+              <span>{language}</span>
+            </button>
+
+            {isOpen && (
+              <div className="absolute -right-5 bg-[#16a0d2] text-white mt-2 w-28 bg rounded-md shadow-lg z-5000 cursor-pointer">
+                <button
+                  onClick={() => selectLanguage("ENG")}
+                  className={`flex items-center block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
+                    language === "ENG"
+                      ? "font-semibold text-gray-900"
+                      : "text-gray-600"
+                  }`}
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+                    alt="US Flag"
+                    className="w-5 h-3 mr-2"
+                  />
+                  ENG
+                </button>
+                <button
+                  onClick={() => selectLanguage("KOR")}
+                  className={`flex items-center block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
+                    language === "KOR"
+                      ? "font-semibold text-gray-900"
+                      : "text-gray-600"
+                  }`}
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg"
+                    alt="Korea Flag"
+                    className="w-5 h-3 mr-2"
+                  />
+                  KOR
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Mobile Navbar Hamburger */}
           <div className="md:hidden">

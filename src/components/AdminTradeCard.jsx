@@ -65,7 +65,7 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
       `}
     >
       {/* Left Section */}
-      <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr-6 justify-center sm:justify-start">
+      <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr- justify-center sm:justify-start">
         <div className="flex items-center space-x-1 md:space-x-2">
           <div className="bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap">
             {sell ? "Sell" : "Buy"}
@@ -75,6 +75,9 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
       </div>
 
       {/* Center Left Section */}
+      <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-200 px-4 py-3 rounded-lg flex items-center">
+        {offer?.userId?.nickname}
+      </div>
       <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
         <img
           src={logo2}

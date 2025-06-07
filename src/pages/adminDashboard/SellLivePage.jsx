@@ -14,6 +14,7 @@ const SellLivePage = () => {
   const [inProgressOrders, setInProgressOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
+  console.log("🚀 ~ SellLivePage ~ sellOrders:", sellOrders)
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
 

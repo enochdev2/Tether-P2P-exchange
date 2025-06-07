@@ -12,9 +12,9 @@ const Home = () => {
       <section>
         <Hero />
       </section>
-      <section>
+      {/* <section>
         <CryptoBuyPage />
-      </section>
+      </section> */}
       <section>
         <FeaturesSection />
       </section>

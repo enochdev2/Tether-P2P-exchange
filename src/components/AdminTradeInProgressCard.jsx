@@ -68,6 +68,9 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
           </div>
         </div>
       </div>
+      <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-200 px-4 py-3 rounded-lg flex items-center">
+        {offer?.userId?.nickname}
+      </div>
 
       {/* Center Left Section */}
       <div className="flex-col md:flex-row md:flex-2 w-full sm:w-auto flex items-center mb-4 sm:mb-0">

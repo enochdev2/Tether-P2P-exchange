@@ -23,8 +23,7 @@ const FeaturesSection = () => {
     },
     {
       title: "Access the globe",
-      description:
-        "Rely on Paxful to overcome local infrastructure constraints and access the global economy, even without a bank account.",
+      description: " By using Tether Zone, we can overcome local infrastructure limitations.",
       icon: <Users className="mx-auto text-green-600" size={48} />,
     },
     // {
