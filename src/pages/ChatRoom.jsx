@@ -18,6 +18,7 @@ const ChatRoom = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [userOrderId, setUserOrderId] = useState(null);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const orderId = offerId;
   useEffect(() => {
@@ -169,7 +170,7 @@ const ChatRoom = () => {
 
         {/* Input & Controls */}
         <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col justify-between">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -177,6 +178,20 @@ const ChatRoom = () => {
               rows={5}
               className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
             />
+
+             <div className="flex absolute top-27 left-3 items-center justify-between">
+              <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-green-700">
+                <FiImage size={27} />
+                {/* <span className="text-sm">Upload Image</span> */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                  className="hidden"
+                />
+              </label>
+
+            </div>
           </div>
 
           {/* {image && (
