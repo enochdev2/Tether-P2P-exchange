@@ -244,7 +244,7 @@ const Navbar = () => {
             </button>
 
             {isOpen && (
-              <div className="absolute -right-5 bg-[#16a0d2] text-white mt-2 w-28 bg rounded-md shadow-lg z-5000 cursor-pointer">
+              <div className="absolute -right-5 bg-[#84c9e2] text-white mt-2 w-28 bg rounded-md shadow-lg z-5000 cursor-pointer">
                 <button
                   onClick={() => selectLanguage("ENG")}
                   className={`flex items-center block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
