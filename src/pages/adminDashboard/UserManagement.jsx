@@ -14,13 +14,14 @@ const UserManagement = () => {
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
   const [change, setChange] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
   // const { allUser } = useAuth();
   const { updateUser, setUser } = useAuth();
 
-
   const allUser = async () => {
     try {
-       const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
         {
@@ -134,7 +135,9 @@ const UserManagement = () => {
     }
   }
 
-
+  const filteredUsers = allUsers.filter((user) =>
+    user.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loadingSell) return <LoadingSpiner />;
 
@@ -155,11 +158,43 @@ const UserManagement = () => {
 
           {/* Render All Users */}
           <div className="mb-2">
-            <h2 className="text-xl font-semibold mb-4">All Users</h2>
+            <div className="mb-4 flex flex-wrap items-center gap-4">
+              <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-md shadow-md">
+                All User
+              </button>
+
+              <div className="relative flex items-center w-full max-w-xs border border-gray-300 bg-white rounded-md shadow-sm">
+                <input
+                  type="text"
+                  placeholder="Enter User name"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-3 py-2 outline-none rounded-md"
+                />
+                <span className="absolute right-2 text-gray-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
             {allUsers?.length === 0 ? (
-              <p className="text-gray-500">No  User Available.</p>
+              <p className="text-gray-500">No User Available.</p>
             ) : (
-              allUsers?.map((offer) => (
+              filteredUsers?.map((offer) => (
+
                 <AdminUserCard
                   key={offer._id}
                   offer={offer}
