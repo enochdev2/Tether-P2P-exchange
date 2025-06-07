@@ -19,8 +19,8 @@ const ChatRoom = () => {
   const [userRole, setUserRole] = useState(null);
   const [userOrderId, setUserOrderId] = useState(null);
   const navigate = useNavigate();
- const orderId = offerId
-   useEffect(() => {
+  const orderId = offerId;
+  useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
     const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
@@ -64,12 +64,10 @@ const ChatRoom = () => {
     setMessages(data);
   };
 
- 
-
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       const message = { sender: user.nickname, content: newMessage, orderId };
-      
+
       socket.emit("sendMessage", message); // Emit message to the server
       // const messageData = {
       //   content: newMessage,
@@ -78,12 +76,12 @@ const ChatRoom = () => {
       //   timestamp: new Date().toISOString(),
       // };
       const messageData = {
-      content: newMessage,
-      sender: user.nickname,
-      orderId: orderId,
-      orderType: orderType, // Pass orderType as well
-      timestamp: new Date().toISOString(),
-    };
+        content: newMessage,
+        sender: user.nickname,
+        orderId: orderId,
+        orderType: orderType, // Pass orderType as well
+        timestamp: new Date().toISOString(),
+      };
 
       const token = localStorage.getItem("token");
 
@@ -181,7 +179,15 @@ const ChatRoom = () => {
             />
           </div>
 
-          
+          {/* {image && (
+            <div className="bg-black px-1 py-1 mb-20">
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Preview"
+                className="max-h-60 rounded-md"
+              />
+            </div>
+          )} */}
 
           <div className="mt-4 flex flex-col gap-3">
             <button
