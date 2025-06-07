@@ -41,6 +41,7 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
   };
 
   const orderType = sell ? "sell" : "buy";
+  const offerId = offer._id;
 
   // Status colors example (define your actual statusColors object elsewhere)
   // const statusColors = {
@@ -106,14 +107,14 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           {/* Chat button for buy orders waiting for buy */}
           {!sell && offer.status === "Waiting for Buy" ? (
             <button
-              onClick={() => navigate(`/chats/${orderType}/${offer._id}`)}
+              onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
               className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               1:1 Chat
             </button>
           ) : (
             <button
-               onClick={() => navigate(`/chats/${orderType}/${offer._id}`)}
+              onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
               className="mt-2 px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               1:1 Chat

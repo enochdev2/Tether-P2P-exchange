@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
+import { FiImage } from "react-icons/fi";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -11,7 +12,7 @@ import { SuccessToast } from "../utils/Success";
 
 const ChatRoom = () => {
   const { user, setIsLoggedIn, setUser } = useAuth();
-  const { offerId, orderType } = useParams();
+  const { orderType, orderId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -20,10 +21,12 @@ const ChatRoom = () => {
   const [userOrderId, setUserOrderId] = useState(null);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
-  const orderId = offerId;
+  const whic = orderId.length > 5 ? orderId : orderType;
+  const whi = orderType.length < 5 ? orderType : orderId  ;
+  // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+      const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -32,9 +35,10 @@ const ChatRoom = () => {
 
     fetchMessages();
 
+
     newSocket.on("connect", () => {
       setIsConnected(true);
-      newSocket.emit("joinRoom", offerId); // emit only after connect
+      newSocket.emit("joinRoom", whic); // emit only after connect
     });
 
     newSocket.on("connect_error", (err) => {
@@ -46,14 +50,14 @@ const ChatRoom = () => {
     });
 
     return () => {
-      newSocket.emit("leaveRoom", offerId);
+      newSocket.emit("leaveRoom", orderId);
       newSocket.disconnect();
     };
-  }, [offerId]);
+  }, [orderId]);
 
   const fetchMessages = async () => {
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${orderId}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -66,39 +70,93 @@ const ChatRoom = () => {
   };
 
   const handleSendMessage = async () => {
-    if (newMessage.trim()) {
+    if (newMessage.trim() || image) {
       const message = { sender: user.nickname, content: newMessage, orderId };
 
-      socket.emit("sendMessage", message); // Emit message to the server
-      // const messageData = {
-      //   content: newMessage,
-      //   sender: user.nickname,
-      //   orderId,
-      //   timestamp: new Date().toISOString(),
-      // };
+      const token = localStorage.getItem("token");
+
+      // socket.emit("sendMessage", message);
+
       const messageData = {
-        content: newMessage,
+        content: newMessage ? newMessage : "Image",
         sender: user.nickname,
         orderId: orderId,
         orderType: orderType, // Pass orderType as well
         timestamp: new Date().toISOString(),
       };
+      let base64Image = null;
 
-      const token = localStorage.getItem("token");
+      const commonMessageData = {
+        content: newMessage ? newMessage : "Image",
+        sender: user.nickname,
+        orderId: whic,
+        orderType: whi,
+        timestamp: new Date().toISOString(),
+      };
 
-      // "http://localhost:3000/api/v1/chat",
-      const res = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(messageData),
-        }
-      );
+      // Reset UI state early to avoid residual image
       setNewMessage("");
+
+      if (image) {
+        readImageAsDataURL(image, async (imageDataUrl) => {
+          const blobImage = dataURLtoBlob(imageDataUrl);
+
+          // Validate file type
+          if (!blobImage.type.includes("image/")) {
+            ErrorToast("Please upload a valid image file.");
+            return;
+          }
+
+          // Validate size (max 5MB)
+          if (blobImage.size > 5 * 1024 * 1024) {
+            ErrorToast("Image size must be less than 5MB.");
+            return;
+          }
+
+          // Send base64 (still not ideal, but validated)
+          const messageData = {
+            ...commonMessageData,
+            image: imageDataUrl, // This is safe and smaller now
+          };
+          console.log("🚀 ~ readImageAsDataURL ~ imageDataUrl:", imageDataUrl)
+
+          socket.emit("sendMessage", messageData);
+
+          await fetch(
+            "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(messageData),
+            }
+          );
+
+          setImage(null); // Clear image after sending
+        });
+      } else {
+        const messageData = {
+          ...commonMessageData,
+          image: null,
+        };
+
+        socket.emit("sendMessage", messageData);
+
+        await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          }
+        );
+      }
+      // setNewMessage("");
     }
   };
 
@@ -121,6 +179,30 @@ const ChatRoom = () => {
     // Or navigate away:
   };
 
+  const readImageAsDataURL = (file, callback) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      callback(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const dataURLtoBlob = (dataURL) => {
+    const splitDataUrl = dataURL.split(",");
+    const byteString = atob(splitDataUrl[1]);
+    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
+
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
+  };
+
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
@@ -130,7 +212,7 @@ const ChatRoom = () => {
         <div className="w-full md:w-2/3 flex flex-col border-r border-gray-200">
           <div className="bg-green-800 text-white text-center py-4 px-6">
             <h1 className="text-xl md:text-2xl font-semibold">
-              Chatroom for Order: {orderId}
+              Chatroom for Order: {whic}
             </h1>
           </div>
 
@@ -154,12 +236,23 @@ const ChatRoom = () => {
                           : "bg-gray-200 text-gray-800 rounded-bl-none"
                       }`}
                     >
-                      <div className="font-semibold mb-1 text-xs opacity-80">
+                      <div className=" mb-1 bg-white/15 text-pink-700 text-lg font-bold  opacity-80">
                         {message.sender}
                       </div>
-                      <div className="break-words whitespace-pre-wrap">
+
+                      {/* TEXT MESSAGE */}
+                      <div className="break-words whitespace-pre-wrap mb-2">
                         {message.content}
                       </div>
+
+                      {/* IMAGE MESSAGE */}
+                      {message.image && (
+                        <img
+                          src={message.image}
+                          alt="Chat Media"
+                          className="max-h-60 rounded-md border mt-2"
+                        />
+                      )}
                     </div>
                   </div>
                 );
@@ -178,8 +271,7 @@ const ChatRoom = () => {
               rows={5}
               className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
             />
-
-             <div className="flex absolute top-27 left-3 items-center justify-between">
+            <div className="flex absolute top-27 left-3 items-center justify-between">
               <label className="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-green-700">
                 <FiImage size={27} />
                 {/* <span className="text-sm">Upload Image</span> */}
@@ -190,11 +282,10 @@ const ChatRoom = () => {
                   className="hidden"
                 />
               </label>
-
             </div>
           </div>
 
-          {/* {image && (
+          {image && (
             <div className="bg-black px-1 py-1 mb-20">
               <img
                 src={URL.createObjectURL(image)}
@@ -202,13 +293,13 @@ const ChatRoom = () => {
                 className="max-h-60 rounded-md"
               />
             </div>
-          )} */}
+          )}
 
           <div className="mt-4 flex flex-col gap-3">
             <button
               onClick={handleSendMessage}
               disabled={!isConnected}
-              className={`w-full py-3 text-white font-semibold rounded-lg transition ${
+              className={`w-full py-3 cursor-pointer text-white font-semibold rounded-lg transition ${
                 isConnected
                   ? "bg-green-800 hover:bg-green-700"
                   : "bg-green-300 cursor-not-allowed"
@@ -220,7 +311,7 @@ const ChatRoom = () => {
             {user?.admin && (
               <button
                 onClick={handleCloseChat}
-                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition"
+                className="w-full py-3 bg-red-600 cursor-pointer  hover:bg-red-700 text-white font-semibold rounded-lg transition"
               >
                 Close Chat
               </button>
@@ -233,3 +324,76 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
+
+const handleSendMessage = async () => {
+  if (!newMessage.trim() && !image) return;
+
+  const token = localStorage.getItem("token");
+
+  const commonMessageData = {
+    content: newMessage,
+    sender: user.nickname,
+    orderId,
+    orderType,
+    timestamp: new Date().toISOString(),
+  };
+
+  // Reset UI state first
+  setNewMessage("");
+
+  if (image) {
+    readImageAsDataURL(image, async (imageDataUrl) => {
+      const blobImage = dataURLtoBlob(imageDataUrl);
+
+      // Validate file type
+      if (!blobImage.type.includes("image/")) {
+        ErrorToast("Please upload a valid image file.");
+        return;
+      }
+
+      // Validate size (max 5MB)
+      if (blobImage.size > 5 * 1024 * 1024) {
+        ErrorToast("Image size must be less than 5MB.");
+        return;
+      }
+
+      // Send base64 (still not ideal, but validated)
+      const messageData = {
+        ...commonMessageData,
+        image: imageDataUrl, // This is safe and smaller now
+      };
+
+      socket.emit("sendMessage", messageData);
+
+      await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(messageData),
+        }
+      );
+
+      setImage(null); // Clear image after sending
+    });
+  } else {
+    const messageData = {
+      ...commonMessageData,
+      image: null,
+    };
+
+    socket.emit("sendMessage", messageData);
+
+    await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messageData),
+    });
+  }
+};

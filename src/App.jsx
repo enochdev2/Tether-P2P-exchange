@@ -56,8 +56,8 @@ function App() {
         />
 
         <Route path="/" element={<Home />} />
-        <Route path="/chats/:orderType/:offerId/" element={<ChatRoom />} />
-        <Route path="/chat/:offerId" element={<ChatRoom2 />} />
+        <Route path="/chats/:orderId/:orderType" element={<ChatRoom />} />
+        {/* <Route path="/chat/:offerId" element={<ChatRoom2 />} /> */}
         <Route path="/adnin/users/:userId" element={<UserDetails />} />
 
         {/* <Route path="/trade-listings" element={<TradingPage />} /> */}
