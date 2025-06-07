@@ -181,6 +181,8 @@ const ChatRoom = () => {
             />
           </div>
 
+          
+
           <div className="mt-4 flex flex-col gap-3">
             <button
               onClick={handleSendMessage}
