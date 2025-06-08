@@ -118,7 +118,6 @@ const ChatRoom = () => {
             ...commonMessageData,
             image: imageDataUrl, // This is safe and smaller now
           };
-          console.log("🚀 ~ readImageAsDataURL ~ imageDataUrl:", imageDataUrl)
 
           socket.emit("sendMessage", messageData);
 
@@ -163,7 +162,7 @@ const ChatRoom = () => {
   const handleCloseChat = async () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${orderId}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
         headers: {
@@ -262,7 +261,7 @@ const ChatRoom = () => {
           <div>
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-green-800 hover:text-green-700 font-bold px-4 py-2 rounded-lg transition duration-200"
+              className="flex items-center gap-2 cursor-pointer text-green-800 hover:text-green-700 font-bold px-4 py-2 rounded-lg transition duration-200"
             >
               <FiArrowLeft size={30} />
               <span>Go back to the previous page</span>

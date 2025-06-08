@@ -12,9 +12,9 @@ const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
+  console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders)
   const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
-  console.log("🚀 ~ SellLivePage ~ sellOrders:", sellOrders)
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
 
@@ -223,7 +223,8 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
+        "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
         {
           method: "GET",
           headers: {
@@ -242,6 +243,13 @@ const SellLivePage = () => {
       }
 
       const sellInProgressOrders = await response.json();
+
+        // 🔽 Sort to prioritize "In Progress" over "Partially Matched"
+    sellInProgressOrders.sort((a, b) => {
+      if (a.status === "In Progress" && b.status !== "In Progress") return -1;
+      if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
+      return 0;
+    });
 
       setInProgressOrders(sellInProgressOrders);
       //   return sellOrders;
@@ -618,6 +626,7 @@ const SellLivePage = () => {
                     offer={offer}
                     sell={Sell}
                     onMatch={handleCompleteMatch}
+                    onMatchs={handleMatch}
                     onCancel={handleCancleMatch}
                     showChatButton={offer.status === "On Sale"}
                     onChatClick={() => navigate(`/admin/chat/${offer._id}`)}

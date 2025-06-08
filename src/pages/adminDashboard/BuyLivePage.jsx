@@ -119,8 +119,14 @@ const BuyLivePage = () => {
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
+      
+      buyInProgressOrders.sort((a, b) => {
+      if (a.status === "In Progress" && b.status !== "In Progress") return -1;
+      if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
+      return 0;
+    });
+      
 
-      //   // Sort oldest date first
       //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
       setInProgressOrders(buyInProgressOrders);

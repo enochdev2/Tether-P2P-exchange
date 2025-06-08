@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
 
@@ -12,7 +12,13 @@ const statusColors = {
 
 // import your logo and statusColors accordingly
 
-const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
+const AdminTradeInProgressCard = ({
+  offer,
+  sell,
+  onMatch,
+  onCancel,
+  onMatchs,
+}) => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -35,6 +41,12 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
   };
 
   const handleMatchSubmit = () => {
+    onMatchs(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
+    setIsMatchModalOpen(false); // Close the modal
+    setBuyerOrderId(""); // Reset the input field
+  };
+
+  const handleMatchComplete = () => {
     onMatch(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
@@ -49,6 +61,35 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
   };
 
   const orderType = sell ? "sell" : "buy";
+
+  const buildMatchedTableRows = (offer, sell) => {
+    const matchedOrders = sell
+      ? offer.matchedBuyOrders
+      : offer.matchedSellOrders;
+
+    const rows = [];
+
+    matchedOrders?.forEach((match, index) => {
+      const matchAmount = match.amount;
+      // const buyerName = match.buyerNickname || "Buyer";
+      const buyerName = match.orderId?.buyerNickname || "Buyer";
+      const sellerName = offer.userId?.nickname || "Seller";
+
+      rows.push({
+        type: `Sell ${index + 1}`,
+        amount: `${matchAmount} USDT`,
+        user: sellerName,
+      });
+
+      rows.push({
+        type: `Buy ${index + 1}`,
+        amount: `${matchAmount} USDT`,
+        user: buyerName,
+      });
+    });
+
+    return rows;
+  };
 
   const statusColors = {
     "On sell": "#26a17b", // Green
@@ -90,9 +131,13 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
         <div className="flex items-center ml-auto space-x-2">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="bg-[#26a17b] text-white px-3 py-1 rounded text-sm"
+            className="bg-[#26a17b] text-white px-3 cursor-pointer py-1 rounded text-sm"
           >
-            <FaChevronDown size={20} />
+            {isDropdownOpen ? (
+              <FaChevronUp size={20} />
+            ) : (
+              <FaChevronDown size={20} />
+            )}
           </button>
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
@@ -108,12 +153,23 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
           </button>
 
           {sell && (
-            <button
-              onClick={handleMatchSubmit}
-              className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-base"
-            >
-              Complete-Match
-            </button>
+            <div>
+              {offer.status === "In Progress" ? (
+                <button
+                  onClick={handleMatchComplete}
+                  className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-base"
+                >
+                  Complete-Match
+                </button>
+              ) : (
+                <button
+                  onClick={handleMatchClick}
+                  className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+                >
+                  Match
+                </button>
+              )}
+            </div>
           )}
         </div>
 
@@ -135,35 +191,20 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel }) => {
               </tr>
             </thead>
             <tbody>
-              {matchedOrders?.length > 0 ? (
-                matchedOrders.map((match, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2">{match.matchModel}</td>
-                    <td className="px-4 py-2 font-medium">
-                      {match.amount} USDT
-                    </td>
-                    <td className="px-4 py-2">{match.orderId}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan="3"
-                    className="px-4 py-2 text-center text-gray-400"
-                  >
-                    No matched orders yet.
-                  </td>
+              {buildMatchedTableRows(offer, sell).map((row, i) => (
+                <tr className=" border-b border-b-gray-300" key={i}>
+                  <td className="px-4 py-2">{row.type}</td>
+                  <td className="px-4 py-2 font-medium">{row.amount}</td>
+                  <td className="px-4 py-2">{row.user}</td>
                 </tr>
-              )}
+              ))}
 
               <tr className="bg-slate-100 font-semibold">
                 <td className="px-4 py-2">Remaining</td>
                 <td className="px-4 py-2">
-                  {parseFloat(offer?.amountRemaining || 0).toFixed(4)} USDT
+                  {parseFloat(offer.amountRemaining).toFixed(4)} USDT
                 </td>
-                <td className="px-4 py-2">
-                  {offer?.userId?.nickname || "N/A"}
-                </td>
+                <td className="px-4 py-2">{offer.userId?.nickname || "N/A"}</td>
               </tr>
             </tbody>
           </table>

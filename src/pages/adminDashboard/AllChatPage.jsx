@@ -176,7 +176,10 @@ const AllChatPage = () => {
                   <p className="text-sm text-gray-500">Order ID</p>
                   <p className="text-lg font-semibold text-green-800">{chat.orderId}</p>
                 </div>
+                <div className="flex space-x-10 items-center">
+                <p className="text-lg font-semibold text-green-800 bg-green-50 px-3 py-3 rounded-lg">{chat?.nickname}</p>
                 <FaArrowRight className="text-green-600 text-xl" />
+                </div>
               </li>
             ))}
           </ul>
