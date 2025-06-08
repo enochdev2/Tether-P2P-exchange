@@ -154,13 +154,23 @@ function ProfileOverview() {
 
         <ProfileCard user={user} />
         <ProfileSetting user={user} />
-
+        <div className="flex gap-8 w-full lg:space-x-28 my-4 overflow-x-auto sm:overflow-visible">
         <InfoCard
           icon={<Wallet2Icon size={24} />}
           title={tether}
           // actionText="Set answers"
           // onAction={() => console.log("Navigate to security questions")}
         />
+
+        <InfoCard
+          icon={<Wallet2Icon size={24} />}
+          title="Refferal Code"
+          actionText={user?.referralCode}
+          // actionText="Set answers"
+          // onAction={() => console.log("Navigate to security questions")}
+        />
+
+        </div>
         
         
         <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
