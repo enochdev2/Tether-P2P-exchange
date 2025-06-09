@@ -236,7 +236,7 @@ const Navbar = () => {
           <div className="relative inline-block z-100 text-left">
             <button
               onClick={toggleDropdownLan}
-              className="flex items-center bg-gradient-to-br from-[#26a17b] via-[#3b82f6] to-[#f59b0b] gap-0.5 px-4 py-2 text-white rounded-md focus:outline-none hover:from-[#3b82f6] hover:via-[#f59b0b] hover:to-[#26a17b] cursor-pointer"
+              className="flex items-center bg-gradient-to-br from-[#26a17b] via-[#3b82f6] to-[#f59b0b] gap-0.5 px-2 md:px-4 md:py-2 py-1 text-white rounded-md focus:outline-none hover:from-[#3b82f6] hover:via-[#f59b0b] hover:to-[#26a17b] text-xs md:text-base cursor-pointer"
             >
               <FaGlobe className="text-lg text-sky-900 mr-0" />
               <span className="ml-0">{!language ? "ENG" : ""}</span>
@@ -247,7 +247,7 @@ const Navbar = () => {
               <div className="absolute -right-5 bg-[#84c9e2] text-white mt-2 w-28 bg rounded-md shadow-lg z-5000 cursor-pointer">
                 <button
                   onClick={() => selectLanguage("ENG")}
-                  className={`flex items-center block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
+                  className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
                     language === "ENG"
                       ? "font-semibold text-gray-900"
                       : "text-gray-600"
@@ -262,7 +262,7 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={() => selectLanguage("KOR")}
-                  className={`flex items-center block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer ${
+                  className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
                     language === "KOR"
                       ? "font-semibold text-gray-900"
                       : "text-gray-600"

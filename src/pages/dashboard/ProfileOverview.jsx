@@ -154,11 +154,11 @@ function ProfileOverview() {
 
         <ProfileCard user={user} />
         <ProfileSetting user={user} />
-        <div className="flex gap-8 w-full lg:space-x-28 my-4 overflow-x-auto sm:overflow-visible">
+        <div className="flex flex-wrap md:flex-row gap-8 w-full lg:space-x-28 my-4 overflow-x-auto sm:overflow-visible">
         <InfoCard
           icon={<Wallet2Icon size={24} />}
-          title={tether}
-          // actionText="Set answers"
+          title={tether.slice(0, 15)}
+          actionText={tether.slice(15, 60)}
           // onAction={() => console.log("Navigate to security questions")}
         />
 
