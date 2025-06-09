@@ -129,8 +129,8 @@ const OtpVerificationPage = ({
           {userIdentifier
             ? `account for ${userIdentifier}`
             : "registered email/phone"}
-          . Please enter the code below.
-        a</p>
+          . Please enter the code below. a
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center gap-2 mb-4">
@@ -165,7 +165,7 @@ const OtpVerificationPage = ({
               }`}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Verifying..." : "Verify OTP"}
+            {isSubmitting ? "Verifying..." : "Verify OTP "}
           </button>
         </form>
 
