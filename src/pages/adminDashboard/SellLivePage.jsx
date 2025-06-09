@@ -12,7 +12,7 @@ const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
-  console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders)
+  console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders);
   const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
@@ -244,12 +244,16 @@ const SellLivePage = () => {
 
       const sellInProgressOrders = await response.json();
 
-        // 🔽 Sort to prioritize "In Progress" over "Partially Matched"
-    sellInProgressOrders.sort((a, b) => {
-      if (a.status === "In Progress" && b.status !== "In Progress") return -1;
-      if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
-      return 0;
-    });
+      // 🔽 Sort to prioritize "In Progress" over "Partially Matched"
+      sellInProgressOrders.sort((a, b) => {
+        if (a.status === "In Progress" && b.status !== "In Progress") return -1;
+        if (
+          a.status === "Partially Matched" &&
+          b.status !== "Partially Matched"
+        )
+          return 1;
+        return 0;
+      });
 
       setInProgressOrders(sellInProgressOrders);
       //   return sellOrders;
@@ -407,86 +411,66 @@ const SellLivePage = () => {
   // Filter sell orders based on selected filters
   const filteredSellOrders = sellOrders.filter((order) => {
     if (selectedFilters.length === 0) return true;
-    // Check if any selected filters match the order amount
-    // if (selectedFilters.includes("lt500") && order.amount < 500) return true;
+
+    // Check for the different filter ranges
     if (
       selectedFilters.includes("500to1000") &&
       order.krwAmount >= 500 &&
       order.krwAmount <= 1000
     )
       return true;
+
     if (
       selectedFilters.includes("10000to30000") &&
       order.krwAmount >= 10000 &&
       order.krwAmount <= 30000
     )
       return true;
+
     if (
       selectedFilters.includes("30000to50000") &&
       order.krwAmount >= 30000 &&
       order.krwAmount <= 50000
     )
       return true;
+
     if (
       selectedFilters.includes("50000to100000") &&
       order.krwAmount >= 50000 &&
       order.krwAmount <= 100000
     )
       return true;
+
     if (
       selectedFilters.includes("100000to200000") &&
       order.krwAmount >= 100000 &&
       order.krwAmount <= 200000
     )
       return true;
+
     if (
       selectedFilters.includes("200000to300000") &&
       order.krwAmount >= 200000 &&
       order.krwAmount <= 300000
     )
       return true;
+
     if (
       selectedFilters.includes("300000to500000") &&
       order.krwAmount >= 300000 &&
       order.krwAmount <= 500000
     )
       return true;
+
     if (
       selectedFilters.includes("500000to1000000") &&
       order.krwAmount >= 500000 &&
       order.krwAmount <= 1000000
     )
-      if (
-        selectedFilters.includes("50000to100000") &&
-        order.krwAmount >= 50000 &&
-        order.krwAmount <= 100000
-      )
-        return true;
-    if (
-      selectedFilters.includes("100000to200000") &&
-      order.krwAmount >= 100000 &&
-      order.krwAmount <= 200000
-    )
       return true;
-    if (
-      selectedFilters.includes("200000to300000") &&
-      order.krwAmount >= 200000 &&
-      order.krwAmount <= 300000
-    )
-      return true;
-    if (
-      selectedFilters.includes("300000to500000") &&
-      order.krwAmount >= 300000 &&
-      order.krwAmount <= 500000
-    )
-      return true;
-    if (
-      selectedFilters.includes("500000to1000000") &&
-      order.amount >= 500000 &&
-      order.amount <= 1000000
-    )
-      return true;
-    if (selectedFilters.includes("gt1000000") && order.amount > 1000000)
+
+    // Filter for amounts greater than 1,000,000 (gt1000000)
+    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
       return true;
 
     return false;

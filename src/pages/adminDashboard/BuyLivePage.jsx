@@ -119,13 +119,16 @@ const BuyLivePage = () => {
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
-      
+
       buyInProgressOrders.sort((a, b) => {
-      if (a.status === "In Progress" && b.status !== "In Progress") return -1;
-      if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
-      return 0;
-    });
-      
+        if (a.status === "In Progress" && b.status !== "In Progress") return -1;
+        if (
+          a.status === "Partially Matched" &&
+          b.status !== "Partially Matched"
+        )
+          return 1;
+        return 0;
+      });
 
       //   sellPendingOrders?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
@@ -319,7 +322,7 @@ const BuyLivePage = () => {
   };
 
   // Filter buy orders based on amount
-  const filteredBuyOrders = buyOrders.filter((order) => {
+  const filteredBuyO1rders = buyOrders.filter((order) => {
     if (selectedFilters.length === 0) return true;
     // Check if any selected filters match the order amount
     // if (selectedFilters.includes("lt500") && order.amount < 500) return true;
@@ -396,11 +399,80 @@ const BuyLivePage = () => {
       return true;
     if (
       selectedFilters.includes("500000to1000000") &&
-      order.amount >= 500000 &&
-      order.amount <= 1000000
+      order.krwAmount >= 500000 &&
+      order.krwAmount <= 1000000
     )
       return true;
-    if (selectedFilters.includes("gt1000000") && order.amount > 1000000)
+    // if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
+    // return true;
+    if (selectedFilters.includes("gt10000000") && order.krwAmount > 10000000)
+      return true;
+
+    return false;
+  });
+
+  const filteredBuyOrders = buyOrders.filter((order) => {
+    if (selectedFilters.length === 0) return true;
+
+    // Check for the different filter ranges
+    if (
+      selectedFilters.includes("500to1000") &&
+      order.krwAmount >= 500 &&
+      order.krwAmount <= 1000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("10000to30000") &&
+      order.krwAmount >= 10000 &&
+      order.krwAmount <= 30000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("30000to50000") &&
+      order.krwAmount >= 30000 &&
+      order.krwAmount <= 50000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("50000to100000") &&
+      order.krwAmount >= 50000 &&
+      order.krwAmount <= 100000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("100000to200000") &&
+      order.krwAmount >= 100000 &&
+      order.krwAmount <= 200000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("200000to300000") &&
+      order.krwAmount >= 200000 &&
+      order.krwAmount <= 300000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("300000to500000") &&
+      order.krwAmount >= 300000 &&
+      order.krwAmount <= 500000
+    )
+      return true;
+
+    if (
+      selectedFilters.includes("500000to1000000") &&
+      order.krwAmount >= 500000 &&
+      order.krwAmount <= 1000000
+    )
+      return true;
+
+    // Filter for amounts greater than 1,000,000 (gt1000000)
+    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
       return true;
 
     return false;

@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       const data = await response.json();
+      console.log("🚀 ~ data:", data)
 
       if (!response.ok) {
         const errorMsg =
@@ -112,9 +113,9 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (newUser) => {
     try {
-      // const response = await fetch("http://localhost:5173/api/v1/user/users", {
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+      // const response = await fetch(
+      //   "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+      const response = await fetch("http://localhost:3000/api/v1/user/users",
         {
           method: "POST",
           headers: {

@@ -105,7 +105,7 @@ const AdminTradeInProgressCard = ({
     <div className="relative flex flex-col items-center rounded-lg px-2 py-2  mb-4 bg-slate-200 shadow-sm">
       <div className="flex flex-col w-full sm:flex-row  border-green-300 py-2 px-2  bg-green-100 border shadow-sm items-center rounded-lg cursor-pointer  ">
         <div className="flex items-center space-x-2">
-          <div className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-sm">
+          <div className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-[14px]">
             Matching In Progress
           </div>
           <div
@@ -141,7 +141,7 @@ const AdminTradeInProgressCard = ({
           </button>
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="bg-[#26a17b] text-white px-3 py-1 rounded text-sm"
+            className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs"
           >
             1:1 Chat
           </button>
@@ -157,7 +157,7 @@ const AdminTradeInProgressCard = ({
               {offer.status === "In Progress" ? (
                 <button
                   onClick={handleMatchComplete}
-                  className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-base"
+                  className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-[13px]"
                 >
                   Complete-Match
                 </button>
@@ -204,7 +204,7 @@ const AdminTradeInProgressCard = ({
                 <td className="px-4 py-2">
                   {parseFloat(offer.amountRemaining).toFixed(4)} USDT
                 </td>
-                <td className="px-4 py-2">{offer.userId?.nickname || "N/A"}</td>
+                <td className="px-4 py-2">{offer.userId?.nickname || null }</td>
               </tr>
             </tbody>
           </table>
