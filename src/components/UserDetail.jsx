@@ -120,23 +120,24 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-scree p-8 font-sans max-w-5xl mx-auto">
-      <h1 className="text-3xl font-extrabold mb-3 text-gray-900">
+    <div className="bg-gray-50 min-h-screen p-6 sm:p-8 font-sans max-w-5xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-extrabold mb-6 text-gray-900">
         User Details :{" "}
-        <span className="text-[#26a17b]"> {user.nickname || user._id}</span>
+        <span className="text-[#26a17b]">{user.nickname || user._id}</span>
       </h1>
 
-      <div className="bg-white p-8 py-4 rounded-xl shadow-lg border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-3 text-green-600 bg-slate-100 px-2 py-2 shadow-sm">
-          Edit User Profile
-        </h2>
+      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
+        
+<h2 className="text-xl sm:text-2xl font-semibold mb-6 text-green-600 bg-slate-100 px-3 py-2 shadow-sm rounded">
+  Edit User Profile
+</h2>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSave();
           }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-3"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           {[
             { label: "Username", name: "username", type: "text" },
@@ -158,13 +159,13 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
               ],
             },
           ].map(({ label, name, type, options }) => (
-            <div key={name} className="flex flex-wrap md:flex-col">
-              <label
-                htmlFor={name}
-                className="mb-1 font-medium text-gray-700 select-none"
-              >
-                {label}
-              </label>
+            <div key={name} className="flex flex-col">
+           <label
+  htmlFor={name}
+  className="mb-2 font-medium text-gray-700 select-none text-sm sm:text-base"
+>
+  {label}
+</label>
 
               {type === "select" ? (
                 <select
@@ -172,7 +173,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                   name={name}
                   value={status}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 >
                   <option value="" disabled>
                     Select status
@@ -217,13 +218,13 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                     name === "username" ||
                     name === "fullName" ||
                     name === "dob"
-                  } // Disable these fields
-                  className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${
+                  }
+                  className={`border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${
                     name === "username" ||
                     name === "nickname" ||
                     name === "fullName" ||
                     name === "dob"
-                      ? "bg-gray-100 text-gray-500 cursor-not-allowed" // Apply different style when disabled
+                      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
                       : "focus:ring-indigo-500 focus:border-indigo-500"
                   }`}
                 />
@@ -231,11 +232,11 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             </div>
           ))}
 
-          <div className="md:col-span-2 flex justify-end mt-4">
+          <div className="md:col-span-2 flex justify-center md:justify-end mt-6">
             <button
               type="submit"
               disabled={isSaving}
-              className={`inline-flex items-center justify-center gap-2 rounded-md bg-green-600 px-6 py-3 text-white font-semibold shadow-md transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed`}
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-green-600 px-8 py-3 text-white font-semibold shadow-md transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             >
               {isSaving ? (
                 <>

@@ -67,21 +67,21 @@ export default function DashboardMetrics({
   };
 
   return (
-    <div className="w-full px-4 py-4 bg-white">
+    <div className="w-full  px-4 py-4 bg-white">
       <div className="overflow-x-auto">
-        <div className="inline-flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 w-max md:w-full">
+        <div className="inline-flex lg:gap-28 md:grid md:grid-cols-2 lg:grid-cols-4 w-max md:w-full">
           {/* Metric Cards with charts */}
           {metrics.map((metric, index) => (
             <div
               key={index}
-              className="min-w-[250px] bg-white rounded-lg shadow-lg p-5 flex-shrink-0 flex flex-col items-center text-center hover:scale-105 cursor-pointer transition-all duration-300"
+              className="min-w-[250px] overflow-y-hidden bg-white rounded-lg shadow-lg p-5 flex-shrink-0 flex flex-col items-center text-center hover:scale-105 cursor-pointer transition-all duration-300"
             >
               <span className="text-sm md:text-lg font-bold text-gray-700">
                 {metric.title}
               </span>
 
               {/* Chart Rendering */}
-              <div className="mt-4 w-full h-[250px]">
+              <div className="mt-4 w-full h-[200px]">
                 {metric.type === "pie" ? (
                   <Pie data={pieData(metric.value, metric.color)} options={{ responsive: true }} />
                 ) : (

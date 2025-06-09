@@ -160,7 +160,7 @@ function Sidebar() {
 
       <div className="scroll-auto">
         {/* Scrollable Links Section */}
-        <div className="flex-1  px-4">
+        <div className="flex-1 px-4">
           {sidebarData.map((section) => (
             <div key={section.id} className="mb-6">
               {section.title && !collapsed && (
@@ -169,19 +169,47 @@ function Sidebar() {
                 </h3>
               )}
               <ul className="space-y-1">
-                {section.links.map((link) => (
-                  <li key={link.id}>
-                    <Link
-                      to={link.to}
-                      className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
-                        isActive(link.to) ? "bg-[#26a17b]" : "hover:bg-gray-700"
-                      }`}
-                    >
-                      {link.icon}
-                      {!collapsed && <span>{link.label}</span>}
-                    </Link>
-                  </li>
-                ))}
+                {section.links.map((link) => {
+                  const active = isActive(link.to);
+
+                  return (
+                    <li key={link.id}>
+                      <Link
+                        to={link.to}
+                        className={`flex ${
+                          collapsed
+                            ? "flex-col items-center gap-1 py-2 px-3"
+                            : "items-center gap-3 py-2 px-3"
+                        } rounded-md transition-colors hover:bg-gray-700 ${
+                          !collapsed && (active ? "bg-[#26a17b]" : "")
+                        }`}
+                      >
+                        {/* Icon container: apply background ONLY when collapsed */}
+                        <div
+                          className={`rounded-md p-1 ${
+                            collapsed
+                              ? active
+                                ? "bg-[#26a17b] text-white"
+                                : "hover:bg-gray-700"
+                              : ""
+                          }`}
+                        >
+                          {link.icon}
+                        </div>
+
+                        {/* Label inline when expanded */}
+                        {!collapsed && <span>{link.label}</span>}
+
+                        {/* Label below icon on small screen when collapsed */}
+                        {collapsed && (
+                          <span className="block text-xs mt-0.5 text-center sm:hidden">
+                            {link.label}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
@@ -194,19 +222,44 @@ function Sidebar() {
               </h3>
             )}
             <ul className="space-y-1">
-              {inquiryData.links.map((link) => (
-                <li key={link.id}>
-                  <Link
-                    to={link.to}
-                    className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
-                      isActive(link.to) ? "bg-[#26a17b]" : "hover:bg-gray-700"
-                    }`}
-                  >
-                    {link.icon}
-                    {!collapsed && <span>{link.label}</span>}
-                  </Link>
-                </li>
-              ))}
+              {inquiryData.links.map((link) => {
+                const active = isActive(link.to);
+
+                return (
+                  <li key={link.id}>
+                    <Link
+                      to={link.to}
+                      className={`flex ${
+                        collapsed
+                          ? "flex-col items-center gap-1 py-2 px-3"
+                          : "items-center gap-3 py-2 px-3"
+                      } rounded-md transition-colors hover:bg-gray-700 ${
+                        !collapsed && (active ? "bg-[#26a17b]" : "")
+                      }`}
+                    >
+                      <div
+                        className={`rounded-md p-1 ${
+                          collapsed
+                            ? active
+                              ? "bg-[#26a17b] text-white"
+                              : "hover:bg-gray-700"
+                            : ""
+                        }`}
+                      >
+                        {link.icon}
+                      </div>
+
+                      {!collapsed && <span>{link.label}</span>}
+
+                      {collapsed && (
+                        <span className="block text-xs mt-0.5 text-center sm:hidden">
+                          {link.label}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

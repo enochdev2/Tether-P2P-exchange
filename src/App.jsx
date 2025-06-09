@@ -31,6 +31,7 @@ import TransactionHistory from "./pages/TransactionHistory";
 import UserManagement from "./pages/adminDashboard/UserManagement";
 import InquiryManagement from "./pages/adminDashboard/InquiryManagement";
 import ChatRoom2 from "./pages/ChatRoom2";
+import OtpVerificationPage from "./pages/OtpVerificationPage";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route path="/OtpVerificationPage" element={<OtpVerificationPage />} />
 
         <Route path="/" element={<Home />} />
         <Route path="/chats/:orderId/:orderType" element={<ChatRoom />} />

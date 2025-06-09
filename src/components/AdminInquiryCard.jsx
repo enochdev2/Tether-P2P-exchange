@@ -63,86 +63,69 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
   };
 
   return (
-    <div
-      className={`relative  rounded-lg py-2 px-4 sm:py-1 md:py-1 mb-4 border border-gray-200 shadow-sm`}
-    >
-      <div className="flex flex-col  bg-white sm:flex-row sm:space-x-1 items-center">
-        {/* Center Left Section */}
-        <div className="flex-col md:flex-row md:flex- w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-          <div className="flex flex-col space-y-2 ..bg-slate-200 px-4 py-1 rounded-2xl">
-            <span className="font-semibold text-xs sm:text-[16px] text-gray-900 truncate">
-              {offer?.title}
-            </span>
-          </div>
-        </div>
+    <div className="relative rounded-lg py-3 px-4 mb-4 border border-gray-200 shadow-sm bg-white">
+  <div className="flex flex-col sm:grid sm:grid-cols-6 gap-4 items-start sm:items-center">
+    {/* Title */}
+    <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">{offer?.title}</div>
 
-        <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-          <div className="flex flex-col space-y-2">
-            <span className="font-semibold text-xs sm:text-[16px] text-gray-900 truncate">
-              {offer?.userId?.username}
-            </span>
-          </div>
-        </div>
-        {/* Center Right Section */}
-        <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-[12px] mb-4 sm:mb-0 text-center sm:text-left truncat">
-          <br /> {offer?.description} <br />
-        </div>
+    {/* Nickname */}
+    <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">{offer?.userId?.username}</div>
 
-        {/* Center Right Section */}
-        <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-[12px] mb-4 sm:mb-0 text-center sm:text-left truncat">
-          <br /> {offer?.comment ? offer?.comment : "No comment added yet"}{" "}
-          <br />
-        </div>
-        {/* Add Comment Button */}
-        <div className="flex flex-wrap flex-col space-x-5 space-y-3 items-center">
-          <div>
-            <button
-              onClick={() => setIsCommenting(!isCommenting)}
-              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              {isCommenting ? "Cancel" : "Add Comment"}
-            </button>
-          </div>
-        </div>
+    {/* Description */}
+    <div className="text-xs sm:text-sm text-gray-700 break-words">{offer?.description}</div>
 
-        {/* Right Section */}
-        <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-0 relative">
-          <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
-            {offer._id.slice(0, 10)}
-          </div>
-          <div className="flex items-center md:text-[15px] space-x-2">
-            <div className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0" />
-            <span
-              className={`font-semibold select-none truncate max-w-[8rem] ${
-                offer.status === "inactive" ? "text-red-600" : "text-lime-600"
-              }`}
-            >
-              {offer.status}
-            </span>
-          </div>
-          <div className="text-center sm:text-right">{dateOnly}</div>
-        </div>
-      </div>
-
-      {/* Dropdown to input and submit comment */}
-      {isCommenting && (
-        <div className="mt-2 w-full ax-w-xs flex flex-wra justify-between space-x-4 bg-slate-100 md:flex-row space-y-1">
-          <textarea
-            className="w-[60%] h-12 space-x-2  row-2 p-2 border border-gray-300 rounded-lg"
-            placeholder="Enter your comment"
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-          />
-          <button
-            onClick={() => handleCommentSubmit(offer._id)}
-            disabled={loading}
-            className="mt-1 flex-1 px-4 h-12 py- bg-[#26a17b] cursor-pointer text-white rounded-lg"
-          >
-            {loading ? "Submitting..." : "Submit Comment"}
-          </button>
-        </div>
-      )}
+    {/* Comment */}
+    <div className="text-xs sm:text-sm text-gray-700 break-words">
+      {offer?.comment || "No comment added yet"}
     </div>
+
+    {/* Action */}
+    <div className="flex flex-col items-start">
+      <button
+        onClick={() => setIsCommenting(!isCommenting)}
+        className="px-3 py-2 bg-[#26a17b] hover:bg-green-700 text-white text-xs md:text-sm rounded font-semibold"
+      >
+        {isCommenting ? "Cancel" : "Add Comment"}
+      </button>
+    </div>
+
+    {/* Status and Date */}
+    <div className="flex flex-col items-start sm:items-end text-xs sm:text-sm text-gray-800">
+      <span className="truncate w-full sm:w-auto">{offer._id.slice(0, 10)}</span>
+      <span
+        className={`font-semibold mt-1 ${
+          offer.status === "inactive" ? "text-red-600" : "text-lime-600"
+        }`}
+      >
+        {offer.status}
+      </span>
+      <span className="mt-1">{dateOnly}</span>
+    </div>
+  </div>
+
+  {/* Comment Input */}
+  {isCommenting && (
+  <div className="mt-4 bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+    <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
+      <textarea
+        className="w-full md:w-[65%] h-24 p-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#26a17b]"
+        placeholder="Write your comment..."
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
+      />
+      <button
+        onClick={() => handleCommentSubmit(offer._id)}
+        disabled={loading}
+        className="w-full md:w-auto px-5 py-3 text-sm font-semibold rounded-lg bg-[#26a17b] hover:bg-green-700 text-white transition duration-200"
+      >
+        {loading ? "Submitting..." : "Submit Comment"}
+      </button>
+    </div>
+  </div>
+)}
+
+</div>
+
   );
 };
 

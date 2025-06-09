@@ -100,7 +100,7 @@ export default function AdminSidebar() {
     <aside
       className={` z-10 pt-4  bg-[#1f2937] text-white transition-all duration-300 ${
         collapsed ? "w-[75px]" : "lg:relative fixed w-[300px]"
-      } min-h-screen`}
+      } h-full`}
     >
       {/* header */}
       <div className="flex items-center justify-between p-4">

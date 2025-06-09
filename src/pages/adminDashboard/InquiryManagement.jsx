@@ -124,53 +124,49 @@ const InquiryManagement = () => {
 
   return (
     <div>
-      <div className="flex bg-gray-100 pt-2 min-h-screen">
-        <div className="flex-1 p-6 overflow-y-auto">
-          <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
-            <div className=" px-5 py-2 rounded-2xl ">
-              <h1 className="text-3xl font-bold bg-gradient-to-br flex from-green-600 via-[#26a17b] to-green-800 items-center text-transparent bg-clip-text ">
-                <FaQuestionCircle className="text-green-600 mr-5" /> All
-                Inquries Management
-              </h1>
-            </div>
-          </div>
+      <div className="flex bg-gray-50 pt-2 min-h-screen">
+  <div className="flex-1 p-4 md:p-6 overflow-y-auto">
+    {/* Header */}
+    <div className="flex justify-between items-center mb-8 bg-slate-50 border border-slate-300 px-6 py-5 rounded-2xl shadow-md">
+  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center">
+    <FaQuestionCircle className="text-green-600 mr-3 text-xl sm:text-2xl md:text-3xl" />
+    All Inquiries Management
+  </h1>
+</div>
 
-          {/* Render Sell Orders */}
-          <div className="mb-5 md:text-xl ">
-            <h2 className="text-xl md:text-2xl font-bold mb-4">
-              All Inquiries
-            </h2>
-            <div className="flex justify-between sm:space-x-1 items-center text-white bg-[#26a17b] px-5 py-2">
-              <div className="">
-                Title
-              </div>
-              <div className="">
-                Nickname
-              </div>
 
-              <div className="">
-                Description
-              </div>
-              <div>Comment</div>
-              <div className="">Action...</div>
-              <div>status</div>
-            </div>
-            {allUsers?.length === 0 ? (
-              <p className="text-gray-500">No User Available.</p>
-            ) : (
-              sortedOffers?.map((offer) => (
-                <AdminInquiryCard
-                  key={offer._id}
-                  offer={offer}
-                  sell={Sell}
-                  showChatButton={offer.status === "On Sale"}
-                  onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                />
-              ))
-            )}
-          </div>
-        </div>
+    {/* Section Title */}
+    <div className="mb-5">
+      <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">All Inquiries</h2>
+
+      {/* Table Header */}
+      <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
+        <div>Title</div>
+        <div>Nickname</div>
+        <div>Description</div>
+        <div>Comment</div>
+        <div>Action</div>
+        <div>Status</div>
       </div>
+
+      {/* Render Data */}
+      {allUsers?.length === 0 ? (
+        <p className="text-gray-500 mt-4">No User Available.</p>
+      ) : (
+        sortedOffers?.map((offer) => (
+          <AdminInquiryCard
+            key={offer._id}
+            offer={offer}
+            sell={Sell}
+            showChatButton={offer.status === "On Sale"}
+            onChatClick={() => Navigate(`/admin/chat/${offer._id}`)}
+          />
+        ))
+      )}
+    </div>
+  </div>
+</div>
+
       {/* Notification Alert Box */}
       <NotificationPopup
         loading={loadingNotifications}

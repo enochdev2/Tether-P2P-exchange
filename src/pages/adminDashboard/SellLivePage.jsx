@@ -498,7 +498,7 @@ const SellLivePage = () => {
 
   return (
     <div>
-      <div className="flex bg-gray-100 pt-2 min-h-screen">
+      <div className="flex bg-gray-100 pt-2 ">
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
             <div className=" px-5 py-2 rounded-2xl ">
