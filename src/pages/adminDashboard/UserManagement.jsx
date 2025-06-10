@@ -141,7 +141,7 @@ const UserManagement = () => {
       const user = JSON.parse(localStorage.getItem("user"));
       // Make an API call to mark all notifications as read
       const response = await fetch(
-        "http://localhost:3000/api/v1/notification/mark-read",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
         {
           method: "PUT",
           headers: {
