@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ErrorToast } from "../../utils/Error";
 
 const SignIn = () => {
-  const { login } = useAuth();
+  const { login, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     nickname: "",
@@ -38,21 +39,45 @@ const SignIn = () => {
     };
 
     try {
-      // Call signUp from AuthContext (which will handle the state and potentially an API call)
-      const data = await login(user);
+      // const data = await login(user);
       // const data = await response.json();
 
-      if (!data.isVerified) {
-        navigate("/verify"); // Redirect to the verification page
-        return;
+      // const response = await fetch("http://localhost:3000/api/v1/user/login",
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMsg =
+          data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+        if(data.message === "User not Verified") return navigate("/verify");
+        //  return response;
       }
 
-      if (data.isVerified) {
+      
+      
+      // Save user data to localStorage (could be just user object or a token)
+      
+      if (!data.user.isVerified) {
+        // navigate("/verify"); // Redirect to the verification page
+        return;
+      }else {
+        localStorage.setItem("token", data.token);
+        setIsLoggedIn(true);
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("isLoggedIn", "true");
         SuccessToast(" Login successfully");
         navigate("/dashboard/profile");
-      } else {
-        return;
-      }
+      } 
 
       console.log("User signed up:", user);
     } catch (error) {
