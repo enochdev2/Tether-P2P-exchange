@@ -77,11 +77,11 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
 
       {/* Nickname */}
       <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-100 px-4 py-2 rounded-lg flex items-center text-gray-700 text-sm shadow-inner">
-        {offer?.userId?.nickname}
+        {offer?.userId?.nickname || "nickname"}
       </div>
 
       {/* Center Left Section */}
-      <div className="flex flex-col md:flex-row md:flex-1 w-full sm:w-auto items-center mb-4 sm:mb-0">
+      <div className="flex flex-col md:flex-row space-x-3 md:flex-1 w-full sm:w-auto items-center mb-4 sm:mb-0">
         <div className="flex items-center">
           <img
             src={logo2}
@@ -93,13 +93,13 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
             <span className="font-medium">
               Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
             </span>
-            <span className="font-semibold text-gray-900">
-              {offer.krwAmount
-                ? `₩${offer.krwAmount.toLocaleString()} KRW`
-                : `₩${offer.price.toLocaleString()} KRW`}
-            </span>
           </div>
         </div>
+      <div className="font-semibold text-sm text-gray-700">
+        {offer.krwAmount
+          ? `₩${offer.krwAmount.toLocaleString()} KRW`
+          : `₩${offer.price.toLocaleString()} KRW`}
+      </div>
       </div>
 
       {/* Buttons */}
@@ -122,7 +122,7 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
+      <div className="flex flex-col flex-wrap sm:flex-nowrap ml-10 lg:ml-20 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
         <div className="break-words text-center sm:text-right w-full sm:w-auto truncate text-gray-500 font-mono">
           {offer._id}
         </div>

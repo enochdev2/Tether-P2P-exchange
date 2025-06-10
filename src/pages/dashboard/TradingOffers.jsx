@@ -300,7 +300,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
         <div className=" lg:px-6">
           <h4 className="md:text-lg text-sm font-semibold text-gray-500">
-            Enter Amount of USDT
+            Enter Amount
           </h4>
         </div>
 
@@ -361,7 +361,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
           }`}
             >
-              {val / 10000}k
+              {val / 1000}k
             </button>
           ))}
           <button

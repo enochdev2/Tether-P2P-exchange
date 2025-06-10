@@ -55,6 +55,14 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route
+          path="/verify"
+          element={
+            <PublicRoute>
+              <OtpVerificationPage />
+            </PublicRoute>
+          }
+        />
         <Route path="/OtpVerificationPage" element={<OtpVerificationPage />} />
 
         <Route path="/" element={<Home />} />

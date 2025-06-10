@@ -6,6 +6,7 @@ import LoadingSpiner from "../../components/LoadingSpiner";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
+import { useAuth } from "../../utils/AuthProvider";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,14 +44,17 @@ export default BuyFormInput;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
+  const { priceKRW, setPriceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
-  const [rate, setRate] = useState("1435.5");
+  const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [agreed, setAgreed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
   // Korean currency button values in won (number format)
   const krwButtons = [
@@ -83,6 +87,42 @@ const Modal = ({ isModalOpen, closeModal }) => {
     setWonAmount(newWonAmount.toString());
     const calculatedUSDT = (newWonAmount / rate).toFixed(4);
     setUsdtAmount(calculatedUSDT);
+  };
+
+  useEffect(() => {
+    if (!refreshing) return;
+    const fetchPrice = async () => {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setRate(data.tether.krw);
+        setPriceKRW(data.tether.krw);
+        return response;
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    fetchPrice().then(() => {
+      setLastRefreshed(new Date());
+      setRefreshing(false);
+    });
+  }, [refreshing]);
+
+  const handleRefresh = async () => {
+    if (refreshing) return;
+    setRefreshing(true);
+
+    // Simulate refresh action (e.g., fetching new rate)
+    setTimeout(() => {
+      setLastRefreshed(new Date());
+      setRefreshing(false);
+    }, 1000); // 2 seconds delay to simulate loading
   };
 
   const validateInputs = () => {
@@ -145,7 +185,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       setWonAmount("");
       setUsdtAmount("");
       SuccessToast("Successfully placed a buy order");
-      if(response.ok){
+      if (response.ok) {
         closeModal();
       }
     } catch (err) {
@@ -168,14 +208,20 @@ const Modal = ({ isModalOpen, closeModal }) => {
         <div className="border  mt-5   border-gray-700 rounded-xl md:w-[95%] mx-auto">
           <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 py-3 gap-1 sm:gap-2 text-xs text-gray-400 border-b border-gray-800">
             <span className="text-[0.8rem]  leading-tight break-words">
-              Tether Rate Calculator: As of May 19, 2025, 11:41 PM
+              Tether Rate Calculator: <br className="block sm:hidden" />
+              As of {lastRefreshed.toLocaleString()}{" "}
+              {refreshing && "Refreshing..."}
             </span>
             <button
-              className="hover:text-white transition flex items-center gap-1 self-end"
+              className="hover:text-white transition cursor-pointer flex items-center gap-1 self-end"
               aria-label="Refresh rate"
-              onClick={() => alert("Refresh clicked")}
+              onClick={handleRefresh}
             >
-              <RefreshCcw size={14} />
+              <RefreshCcw
+                size={14}
+                className={refreshing ? "animate-spin" : ""}
+              />
+              <span className="hidden sm:inline">Refresh</span>
             </button>
           </div>
 
@@ -299,7 +345,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
           }`}
             >
-              {val / 10000}k
+              {val / 1000}k
             </button>
           ))}
           <button

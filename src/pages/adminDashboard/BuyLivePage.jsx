@@ -321,95 +321,39 @@ const BuyLivePage = () => {
     }
   };
 
-  // Filter buy orders based on amount
-  const filteredBuyO1rders = buyOrders.filter((order) => {
-    if (selectedFilters.length === 0) return true;
-    // Check if any selected filters match the order amount
-    // if (selectedFilters.includes("lt500") && order.amount < 500) return true;
-    if (
-      selectedFilters.includes("500to1000") &&
-      order.krwAmount >= 500 &&
-      order.krwAmount <= 1000
-    )
-      return true;
-    if (
-      selectedFilters.includes("10000to30000") &&
-      order.krwAmount >= 10000 &&
-      order.krwAmount <= 30000
-    )
-      return true;
-    if (
-      selectedFilters.includes("30000to50000") &&
-      order.krwAmount >= 30000 &&
-      order.krwAmount <= 50000
-    )
-      return true;
-    if (
-      selectedFilters.includes("50000to100000") &&
-      order.krwAmount >= 50000 &&
-      order.krwAmount <= 100000
-    )
-      return true;
-    if (
-      selectedFilters.includes("100000to200000") &&
-      order.krwAmount >= 100000 &&
-      order.krwAmount <= 200000
-    )
-      return true;
-    if (
-      selectedFilters.includes("200000to300000") &&
-      order.krwAmount >= 200000 &&
-      order.krwAmount <= 300000
-    )
-      return true;
-    if (
-      selectedFilters.includes("300000to500000") &&
-      order.krwAmount >= 300000 &&
-      order.krwAmount <= 500000
-    )
-      return true;
-    if (
-      selectedFilters.includes("500000to1000000") &&
-      order.krwAmount >= 500000 &&
-      order.krwAmount <= 1000000
-    )
-      if (
-        selectedFilters.includes("50000to100000") &&
-        order.krwAmount >= 50000 &&
-        order.krwAmount <= 100000
-      )
-        return true;
-    if (
-      selectedFilters.includes("100000to200000") &&
-      order.krwAmount >= 100000 &&
-      order.krwAmount <= 200000
-    )
-      return true;
-    if (
-      selectedFilters.includes("200000to300000") &&
-      order.krwAmount >= 200000 &&
-      order.krwAmount <= 300000
-    )
-      return true;
-    if (
-      selectedFilters.includes("300000to500000") &&
-      order.krwAmount >= 300000 &&
-      order.krwAmount <= 500000
-    )
-      return true;
-    if (
-      selectedFilters.includes("500000to1000000") &&
-      order.krwAmount >= 500000 &&
-      order.krwAmount <= 1000000
-    )
-      return true;
-    // if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
-    // return true;
-    if (selectedFilters.includes("gt10000000") && order.krwAmount > 10000000)
-      return true;
+  const handleMarkAllAsRead = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      // Make an API call to mark all notifications as read
+      const response = await fetch(
+        "http://localhost:3000/api/v1/notification/mark-read",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+           body: JSON.stringify({
+        userId: user._id, 
+        type: "buyOrder", 
+        isForAdmin: true,
+      }),
+        }
+      );
 
-    return false;
-  });
+      const result = await response.json();
+      if (response.ok) {
+        // Handle success (for example, reset notifications)
+        SuccessToast("All notifications marked as read");
+        setNotifications([]); // Clear the notifications or update the state accordingly
+      } else {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
 
   const filteredBuyOrders = buyOrders.filter((order) => {
     if (selectedFilters.length === 0) return true;
@@ -600,6 +544,7 @@ const BuyLivePage = () => {
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
       />
     </div>
   );

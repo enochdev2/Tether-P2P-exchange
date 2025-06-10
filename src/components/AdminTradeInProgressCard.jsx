@@ -102,7 +102,7 @@ const AdminTradeInProgressCard = ({
     : offer?.matchedSellOrders;
 
   return (
-    <div className="relative  w-full flex flex-col gap-4 items-center mb-4 rounded-xl bg-white p-4 shadow-lg border border-gray-200">
+    <div className="relative  w-full flex flex-col gap-4 items-center mb-4 rounded-xl bg-white p-2 shadow-lg border border-green-600">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row items-start  sm:items-center justify-between w-full gap-4">
         {/* Status & Nickname */}
@@ -133,7 +133,7 @@ const AdminTradeInProgressCard = ({
         <div className="flex gap-2 flex-wrap items-center">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="bg-[#26a17b] hover:bg-green-700 text-white p-2 rounded-md shadow-sm"
+            className="bg-[#26a17b] hover:bg-green-700 text-white p-2 cursor-pointer rounded-md shadow-sm"
           >
             {isDropdownOpen ? (
               <FaChevronUp size={14} />
@@ -144,14 +144,14 @@ const AdminTradeInProgressCard = ({
 
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="bg-[#26a17b] hover:bg-green-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+            className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
           >
             1:1 Chat
           </button>
 
           <button
             onClick={handleMatchCancel}
-            className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+            className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
           >
             Cancel
           </button>
@@ -160,14 +160,14 @@ const AdminTradeInProgressCard = ({
             (offer.status === "In Progress" ? (
               <button
                 onClick={handleMatchComplete}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium shadow-sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
               >
                 Complete-Match
               </button>
             ) : (
               <button
                 onClick={handleMatchClick}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded-md font-semibold shadow-sm"
+                className="bg-cyan-600  hover:bg-cyan-600 text-white text-xs px-3 py-3 rounded-md font-semibold shadow-sm cursor-pointer"
               >
                 Match
               </button>

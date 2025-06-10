@@ -1,12 +1,26 @@
 // components/NotificationPopup.js
 import React from "react";
+import { SuccessToast } from "../utils/Success";
 
 const NotificationPopup = ({
   loading = false,
   notifications = [],
   onMarkRead = () => {},
   title = "Unread Notifications",
+  onMarkAllAsRead = () => {}, 
 }) => {
+
+   // Handle the API call for marking all notifications as read
+  const handleMarkAllAsRead = async () => {
+    try {
+      // Make the API call to mark all notifications as read
+      await onMarkAllAsRead();
+      SuccessToast("All notifications marked as read");
+    } catch (error) {
+      console.error("Error marking all notifications as read", error);
+    }
+  };
+
   if (loading || notifications.length === 0) return null;
 
   return (
@@ -14,8 +28,18 @@ const NotificationPopup = ({
       className="fixed bottom-1 md:bottom-5 right-1 sm:right-5 w-80 max-w-[280px] md:max-w-full bg-white border-2 border-red-700 rounded-lg shadow-lg px-2 py-3 md:p-4 z-50"
       style={{ maxHeight: "400px", overflowY: "auto" }}
     >
-      <h3 className="font-semibold mb-2 text-red-600 md:text-lg text-sm">{title}</h3>
 
+        {/* Title with Mark All button */}
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="font-semibold text-red-600 md:text-lg text-sm">{title}</h3>
+        <button
+          onClick={handleMarkAllAsRead}
+          className="text-xs bg-green-600 cursor-pointer hover:bg-green-700 text-white py-1 px-3 rounded"
+          type="button"
+        >
+          Mark All
+        </button>
+      </div>
       {notifications.map((notif) => (
         <div
           key={notif._id}

@@ -75,7 +75,7 @@ const SignUp = () => {
 
       if (response.ok) {
         SuccessToast(" you have successfully registered");
-        navigate("/signin");
+        navigate("/verify");
       } else {
         return;
       }
