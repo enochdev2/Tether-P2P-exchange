@@ -95,11 +95,11 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
             </span>
           </div>
         </div>
-      <div className="font-semibold text-sm text-gray-700">
+      </div>
+      <div className="font-semibold text-sm text-gray-700 flex-1">
         {offer.krwAmount
           ? `₩${offer.krwAmount.toLocaleString()} KRW`
           : `₩${offer.price.toLocaleString()} KRW`}
-      </div>
       </div>
 
       {/* Buttons */}

@@ -511,11 +511,11 @@ const SellLivePage = () => {
           <button
             key={key}
             onClick={() => handleAmountFilterChange(key)}
-            className={`whitespace-pre-line px-4 py-2 rounded-md text-md font-medium shadow-sm transition duration-150 ${
+            className={`whitespace-pre-line cursor-pointer px-4 py- rounded-md text-[15px] font-medium shadow-sm transition duration-150 ${
               (key === "all" && selectedFilters.length === 0) ||
               selectedFilters.includes(key)
                 ? "bg-[#26a17b] text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                : "bg-gray-100 text-gray-700 border border-slate-300 hover:bg-gray-200"
             }`}
           >
             {label}

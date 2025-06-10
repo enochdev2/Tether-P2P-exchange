@@ -149,21 +149,24 @@ const AdminTradeInProgressCard = ({
             1:1 Chat
           </button>
 
+
+          {sell &&
+            (offer.status === "In Progress" ? (
+              <div>
           <button
             onClick={handleMatchCancel}
             className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
           >
             Cancel
           </button>
-
-          {sell &&
-            (offer.status === "In Progress" ? (
               <button
                 onClick={handleMatchComplete}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
               >
                 Complete-Match
               </button>
+
+              </div>
             ) : (
               <button
                 onClick={handleMatchClick}
