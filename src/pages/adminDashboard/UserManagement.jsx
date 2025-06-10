@@ -145,70 +145,68 @@ const UserManagement = () => {
 
   return (
     <div>
-      <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-12">
-  {/* Header */}
-  <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white p-4 sm:p-6 rounded-xl shadow-md mb-6">
-    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3 mb-3 sm:mb-0">
-      <UserPlus2Icon className="w-6 h-6 sm:w-7 sm:h-7 text-green-600" />
-      <span className="bg-gradient-to-r from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
-        User Management
-      </span>
-    </h1>
+      <div className="flex bg-gray-100 pt-2 min-h-screen">
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
+            <div className=" px-5 py-2 rounded-2xl ">
+              <h1 className="text-3xl font-bold bg-gradient-to-br flex from-green-600 via-[#26a17b] to-green-800 items-center text-transparent bg-clip-text ">
+                <UserPlus2Icon className="text-green-600 mr-5" /> User
+                Management
+              </h1>
+            </div>
+          </div>
 
-    <button className="w-full sm:w-auto bg-green-600 hover:bg-green-700 transition text-white font-medium px-5 py-2 rounded-md shadow">
-      All Users
-    </button>
-  </header>
+          {/* Render All Users */}
+          <div className="mb-2">
+            <div className="mb-4 flex flex-wrap items-center gap-4">
+              <button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-md shadow-md">
+                All User
+              </button>
 
-  {/* Search Section */}
-  <div className="mb-6">
-    <div className="relative w-full">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search user by name..."
-        className="w-full border border-gray-300 px-4 py-3 pr-10 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
-      />
-      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-5 h-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </span>
-    </div>
-  </div>
+              <div className="relative flex items-center w-full max-w-xs border border-gray-300 bg-white rounded-md shadow-sm">
+                <input
+                  type="text"
+                  placeholder="Enter User name"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-3 py-2 outline-none rounded-md"
+                />
+                <span className="absolute right-2 text-gray-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
 
-  {/* User Cards Grid */}
-  <section className="">
-    {allUsers?.length === 0 ? (
-      <div className="col-span-full text-center text-gray-500 py-10">
-        No users available.
+            {allUsers?.length === 0 ? (
+              <p className="text-gray-500">No User Available.</p>
+            ) : (
+              filteredUsers?.map((offer) => (
+
+                <AdminUserCard
+                  key={offer._id}
+                  offer={offer}
+                  handleSubmit={() => handleSubmit(offer.nickname)}
+                  setChange={setChange}
+                  handleUpdate={allUser}
+                />
+              ))
+            )}
+          </div>
+        </div>
       </div>
-    ) : (
-      filteredUsers?.map((offer) => (
-        <AdminUserCard
-          key={offer._id}
-          offer={offer}
-          handleSubmit={() => handleSubmit(offer.nickname)}
-          setChange={setChange}
-          handleUpdate={allUser}
-        />
-      ))
-    )}
-  </section>
-</div>
-
       {/* Notification Alert Box */}
       <NotificationPopup
         loading={loadingNotifications}

@@ -102,88 +102,93 @@ const AdminTradeInProgressCard = ({
     : offer?.matchedSellOrders;
 
   return (
-    <div className="relative flex flex-col items-center rounded-lg px-2 py-2  mb-4 bg-slate-200 shadow-sm">
-      <div className="flex flex-col w-full sm:flex-row  border-green-300 py-2 px-2  bg-green-100 border shadow-sm items-center rounded-lg cursor-pointer  ">
-        <div className="flex items-center space-x-2">
-          <div className="bg-green-600 text-white font-semibold px-2 py-1 rounded-md text-[14px]">
+    <div className="relative  w-full flex flex-col gap-4 items-center mb-4 rounded-xl bg-white p-4 shadow-lg border border-gray-200">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row items-start  sm:items-center justify-between w-full gap-4">
+        {/* Status & Nickname */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="bg-green-600 text-white text-sm font-semibold px-3 py-2 rounded-md shadow-sm">
             Matching In Progress
-          </div>
-          <div
-            className="bg-slate-200 px-3 py-1 rounded-md cursor-pointer"
+          </span>
+          <button
+            className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-md font-medium px-3 py-1 rounded-md transition"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {offer?.userId?.nickname || "Nickname"}
-          </div>
+          </button>
         </div>
 
-        <div className="flex items-center ml-4">
-          <img src={logo2} alt="Tether" className="w-5 h-5 mr-2" />
-          <div>
-            <div className="text-xs text-gray-400">
-              Total: {offer.amount} USDT
-            </div>
-            <div className="text-sm text-black">
+        {/* Amount & Balance */}
+        <div className="flex items-center gap-2 text-md text-gray-700">
+          <img src={logo2} alt="Tether" className="w-5 h-5" />
+          <div className="leading-tight">
+            <p className="text-gray-400 text-sm">Total: {offer.amount} USDT</p>
+            <p className="font-semibold text-md">
               Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
-            </div>
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center ml-auto space-x-2">
+        {/* Action Buttons */}
+        <div className="flex gap-2 flex-wrap items-center">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="bg-[#26a17b] text-white px-3 cursor-pointer py-1 rounded text-sm"
+            className="bg-[#26a17b] hover:bg-green-700 text-white p-2 rounded-md shadow-sm"
           >
             {isDropdownOpen ? (
-              <FaChevronUp size={20} />
+              <FaChevronUp size={14} />
             ) : (
-              <FaChevronDown size={20} />
+              <FaChevronDown size={14} />
             )}
           </button>
+
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs"
+            className="bg-[#26a17b] hover:bg-green-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
           >
             1:1 Chat
           </button>
+
           <button
             onClick={handleMatchCancel}
-            className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-base"
+            className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
           >
             Cancel
           </button>
 
-          {sell && (
-            <div>
-              {offer.status === "In Progress" ? (
-                <button
-                  onClick={handleMatchComplete}
-                  className="bg-[#26a17b] text-white px-3 py-1 rounded text-xs lg:text-[13px]"
-                >
-                  Complete-Match
-                </button>
-              ) : (
-                <button
-                  onClick={handleMatchClick}
-                  className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-                >
-                  Match
-                </button>
-              )}
-            </div>
-          )}
+          {sell &&
+            (offer.status === "In Progress" ? (
+              <button
+                onClick={handleMatchComplete}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium shadow-sm"
+              >
+                Complete-Match
+              </button>
+            ) : (
+              <button
+                onClick={handleMatchClick}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-3 py-1 rounded-md font-semibold shadow-sm"
+              >
+                Match
+              </button>
+            ))}
         </div>
 
-        <div className="text-xs text-right ml-4">
-          <div>{offer._id}</div>
-          <div className="text-green-700 font-bold">{offer.status}</div>
-          <div>{dateOnly}</div>
+        {/* ID, Status, Date */}
+        <div className="text-xs text-gray-600 text-right space-y-0.5 leading-snug">
+          <p className="truncate  max-w-[120px] font-mono text-gray-500">
+            {offer._id}
+          </p>
+          <p className="font-bold text-green-700">{offer.status}</p>
+          <p className="text-gray-500">{dateOnly}</p>
         </div>
       </div>
 
+      {/* Dropdown Table */}
       {isDropdownOpen && (
-        <div className=" transform -trans top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 w-full max-w- p-4">
+        <div className="w-full mt-3 bg-white border border-gray-200 rounded-lg shadow-sm overflow-auto">
           <table className="w-full text-sm text-left text-gray-700">
-            <thead className="text-xs uppercase text-gray-500 border-b">
+            <thead className="text-xs uppercase bg-gray-100 text-gray-500">
               <tr>
                 <th className="px-4 py-2">Type</th>
                 <th className="px-4 py-2">Amount</th>
@@ -192,48 +197,48 @@ const AdminTradeInProgressCard = ({
             </thead>
             <tbody>
               {buildMatchedTableRows(offer, sell).map((row, i) => (
-                <tr className=" border-b border-b-gray-300" key={i}>
+                <tr key={i} className="border-b hover:bg-gray-50">
                   <td className="px-4 py-2">{row.type}</td>
                   <td className="px-4 py-2 font-medium">{row.amount}</td>
                   <td className="px-4 py-2">{row.user}</td>
                 </tr>
               ))}
-
-              <tr className="bg-slate-100 font-semibold">
+              <tr className="bg-slate-100 font-semibold text-sm">
                 <td className="px-4 py-2">Remaining</td>
                 <td className="px-4 py-2">
                   {parseFloat(offer.amountRemaining).toFixed(4)} USDT
                 </td>
-                <td className="px-4 py-2">{offer.userId?.nickname || null }</td>
+                <td className="px-4 py-2">{offer.userId?.nickname || "N/A"}</td>
               </tr>
             </tbody>
           </table>
         </div>
       )}
 
+      {/* Match Modal */}
       {isMatchModalOpen && (
-        <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-96 border border-green-700 shadow-lg">
-            <h3 className="text-xl font-semibold mb-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-[95%] max-w-md border border-green-600 shadow-xl">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
               Match Seller with Buyer
             </h3>
             <input
               type="text"
-              className="border border-gray-300 rounded-md p-2 mb-4 w-full"
               placeholder="Enter Buyer Order ID"
+              className="w-full mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
               value={buyerOrderId}
               onChange={(e) => setBuyerOrderId(e.target.value)}
             />
-            <div className="flex justify-between">
+            <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsMatchModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded-md"
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-sm text-gray-700"
               >
                 Cancel
               </button>
               <button
                 onClick={handleMatchSubmit}
-                className="px-4 py-2 bg-[#26a17b] text-white rounded-md"
+                className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm"
               >
                 Match
               </button>

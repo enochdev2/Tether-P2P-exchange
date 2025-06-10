@@ -484,11 +484,10 @@ const BuyLivePage = () => {
     <div>
       <div className="flex bg-gray-100 pt-2 min-h-screen">
         <div className="flex-1 px-6 py-3 overflow-y-auto">
-          {/* <BuyTetherComponent /> */}
-
-          <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
-            <div className=" px-5 py-2 rounded-2xl ">
-              <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text ">
+          {/* Page Header */}
+          <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl">
+            <div className="px-5 py-2 rounded-2xl">
+              <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
                 Buy Orders (
                 <span className="text-emerald-70 text-shadow-emerald-400">
                   Live
@@ -496,116 +495,48 @@ const BuyLivePage = () => {
                 )
               </h1>
             </div>
-
             <div className="space-x-4">
-              <button className="bg-gray-200 px-4 py-2 rounded-md">
+              <button className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 font-medium transition">
                 Sort By
               </button>
             </div>
           </div>
 
-          {/* Amount Filter Buttons for Buy Orders */}
-          <div className="mb-6 space-x-2 space-y-3 text-base flex flex-wrap items-center">
-            {/* Amount Filter Buttons */}
-            <button
-              onClick={() => handleAmountFilterChange("all")}
-              className={`px-5 py-2 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.length === 0
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("10000to30000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("10000to30000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              10,000 ↑ <br /> 30,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("30000to50000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("30000to50000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              30,000 ↑ <br /> 50,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("50000to100000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("50000to100000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              50,000 ↑ <br /> 100,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("100000to200000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("100000to200000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              100,000 ↑ <br /> 200,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("200000to300000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("200000to300000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              200,000 ↑ <br /> 300,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("300000to500000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("300000to500000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              300,000 ↑ <br /> 500,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("500000to1000000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("500000to1000000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              500,000 ↑ <br /> 1,000,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("gt1000000")}
-              className={`px-6 py-2 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("gt1000000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              1,000,000 ↑
-            </button>
+          {/* Filter Buttons */}
+          <div className="mb-6 flex flex-wrap gap-2 text-sm">
+            {[
+              { label: "All", value: "all" },
+              { label: "10,000 ↑\n30,000 ↓", value: "10000to30000" },
+              { label: "30,000 ↑\n50,000 ↓", value: "30000to50000" },
+              { label: "50,000 ↑\n100,000 ↓", value: "50000to100000" },
+              { label: "100,000 ↑\n200,000 ↓", value: "100000to200000" },
+              { label: "200,000 ↑\n300,000 ↓", value: "200000to300000" },
+              { label: "300,000 ↑\n500,000 ↓", value: "300000to500000" },
+              { label: "500,000 ↑\n1,000,000 ↓", value: "500000to1000000" },
+              { label: "1,000,000 ↑", value: "gt1000000" },
+            ].map(({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => handleAmountFilterChange(value)}
+                className={`px-4 py-2 rounded-md font-semibold whitespace-pre-line transition-all duration-200 ${
+                  selectedFilters.includes(value) ||
+                  (value === "all" && selectedFilters.length === 0)
+                    ? "bg-[#26a17b] text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          {/* Render Sell Orders In Progress */}
-          <div className="mb-5">
-            {inProgressOrders.length !== 0 && (
-              <div className="">
-                <h2 className="text-xl text-green-700 rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All Orders In Progress
-                </h2>
+          {/* In Progress Orders */}
+          {inProgressOrders.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-xl text-green-700 border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
+                All Orders In Progress
+              </h2>
+              <div className="mt-4 space-y-4">
                 {inProgressOrders.map((offer) => (
                   <AdminTradeInProgressCard
                     key={offer._id}
@@ -617,16 +548,17 @@ const BuyLivePage = () => {
                   />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          <div>
-            {pendingOrders.length !== 0 && (
-              <div>
-                <h2 className="text-lg text-red-700 rounded-2xl shadow-lg py-1 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All Pending Orders
-                </h2>
-                {pendingOrders?.map((offer) => (
+          {/* Pending Orders */}
+          {pendingOrders.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-xl text-red-700 border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
+                All Pending Orders
+              </h2>
+              <div className="mt-4 space-y-4">
+                {pendingOrders.map((offer) => (
                   <AdminTradeCard2
                     key={offer._id}
                     offer={offer}
@@ -638,29 +570,32 @@ const BuyLivePage = () => {
                   />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Render Buy Orders */}
+          {/* Live Buy Orders */}
           <div>
-            <h2 className="text-lg text-black rounded-2xl shadow-lg py-1 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+            <h2 className="text-xl text-black border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
               All Live Buy Orders
             </h2>
-            {filteredBuyOrders.length === 0 ? (
-              <p className="text-gray-500">No buy orders found.</p>
-            ) : (
-              filteredBuyOrders.map((offer) => (
-                <AdminTradeCard
-                  key={offer._id}
-                  offer={offer}
-                  showChatButton={offer.status === "Waiting for Buy"}
-                  onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                />
-              ))
-            )}
+            <div className="mt-4 space-y-4">
+              {filteredBuyOrders.length === 0 ? (
+                <p className="text-gray-500">No buy orders found.</p>
+              ) : (
+                filteredBuyOrders.map((offer) => (
+                  <AdminTradeCard
+                    key={offer._id}
+                    offer={offer}
+                    showChatButton={offer.status === "Waiting for Buy"}
+                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                  />
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
+
       <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}

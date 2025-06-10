@@ -47,89 +47,83 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
 
   return (
     <div
-      className={`relative flex flex-col sm:flex-row items-center bg-red-50 rounded-lg py-2 px-2 sm:py-3 md:py-1 mb-4 border border-red-500 shadow-sm
-        ${isPending ? "opacity-90 filter grayscale" : ""}
-      `}
-    >
-      {/* Left Section */}
-      <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr-3 justify-center sm:justify-start">
-        <div className="flex items-center space-x-1 md:space-x-2">
-          <div className="bg-gray-400 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap">
-            {sell ? "Sell" : "Buy"}
-          </div>
-          <div className="w-3 h-3 hidden sm:block bg-gray-400 rounded-full mt-1" />
-        </div>
-      </div>
+  className={`relative flex flex-col sm:flex-row items-center justify-between bg-red-50 border border-red-500 rounded-xl px-4 py-1 shadow-md transition-all duration-300 ${
+    isPending ? "opacity-90 grayscale" : ""
+  }`}
+>
+  {/* Left Badge */}
+  <div className="flex items-center gap-2 sm:w-24 justify-center sm:justify-start">
+    <span className="bg-gray-700 text-white text-[13px] sm:text-sm md:text-base font-semibold px-3 py-1 rounded-lg shadow-sm">
+      {sell ? "Sell" : "Buy"}
+    </span>
+    <span className="w-3 h-3 bg-gray-500 rounded-full hidden sm:block"></span>
+  </div>
 
-      <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-200 px-4 py-3 rounded-lg flex items-center">
-        {offer?.userId?.nickname}
-      </div>
+  {/* Nickname Display */}
+  <div className="w-full sm:w-auto flex items-center justify-center sm:justify-start bg-slate-100 px-4 py-2 rounded-md font-medium text-sm sm:text-base text-gray-800 shadow-inner">
+    {offer?.userId?.nickname || "Unnamed User"}
+  </div>
 
-      {/* Center Left Section */}
-      <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img
-          src={logo2}
-          alt="Tether logo"
-          className="w-5 h-5 md:w-7 md:h-7 mr-3"
-        />
-        <span className="font-medium text-xs sm:text-[16px] text-gray-400 truncate">
-          {offer.amount} USDT
-        </span>
-      </div>
+  {/* Amount */}
+  <div className="flex items-center gap-2 text-sm sm:text-base text-gray-600">
+    <img src={logo2} alt="Tether" className="w-5 h-5 sm:w-6 sm:h-6" />
+    <span className="font-semibold">{offer.amount} USDT</span>
+  </div>
 
-      {/* Center Right Section */}
-      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-400 text-xs sm:text-[16px] mb-4 sm:mb-0 text-center sm:text-left truncat">
-        {offer.krwAmount
-          ? `₩${offer.krwAmount.toLocaleString()} KRW`
-          : `₩${offer.price.toLocaleString()} KRW`}
-      </div>
+  {/* KRW Amount */}
+  <div className="text-xs sm:text-sm md:text-base text-gray-700 font-medium text-center sm:text-left truncate w-full sm:w-40">
+    {offer.krwAmount
+      ? `₩${offer.krwAmount.toLocaleString()} KRW`
+      : `₩${offer.price.toLocaleString()} KRW`}
+  </div>
 
-      <div>
-        {/* Chat button for buy orders waiting for buy */}
-        {offer.status === "Pending Approval" && (
-          <div className=" space-x-3">
-            <button
-              onClick={() => approveOrders(offer._id)}
-              className="mt-2 px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-base font-bold"
-            >
-              Approve
-            </button>
-            <button
-              onClick={() => rejectOrders(offer._id)}
-              className="mt-2 px-2 py-2 cursor-pointer bg-[#a12626] hover:bg-red-700 text-white rounded text-xs md:text-base font-bold"
-            >
-              Reject
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Right Section */}
-      <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
-        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
-          {offer._id.slice(0, 10)}
-        </div>
-        <div className="flex items-center  md:text-[16px] space-x-2">
-          <div
-            className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"
-            style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
-          />
-          <span
-            className={`font-semibold select-none truncate max-w-[8rem] ${
-              offer.status === "Pending Approval"
-                ? "text-gray-400"
-                : offer.status === "Sell completed" ||
-                  offer.status === "Buy Completed"
-                ? "text-orange-500"
-                : "text-lime-600"
-            }`}
-          >
-            {offer.status}
-          </span>
-        </div>
-        <div className="text-center sm:text-right">{dateOnly}</div>
-      </div>
+  {/* Approve / Reject Buttons */}
+  {offer.status === "Pending Approval" && (
+    <div className="flex gap-3 items-center">
+      <button
+        onClick={() => approveOrders(offer._id)}
+        className="px-4 py-1.5 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm shadow-md font-bold transition"
+      >
+        Approve
+      </button>
+      <button
+        onClick={() => rejectOrders(offer._id)}
+        className="px-4 py-1.5 bg-[#a12626] hover:bg-red-700 text-white rounded-md text-sm shadow-md font-bold transition"
+      >
+        Reject
+      </button>
     </div>
+  )}
+
+  {/* Order Info */}
+  <div className="flex flex-col items-center sm:items-end text-xs sm:text-sm md:text-base text-gray-800 w-full sm:w-40 space-y-1 truncate">
+    <div className="text-center sm:text-right w-full truncate font-mono text-gray-500">
+      {offer._id.slice(0, 10)}
+    </div>
+
+    <div className="flex items-center justify-center sm:justify-end gap-2">
+      <span
+        className="w-3 h-3 rounded-full hidden sm:inline-block"
+        style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
+      />
+      <span
+        className={`font-semibold truncate max-w-[9rem] ${
+          offer.status === "Pending Approval"
+            ? "text-yellow-600"
+            : offer.status === "Sell completed" ||
+              offer.status === "Buy Completed"
+            ? "text-orange-500"
+            : "text-green-600"
+        }`}
+      >
+        {offer.status}
+      </span>
+    </div>
+
+    <div className="text-center text-sm  sm:text-right text-gray-500">{dateOnly}</div>
+  </div>
+</div>
+
   );
 };
 

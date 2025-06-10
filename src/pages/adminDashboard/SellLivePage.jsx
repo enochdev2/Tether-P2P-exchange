@@ -482,188 +482,119 @@ const SellLivePage = () => {
 
   return (
     <div>
-      <div className="flex bg-gray-100 pt-2 ">
-        <div className="flex-1 p-6 overflow-y-auto">
-          <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl ">
-            <div className=" px-5 py-2 rounded-2xl ">
-              <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text ">
-                Sell Orders (
-                <span className="text-emerald-70 text-shadow-emerald-400">
-                  Live
-                </span>
-                )
-              </h1>
-            </div>
+     <div className="flex bg-gray-50 pt-4 min-h-screen">
+  <div className="flex-1 px-4 md:px-8 py-6 overflow-y-auto">
+    {/* Page Header */}
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center bg-white shadow rounded-2xl px-6 py-4 mb-8 border border-gray-200">
+      <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center gap-2">
+        Sell Orders <span className="text-emerald-600">(Live)</span>
+      </h1>
+      <button className="bg-gray-200 text-sm text-gray-800 px-5 py-2 rounded-md font-medium hover:bg-gray-300 mt-4 md:mt-0 transition">
+        Sort By
+      </button>
+    </div>
 
-            <div className="space-x-4">
-              <button className="bg-gray-200 px-4 py-2 rounded-md">
-                Sort By
-              </button>
-            </div>
-          </div>
+    {/* Filter Buttons */}
+    <div className="mb-10">
+      <div className="flex flex-wrap gap-3">
+        {[
+          { label: "All", key: "all" },
+          { label: "10,000 ↑\n30,000 ↓", key: "10000to30000" },
+          { label: "30,000 ↑\n50,000 ↓", key: "30000to50000" },
+          { label: "50,000 ↑\n100,000 ↓", key: "50000to100000" },
+          { label: "100,000 ↑\n200,000 ↓", key: "100000to200000" },
+          { label: "200,000 ↑\n300,000 ↓", key: "200000to300000" },
+          { label: "300,000 ↑\n500,000 ↓", key: "300000to500000" },
+          { label: "500,000 ↑\n1,000,000 ↓", key: "500000to1000000" },
+          { label: "1,000,000 ↑", key: "gt1000000" },
+        ].map(({ label, key }) => (
+          <button
+            key={key}
+            onClick={() => handleAmountFilterChange(key)}
+            className={`whitespace-pre-line px-4 py-2 rounded-md text-md font-medium shadow-sm transition duration-150 ${
+              (key === "all" && selectedFilters.length === 0) ||
+              selectedFilters.includes(key)
+                ? "bg-[#26a17b] text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
 
-          {/* Amount Filter Buttons for Sell Orders */}
-          <div className="mb-6 space-x-2 space-y-3 text-base flex flex-wrap items-center">
-            {/* Amount Filter Buttons */}
-            <button
-              onClick={() => handleAmountFilterChange("all")}
-              className={`px-5 py-2 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.length === 0
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("10000to30000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("10000to30000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              10,000 ↑ <br /> 30,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("30000to50000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("30000to50000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              30,000 ↑ <br /> 50,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("50000to100000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("50000to100000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              50,000 ↑ <br /> 100,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("100000to200000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("100000to200000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              100,000 ↑ <br /> 200,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("200000to300000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("200000to300000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              200,000 ↑ <br /> 300,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("300000to500000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("300000to500000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              300,000 ↑ <br /> 500,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("500000to1000000")}
-              className={`px-6 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("500000to1000000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              500,000 ↑ <br /> 1,000,000 ↓
-            </button>
-            <button
-              onClick={() => handleAmountFilterChange("gt1000000")}
-              className={`px-6 py-2 cursor-pointer rounded-md font-semibold ${
-                selectedFilters.includes("gt1000000")
-                  ? "bg-[#26a17b] text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              1,000,000 ↑
-            </button>
-          </div>
-
-          {/* Render Sell Orders In Progress */}
-          <div className="mb-5">
-            {inProgressOrders.length !== 0 && (
-              <div className="">
-                <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  All Order In Progress
-                </h2>
-                {inProgressOrders.map((offer) => (
-                  <AdminTradeInProgressCard
-                    key={offer._id}
-                    offer={offer}
-                    sell={Sell}
-                    onMatch={handleCompleteMatch}
-                    onMatchs={handleMatch}
-                    onCancel={handleCancleMatch}
-                    showChatButton={offer.status === "On Sale"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div>
-            {pendingOrders.length !== 0 && (
-              <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  All Pending Sell Orders
-                </h2>
-                {pendingOrders?.map((offer) => (
-                  <AdminTradeCard2
-                    key={offer._id}
-                    offer={offer}
-                    sell={Sell}
-                    approveOrders={() => approveOrders(offer._id)}
-                    rejectOrders={() => rejectOrders(offer._id)}
-                    setPendingOrders={setPendingOrders}
-                    showChatButton={offer.status === "Pending Approval"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Render Sell Orders */}
-          <div className="mb-5">
-            <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-              All Live Sell Orders
-            </h2>
-            {filteredSellOrders.length === 0 ? (
-              <p className="text-gray-500">No sell orders match the filter.</p>
-            ) : (
-              filteredSellOrders.map((offer) => (
-                <AdminTradeCard
-                  key={offer._id}
-                  offer={offer}
-                  sell={Sell}
-                  onMatch={handleMatch}
-                  showChatButton={offer.status === "On Sale"}
-                  onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-                />
-              ))
-            )}
-          </div>
+    {/* Orders In Progress */}
+    {inProgressOrders.length > 0 && (
+      <div className="mb-10">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+          All Orders In Progress
+        </h2>
+        <div className="space-y-4">
+          {inProgressOrders.map((offer) => (
+            <AdminTradeInProgressCard
+              key={offer._id}
+              offer={offer}
+              sell={Sell}
+              onMatch={handleCompleteMatch}
+              onMatchs={handleMatch}
+              onCancel={handleCancleMatch}
+              showChatButton={offer.status === "On Sale"}
+              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+            />
+          ))}
         </div>
       </div>
+    )}
+
+    {/* Pending Orders */}
+    {pendingOrders.length > 0 && (
+      <div className="mb-10">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+          All Pending Sell Orders
+        </h2>
+        <div className="space-y-4">
+          {pendingOrders.map((offer) => (
+            <AdminTradeCard2
+              key={offer._id}
+              offer={offer}
+              sell={Sell}
+              approveOrders={() => approveOrders(offer._id)}
+              rejectOrders={() => rejectOrders(offer._id)}
+              setPendingOrders={setPendingOrders}
+              showChatButton={offer.status === "Pending Approval"}
+              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Live Sell Orders */}
+    <div className="mb-6">
+      <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+        All Live Sell Orders
+      </h2>
+      {filteredSellOrders.length === 0 ? (
+        <p className="text-gray-500 italic text-sm">No sell orders match the filter.</p>
+      ) : (
+        <div className="space-y-4">
+          {filteredSellOrders.map((offer) => (
+            <AdminTradeCard
+              key={offer._id}
+              offer={offer}
+              sell={Sell}
+              onMatch={handleMatch}
+              showChatButton={offer.status === "On Sale"}
+              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
       {/* Notification Alert Box */}
       <NotificationPopup
         loading={loadingNotifications}

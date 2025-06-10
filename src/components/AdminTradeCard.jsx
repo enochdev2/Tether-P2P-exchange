@@ -61,122 +61,112 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
 
   return (
     <div
-      className={`relative flex flex-col sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-3 md:py-2 mb-4 border border-gray-200 shadow-sm
-        ${isPending ? "opacity-90 filter grayscale" : ""}
-      `}
+      className={`relative flex flex-col sm:flex-row items-center bg-white rounded-lg py-3 px-4 mb-4 border border-gray-300 shadow-md ${
+        isPending ? "opacity-90 grayscale" : ""
+      }`}
     >
       {/* Left Section */}
-      <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr- justify-center sm:justify-start">
-        <div className="flex items-center space-x-1 md:space-x-2">
-          <div className="bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap">
+      <div className="flex items-center sm:w-24 mb-4 sm:mb-0 sm:mr-2 justify-center sm:justify-start">
+        <div className="flex items-center space-x-2">
+          <div className="bg-green-600 text-white font-semibold text-sm px-4 py-1.5 rounded-md select-none whitespace-nowrap shadow">
             {sell ? "Sell" : "Buy"}
           </div>
           <div className="w-3 h-3 hidden sm:block bg-green-700 rounded-full mt-1" />
         </div>
       </div>
 
-      {/* Center Left Section */}
-      <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-200 px-4 py-3 rounded-lg flex items-center">
+      {/* Nickname */}
+      <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-100 px-4 py-2 rounded-lg flex items-center text-gray-700 text-sm shadow-inner">
         {offer?.userId?.nickname}
       </div>
-      <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img
-          src={logo2}
-          alt="Tether logo"
-          className="w-5 h-5 md:w-7 md:h-7 mr-3"
-        />
-        <div className="flex flex-col space-y-2">
-          <span className="font-medium text-xs sm:text-[16px] text-gray-400 truncate">
-            Total: {offer.amount} USDT
-          </span>
-          <span className="font-medium text-xs sm:text-[16px] text-gray-900 truncate">
-            Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
-          </span>
+
+      {/* Center Left Section */}
+      <div className="flex flex-col md:flex-row md:flex-1 w-full sm:w-auto items-center mb-4 sm:mb-0">
+        <div className="flex items-center">
+          <img
+            src={logo2}
+            alt="Tether logo"
+            className="w-6 h-6 md:w-7 md:h-7 mr-3"
+          />
+          <div className="flex flex-col space-y-1 text-sm text-gray-800">
+            <span className="font-medium">Total: {offer.amount} USDT</span>
+            <span className="font-medium">
+              Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+            </span>
+            <span className="font-semibold text-gray-900">
+              {offer.krwAmount
+                ? `₩${offer.krwAmount.toLocaleString()} KRW`
+                : `₩${offer.price.toLocaleString()} KRW`}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Center Right Section */}
-      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-[15px] mb-4 sm:mb-0 text-center sm:text-left truncat">
-        {offer.krwAmount
-          ? `₩${offer.krwAmount.toLocaleString()} KRW`
-          : `₩${offer.price.toLocaleString()} KRW`}
-      </div>
-
-      <div className="flex flex-wrap space-x-5 space-y-3 items-center">
-        <div>
-          {/* Chat button for buy orders waiting for buy */}
-          {!sell && offer.status === "Waiting for Buy" ? (
-            <button
-              onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
-              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              1:1 Chat
-            </button>
-          ) : (
-            <button
-              onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
-              className="mt-2 px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              1:1 Chat
-            </button>
-          )}
-        </div>
+      {/* Buttons */}
+      <div className="flex items-center justify-center space-x-3 my-2 sm:my-0">
+        <button
+          onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
+          className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
+        >
+          1:1 Chat
+        </button>
 
         {sell && (
-          <div className="">
-            <button
-              onClick={handleMatchClick}
-              className="mt- px-2 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-            >
-              Match
-            </button>
-          </div>
+          <button
+            onClick={handleMatchClick}
+            className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
+          >
+            Match
+          </button>
         )}
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
-        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
+      <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
+        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate text-gray-500 font-mono">
           {offer._id}
         </div>
-        <div className="flex items-center  md:text-[16px] space-x-2">
+        <div className="flex items-center text-sm space-x-2">
           <div
             className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"
             style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
           />
           <span
-            className={`font-semibold select-none truncate max-w-[8rem] ${
+            className={`font-semibold truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
-                ? "text-gray-400"
+                ? "text-yellow-600"
                 : offer.status === "Sell completed" ||
                   offer.status === "Buy Completed"
                 ? "text-orange-500"
-                : "text-lime-600"
+                : "text-green-600"
             }`}
           >
             {offer.status}
           </span>
         </div>
-        <div className="text-center sm:text-right">{dateOnly}</div>
+        <div className="text-center sm:text-right text-gray-500 text-sm">
+          {dateOnly}
+        </div>
       </div>
-      {/* Modal for Matching */}
+
+      {/* Modal */}
       {isMatchModalOpen && (
-        <div className="fixed inset-0 bg-black/30 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg border-green-700 border-2 shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl border-green-700 border-2 shadow-lg w-96">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
               Match Seller with Buyer
             </h3>
             <input
               type="text"
-              className="border border-gray-300 rounded-md p-2 mb-4 w-full"
+              className="border border-gray-300 rounded-md p-2 mb-4 w-full focus:ring-2 focus:ring-green-500 outline-none"
               placeholder="Enter Buyer Order ID"
               value={buyerOrderId}
               onChange={(e) => setBuyerOrderId(e.target.value)}
             />
-            <div className="flex justify-between">
+            <div className="flex justify-end space-x-3">
               <button
                 onClick={handleCloseModal}
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md"
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-gray-800"
               >
                 Cancel
               </button>
