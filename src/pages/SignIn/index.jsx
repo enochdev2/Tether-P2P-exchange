@@ -39,9 +39,15 @@ const SignIn = () => {
 
     try {
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
-      const response = await login(user);
+      const data = await login(user);
+      // const data = await response.json();
 
-      if (response.ok) {
+      if (!data.isVerified) {
+        navigate("/verify"); // Redirect to the verification page
+        return;
+      }
+
+      if (data.isVerified) {
         SuccessToast(" Login successfully");
         navigate("/dashboard/profile");
       } else {

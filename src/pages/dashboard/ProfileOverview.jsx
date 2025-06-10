@@ -39,7 +39,7 @@ function ProfileOverview() {
   }, [navigate]);
 
   const getUserProfile = async () => {
-    if(user) {
+    if (user) {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
@@ -52,9 +52,9 @@ function ProfileOverview() {
             },
           }
         );
-  
+
         // const data = await response.json();
-  
+
         if (!response.ok) {
           const data = await response.json();
           if (data.message === "Invalid or expired token") {
@@ -155,24 +155,15 @@ function ProfileOverview() {
         <ProfileCard user={user} />
         <ProfileSetting user={user} />
         <div className="flex flex-wrap md:flex-row gap-8 w-full lg:space-x-28 my-4 overflow-x-auto sm:overflow-visible">
-        <InfoCard
-          icon={<Wallet2Icon size={24} />}
-          title={tether.slice(0, 15)}
-          actionText={tether.slice(15, 60)}
-          // onAction={() => console.log("Navigate to security questions")}
-        />
-
-        <InfoCard
-          icon={<Wallet2Icon size={24} />}
-          title="Refferal Code"
-          actionText={user?.referralCode}
-          // actionText="Set answers"
-          // onAction={() => console.log("Navigate to security questions")}
-        />
-
+          <InfoCard
+            icon={<Wallet2Icon size={24} />}
+            title="Refferal Code"
+            actionText={user?.referralCode}
+            // actionText="Set answers"
+            // onAction={() => console.log("Navigate to security questions")}
+          />
         </div>
-        
-        
+
         <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
@@ -190,10 +181,15 @@ function ProfileOverview() {
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
-         
-    
+
           {/* <InfoCard /> */}
         </div>
+        <InfoCard
+          icon={<Wallet2Icon size={24} />}
+          title={tether.slice(0, 15)}
+          actionText={tether.slice(15, 60)}
+          // onAction={() => console.log("Navigate to security questions")}
+        />
       </div>
       <NotificationPopup
         loading={loadingNotifications}

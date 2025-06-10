@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../utils/AuthProvider";
+import { SuccessToast } from "../utils/Success";
+import { useNavigate } from "react-router-dom";
 
 const OtpVerificationPage = ({
   onVerifySuccess,
   onResendOtp,
   userIdentifier,
 }) => {
+  // const { user, setUser } = useAuth();
+  const navigate = useNavigate();
+
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // State for 6 individual OTP digits
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,64 +68,116 @@ const OtpVerificationPage = ({
   };
 
   // Handle OTP submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage("");
+    setIsSubmitting(true); // Disable submit button while submitting
+    setErrorMessage(""); // Clear previous error message
 
+    // Combine the OTP digits into a single string
     const fullOtp = otp.join("");
 
+    // Check if the OTP entered is valid (6 digits)
     if (fullOtp.length !== 6 || !/^\d{6}$/.test(fullOtp)) {
       setErrorMessage("Please enter a valid 6-digit OTP.");
       setIsSubmitting(false);
       return;
     }
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user); // This will give you the user data you saved earlier
 
-    // Simulate API call for OTP verification
+    // "http://localhost:3000/api/v1/user/users/verify",
     try {
-      // Replace with your actual OTP verification API call
-      console.log(`Verifying OTP: ${fullOtp} for user: ${userIdentifier}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
+      // Make API call to verify the OTP
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nickname: user.nickname, // Pass the userId (could be from props or context)
+            code: fullOtp, // The OTP entered by the user
+          }),
+        }
+      );
 
-      if (fullOtp === "123456") {
-        // Example correct OTP
-        onVerifySuccess(fullOtp);
-      } else {
-        setErrorMessage("Invalid OTP. Please try again.");
+      const result = await response.json();
+
+      // Check if the response is successful
+      if (!response.ok) {
+        // Display error message if OTP verification fails
+        setErrorMessage(result.error || "Invalid OTP. Please try again.");
+        setIsSubmitting(false); // Enable the submit button again
+        return;
       }
+
+      navigate("/signin");
+      SuccessToast("OTP verified successfully!");
     } catch (error) {
       setErrorMessage(
         "An error occurred during verification. Please try again."
       );
       console.error("OTP verification error:", error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Enable submit button again after operation completes
     }
   };
 
-  // Handle resend OTP request
   const handleResend = async () => {
     if (!canResend) return;
 
-    setCanResend(false);
-    setResendTimer(60); // Reset timer
-    setErrorMessage("");
+    setCanResend(false); // Disable resend button until timer resets
+    setResendTimer(60); // Reset timer to 60 seconds
+    setErrorMessage(""); // Clear any previous errors
     setOtp(["", "", "", "", "", ""]); // Clear OTP input
-
     try {
-      // Replace with your actual resend OTP API call
-      console.log(`Resending OTP to: ${userIdentifier}`);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
-      onResendOtp(); // Call the prop function
+      // Make API call to resend verification code
+      // "http://localhost:3000/api/v1/user/users/resendverify",
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log(user);
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/resendverify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nickname: user.nickname,
+            phone: user.phone,
+          }), // Replace with actual user data
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        // Handle error response from API
+        setErrorMessage(
+          result.error || "Failed to resend OTP. Please try again."
+        );
+        return;
+      }
+
+      // Call onResendOtp (provided by parent component)
+      onResendOtp();
+
       alert("OTP has been re-sent successfully!"); // Use a custom modal in a real app
     } catch (error) {
       setErrorMessage("Failed to re-send OTP. Please try again.");
       console.error("Resend OTP error:", error);
     }
   };
+  console.log("🚀 ~ handleResend ~ setOtp:", setOtp);
+  console.log("🚀 ~ handleResend ~ setOtp:", setOtp);
+  console.log("🚀 ~ handleResend ~ setOtp:", setOtp);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 font-inter p-4">
+    <div
+      className="flex items-center justify-center min-h-screen bg-gray-5 font-inter p-4"
+      style={{ backgroundImage: "url('/bgg.png')" }}
+    >
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
         <h2 className="text-3xl font-extrabold text-gray-800 mb-4">
           OTP Verification
@@ -157,7 +215,7 @@ const OtpVerificationPage = ({
 
           <button
             type="submit"
-            className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-300 ease-in-out
+            className={`w-full cursor-pointer py-3 px-4 rounded-xl font-semibold text-white transition-all duration-300 ease-in-out
               ${
                 isSubmitting
                   ? "bg-green-700 cursor-not-allowed"
@@ -173,7 +231,7 @@ const OtpVerificationPage = ({
           Didn't receive the code?{" "}
           <button
             onClick={handleResend}
-            className={`font-semibold transition-colors duration-200
+            className={`font-semibold transition-colors cursor-pointer duration-200
               ${
                 canResend
                   ? "text-blue-600 hover:text-blue-800"
@@ -190,3 +248,59 @@ const OtpVerificationPage = ({
 };
 
 export default OtpVerificationPage;
+
+// Handle resend OTP request
+// const handleResend = async () => {
+//   if (!canResend) return;
+
+//   setCanResend(false);
+//   setResendTimer(60); // Reset timer
+//   setErrorMessage("");
+//   setOtp(["", "", "", "", "", ""]); // Clear OTP input
+
+//   try {
+//     // Replace with your actual resend OTP API call
+//     console.log(`Resending OTP to: ${userIdentifier}`);
+//     await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+//     onResendOtp(); // Call the prop function
+//     alert("OTP has been re-sent successfully!"); // Use a custom modal in a real app
+//   } catch (error) {
+//     setErrorMessage("Failed to re-send OTP. Please try again.");
+//     console.error("Resend OTP error:", error);
+//   }
+// };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setIsSubmitting(true);
+//   setErrorMessage("");
+
+//   const fullOtp = otp.join("");
+
+//   if (fullOtp.length !== 6 || !/^\d{6}$/.test(fullOtp)) {
+//     setErrorMessage("Please enter a valid 6-digit OTP.");
+//     setIsSubmitting(false);
+//     return;
+//   }
+
+//   // Simulate API call for OTP verification
+//   try {
+//     // Replace with your actual OTP verification API call
+//     console.log(`Verifying OTP: ${fullOtp} for user: ${userIdentifier}`);
+//     await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
+
+//     if (fullOtp === "123456") {
+//       // Example correct OTP
+//       onVerifySuccess(fullOtp);
+//     } else {
+//       setErrorMessage("Invalid OTP. Please try again.");
+//     }
+//   } catch (error) {
+//     setErrorMessage(
+//       "An error occurred during verification. Please try again."
+//     );
+//     console.error("OTP verification error:", error);
+//   } finally {
+//     setIsSubmitting(false);
+//   }
+// };

@@ -223,8 +223,8 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
-        "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
+        // "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
         {
           method: "GET",
           headers: {

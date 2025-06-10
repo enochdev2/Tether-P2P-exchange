@@ -43,12 +43,12 @@ export const AuthProvider = ({ children }) => {
       return response;
     } catch (err) {
       console.log(err.message);
-    } 
+    }
   };
 
   const login = async (userData) => {
     try {
-      // const response = await fetch("http://localhost:3000/api/v1/user/login", {
+      // const response = await fetch("http://localhost:3000/api/v1/user/login",
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
         {
@@ -59,12 +59,12 @@ export const AuthProvider = ({ children }) => {
         }
       );
       const data = await response.json();
-      console.log("🚀 ~ data:", data)
 
       if (!response.ok) {
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
+        //  return response;
       }
 
       localStorage.setItem("token", data.token);
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
       // Save user data to localStorage (could be just user object or a token)
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("isLoggedIn", "true");
-      return response;
+      return data;
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -113,9 +113,9 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (newUser) => {
     try {
-      // const response = await fetch(
-      //   "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
-      const response = await fetch("http://localhost:3000/api/v1/user/users",
+      // const response = await fetch("http://localhost:3000/api/v1/user/users",
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
         {
           method: "POST",
           headers: {
@@ -133,11 +133,17 @@ export const AuthProvider = ({ children }) => {
         ErrorToast(errorMsg);
       }
 
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data)); // Store in localStorage
+
+      console.log("User successfully registered:", data);
+
       return response;
     } catch (error) {
       console.error("Error during sign-up:", error);
       // Handle any errors (e.g., show an error message)
     }
+    console.log("🚀 ~ signUp ~ data.user:", data.user);
   };
 
   const allUser = async () => {
@@ -158,7 +164,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-   
+
       return data; // return parsed user data
     } catch (error) {
       console.error("Error fetching users:", error);
