@@ -7,6 +7,7 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
+import { markAllNotificationsAsRead } from "../../utils";
 
 const UserManagement = () => {
   const [loadingSell, setLoadingSell] = useState(true);
@@ -136,36 +137,21 @@ const UserManagement = () => {
   }
 
   const handleMarkAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      // Make an API call to mark all notifications as read
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            type: "registration",
-            isForAdmin: true,
-          }),
-        }
-      );
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      const result = await response.json();
-      if (response.ok) {
-        // Handle success (for example, reset notifications)
-        SuccessToast("All notifications marked as read");
-        setNotifications([]); // Clear the notifications or update the state accordingly
-      } else {
-        console.error(result.error);
-      }
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
+    const { success, error } = await markAllNotificationsAsRead({
+      userId: user._id,
+      type: "registration", // or another type
+      isForAdmin: true, // or false depending on the context
+      token,
+    });
+
+    if (success) {
+      SuccessToast("All notifications marked as read");
+      setNotifications([]); // or any state update
+    } else {
+      console.error(error);
     }
   };
 

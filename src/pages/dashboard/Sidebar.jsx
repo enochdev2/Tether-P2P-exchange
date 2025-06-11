@@ -2,22 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   TrendingUp,
-  Box,
-  Heart,
-  Download,
+  DollarSign,
   User,
   HelpCircle,
   LogOut as LogOutIcon,
   Menu,
   X,
-  Send,
-  DollarSign,
-  TrendingDown,
 } from "lucide-react";
 
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 
 const sidebarData = [
   {
@@ -25,7 +21,7 @@ const sidebarData = [
     links: [
       {
         id: "account-info",
-        label: "Account info",
+        label: "accountInfo", // Translation key
         to: "profile",
         icon: <User />,
       },
@@ -33,17 +29,17 @@ const sidebarData = [
   },
   {
     id: "sell",
-    title: "Sell",
+    title: "sell", // Translation key
     links: [
       {
         id: "sell-order",
-        label: "Sell Order",
+        label: "sellOrder", // Translation key
         to: "sell-order",
         icon: <TrendingUp />,
       },
       {
         id: "sell-history",
-        label: "Sell History",
+        label: "sellHistory", // Translation key
         to: "sell-history",
         icon: <DollarSign />,
       },
@@ -51,17 +47,17 @@ const sidebarData = [
   },
   {
     id: "buy",
-    title: "Buy",
+    title: "buy", // Translation key
     links: [
       {
         id: "buy-order",
-        label: "Buy Order",
+        label: "buyOrder", // Translation key
         to: "buy-order",
         icon: <TrendingUp />,
       },
       {
         id: "buy-history",
-        label: "Buy History",
+        label: "buyHistory", // Translation key
         to: "buy-history",
         icon: <DollarSign />,
       },
@@ -70,18 +66,18 @@ const sidebarData = [
 ];
 
 const inquiryData = {
-  title: "Inquiry",
+  title: "inquiry", // Translation key
   links: [
-    { id: "edit-info", label: "Edit My Info", to: "edit-info", icon: <User /> },
+    { id: "edit-info", label: "editInfo", to: "edit-info", icon: <User /> },
     {
       id: "one-on-one",
-      label: "1:1 inquiry",
+      label: "oneOnOne", // Translation key
       to: "one-on-one",
       icon: <HelpCircle />,
     },
     {
       id: "inquiry-history",
-      label: "Inquiry History",
+      label: "inquiryHistory", // Translation key
       to: "inquiry-history",
       icon: <HelpCircle />,
     },
@@ -89,6 +85,7 @@ const inquiryData = {
 };
 
 function Sidebar() {
+  const { t } = useTranslation(); // Initialize translation hook
   const [collapsed, setCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { logout, user } = useAuth();
@@ -152,8 +149,6 @@ function Sidebar() {
           className="cursor-pointer lg:hidden"
           onClick={() => setCollapsed(!collapsed)}
         >
-          {/* {collapsed ? <Menu size={24} /> : <X size={24} />} */}
-
           {collapsed ? <FiArrowRight size={25} /> : <FiArrowLeft size={25} />}
         </button>
       </div>
@@ -165,7 +160,7 @@ function Sidebar() {
             <div key={section.id} className="mb-6">
               {section.title && !collapsed && (
                 <h3 className="text-gray-400 text-sm font-semibold uppercase mb-2">
-                  {section.title}
+                  {t(section.title)} {/* Translate section title */}
                 </h3>
               )}
               <ul className="space-y-1">
@@ -198,12 +193,12 @@ function Sidebar() {
                         </div>
 
                         {/* Label inline when expanded */}
-                        {!collapsed && <span>{link.label}</span>}
+                        {!collapsed && <span>{t(link.label)}</span>} {/* Translate label */}
 
                         {/* Label below icon on small screen when collapsed */}
                         {collapsed && (
                           <span className="block text-xs mt-0.5 text-center sm:hidden">
-                            {link.label}
+                            {t(link.label)} {/* Translate label */}
                           </span>
                         )}
                       </Link>
@@ -218,7 +213,7 @@ function Sidebar() {
           <div className="mb-6 mt-20">
             {!collapsed && (
               <h3 className="text-gray-400 text-sm font-semibold uppercase mb-2">
-                {inquiryData.title}
+                {t(inquiryData.title)} {/* Translate Inquiry Section Title */}
               </h3>
             )}
             <ul className="space-y-1">
@@ -249,11 +244,11 @@ function Sidebar() {
                         {link.icon}
                       </div>
 
-                      {!collapsed && <span>{link.label}</span>}
+                      {!collapsed && <span>{t(link.label)}</span>} {/* Translate Inquiry Links */}
 
                       {collapsed && (
                         <span className="block text-xs mt-0.5 text-center sm:hidden">
-                          {link.label}
+                          {t(link.label)} {/* Translate Inquiry Links */}
                         </span>
                       )}
                     </Link>
@@ -294,10 +289,10 @@ function Sidebar() {
                     d="M4 12a8 8 0 018-8v8H4z"
                   ></path>
                 </svg>
-                Siging Out...
+                {t('signOut')} {/* Translate Sign Out */}
               </>
             ) : (
-              <>{!collapsed && <span>Sign Out</span>}</>
+              <>{!collapsed && <span>{t('signOut')}</span>}</>
             )}
           </button>
         </div>

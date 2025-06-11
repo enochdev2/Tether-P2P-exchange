@@ -1,49 +1,32 @@
 import React, { useEffect } from "react";
-import { Globe, Send, DollarSign, Zap, Users, TrendingUp } from "lucide-react";
+import { Globe, Send, Users } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useTranslation } from 'react-i18next';
 
 const FeaturesSection = () => {
+  const { t } = useTranslation(); // Access translation function
+
   useEffect(() => {
     AOS.init({ duration: 700, once: true });
   }, []);
 
   const features = [
     {
-      title: "Trade worldwide",
-      description:
-        "Buy and sell local and digital currencies including Bitcoin, Ethereum, Tether, and USDC – across 140 markets with 500+ payment methods.",
+      title: t('features.tradeWorldwide'),
+      description: t('features.descriptionTradeWorldwide'),
       icon: <Globe className="mx-auto text-green-600" size={48} />,
     },
     {
-      title: "Send money instantly",
-      description:
-        "Send cash or cryptocurrency to anyone, anytime – with faster, cheaper, and simpler transactions powered by the blockchain.",
+      title: t('features.sendMoneyInstantly'),
+      description: t('features.descriptionSendMoneyInstantly'),
       icon: <Send className="mx-auto text-green-600" size={48} />,
     },
     {
-      title: "Access the globe",
-      description: " By using Tether Zone, we can overcome local infrastructure limitations.",
+      title: t('features.accessTheGlobe'),
+      description: t('features.descriptionAccessTheGlobe'),
       icon: <Users className="mx-auto text-green-600" size={48} />,
     },
-    // {
-    //   title: "Escape volatility",
-    //   description:
-    //     "Swap high-inflating fiat currencies for digital stores of value like BTC or stablecoins to hedge against inflation or protect against banking issues.",
-    //   icon: <Zap className="mx-auto text-green-600" size={48} />,
-    // },
-    // {
-    //   title: "Supply global markets",
-    //   description:
-    //     "Become a peer-to-peer market maker and benefit from arbitrage trading opportunities across regions and payment methods.",
-    //   icon: <DollarSign className="mx-auto text-green-600" size={48} />,
-    // },
-    // {
-    //   title: "Scale your business",
-    //   description:
-    //     "Leverage Paxful’s liquidity, market reach, payment diversification, and security features to rapidly expand your business to new heights.",
-    //   icon: <TrendingUp className="mx-auto text-green-600" size={48} />,
-    // },
   ];
 
   return (
@@ -64,7 +47,7 @@ const FeaturesSection = () => {
           className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-14"
           data-aos="fade-up"
         >
-          The world's largest P2P marketplace
+          {t('features.largestP2PMarketplace')}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

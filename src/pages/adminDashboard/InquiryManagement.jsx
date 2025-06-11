@@ -4,6 +4,8 @@ import AdminInquiryCard from "../../components/AdminInquiryCard";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
+import { markAllNotificationsAsRead } from "../../utils";
 
 const InquiryManagement = () => {
   const [pendingOrders, setPendingOrders] = useState([]);
@@ -108,6 +110,25 @@ const InquiryManagement = () => {
       console.error("Error marking notification as read:", error);
     }
   }
+
+  const handleMarkAllAsRead = async () => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+  
+    const { success, error } = await markAllNotificationsAsRead({
+      userId: user._id,
+      type: "chat", // or another type
+      isForAdmin: true,     // or false depending on the context
+      token,
+    });
+  
+    if (success) {
+      SuccessToast("All notifications marked as read");
+      setNotifications([]); // or any state update
+    } else {
+      console.error(error);
+    }
+  };
 
    const sortedOffers = allUsers.sort((a, b) => {
       // First, prioritize posts without comments

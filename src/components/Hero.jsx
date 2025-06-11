@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthProvider";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useTranslation } from 'react-i18next';
 // import { useEffect } from 'react';
 
 const Hero = () => {
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,17 +39,16 @@ const Hero = () => {
           data-aos="fade-right"
         >
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-            The Secure,
+            {t('The Secure')}
           </h1>
           <h1 className="text-3xl sm:text-5xl md:text-[50px] font-bold text-green-600">
-            People-powered way to
+            {t('People-powered way to')}
           </h1>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-            Exchange your USDT <span className="text-green-600">→</span>
+            {t('Exchange your USDT')} <span className="text-green-600">→</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl font-medium text-gray-300">
-            Effortlessly exchange with complete transparency, security, and
-            convenience. Your journey to financial freedom starts here.
+            {t('text2')}
           </p>
 
           <div
@@ -60,19 +61,19 @@ const Hero = () => {
                   className="bg-gray-800 text-white px-8 py-2 rounded-md text-base font-medium hover:bg-gray-700 sm:w-auto w-full transition"
                   to="signin"
                 >
-                  Sign In
+                    {t('Sign In')}
                 </Link>
                 <Link
                   className="bg-green-800 text-white px-8 py-2 rounded-md text-base font-medium hover:bg-green-600 sm:w-auto w-full transition"
                   to="signup"
                 >
-                  Sign Up
+                   {t('Sign Up')}
                 </Link>
               </>
             ) : (
               <Link to="/post-offer">
                 <button className="bg-green-600 hover:bg-green-700 transition text-white py-3 px-6 rounded-xl font-bold text-lg w-full sm:w-auto">
-                  Explore Trade Offers
+                  {t('Explore Trade Offers')}
                 </button>
               </Link>
             )}

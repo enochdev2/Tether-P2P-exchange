@@ -7,6 +7,7 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import { markAllNotificationsAsRead } from "../../utils";
 
 const SellLivePage = () => {
   const [activeLink, setActiveLink] = useState("findOffers");
@@ -393,6 +394,25 @@ const SellLivePage = () => {
       console.error("Error marking notification as read:", error);
     }
   }
+
+  const handleMarkAllAsRead = async () => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+  
+    const { success, error } = await markAllNotificationsAsRead({
+      userId: user._id,
+      type: "sellOrder", // or another type
+      isForAdmin: true,     // or false depending on the context
+      token,
+    });
+  
+    if (success) {
+      SuccessToast("All notifications marked as read");
+      setNotifications([]); // or any state update
+    } else {
+      console.error(error);
+    }
+  };
 
   const handleAmountFilterChange = (filter) => {
     if (filter === "all") {

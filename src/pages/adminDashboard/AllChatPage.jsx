@@ -3,6 +3,7 @@ import { FaArrowRight, FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
+import { markAllNotificationsAsRead } from "../../utils";
 
 const AllChatPage = () => {
   const navigate = useNavigate();
@@ -124,41 +125,28 @@ const AllChatPage = () => {
     }
   };
 
-  const handleMarkAllAsRead = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const user = JSON.parse(localStorage.getItem("user"));
-        // Make an API call to mark all notifications as read
-        const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-             body: JSON.stringify({
-          userId: user._id, 
-          type: "chat", 
-          isForAdmin: true,
-        }),
-          }
-        );
   
-        const result = await response.json();
-        console.log("🚀 ~ handleMarkAllAsRead ~ result:", result)
-        if (response.ok) {
-          // Handle success (for example, reset notifications)
-          SuccessToast("All notifications marked as read");
-          setNotifications([]); 
-          fetchNotifications();
-        } else {
-          console.error(result.error);
-        }
-      } catch (error) {
-        console.error("Error marking all notifications as read:", error);
-      }
-    };
+
+
+const handleMarkAllAsRead = async () => {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const { success, error } = await markAllNotificationsAsRead({
+    userId: user._id,
+    type: "chat", // or another type
+    isForAdmin: true,     // or false depending on the context
+    token,
+  });
+
+  if (success) {
+    SuccessToast("All notifications marked as read");
+    setNotifications([]); // or any state update
+  } else {
+    console.error(error);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 py-10 px-6">
