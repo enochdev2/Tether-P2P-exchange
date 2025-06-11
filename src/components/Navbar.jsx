@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import i18n from "i18next";
-import { Link } from "react-router-dom";
-import { useAuth } from "../utils/AuthProvider";
-import { FaGlobe } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
 import {
   ArrowUpDown,
   Eye,
@@ -14,8 +10,12 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo2 from "../assets/Tether2.png";
 import logo from "../assets/Tether.png";
+import { useAuth } from "../utils/AuthProvider";
+import { FaGlobe } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -23,26 +23,28 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState(""); // Track the active link
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Manage mobile menu visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown visibility
+  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
   const [language, setLanguage] = useState(i18n.language.toUpperCase() || "EN"); // Initial language state
   const [isOpen, setIsOpen] = useState(false);
 
-  const navLinks = [
-    { name: "Home", to: "/", private: false },
-    { name: "Transaction History", to: "/post-offer", private: false },
-    { name: "My Page", to: "/dashboard/profile", private: true },
-  ];
+  // Check if language is stored in localStorage and set it on component mount
   useEffect(() => {
-    // Check if the user has a saved language in localStorage
     const storedLanguage = localStorage.getItem("language");
     if (storedLanguage) {
       i18n.changeLanguage(storedLanguage.toLowerCase());
       setLanguage(storedLanguage);
     } else {
-      // If no language is saved, default to English
       i18n.changeLanguage("en");
       setLanguage("EN");
     }
   }, []);
+
+  const navLinks = [
+    { name: "Home", to: "/", private: false },
+    // { name: "Trade Listings", to: "/trade-listings", private: false },
+    { name: "Transaction History", to: "/post-offer", private: false },
+    { name: "My Page", to: "/dashboard/profile", private: true },
+  ];
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -50,24 +52,28 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen); // Toggle the mobile menu
-  const toggleDropdownLan = () => setIsOpen(!isOpen); // Toggle the language dropdown
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Toggle the profile dropdown
+  const togglePasswordVisibility = () => setShowPassword(!showPassword); // Toggle password visibility
+
+  const toggleDropdownLan = () => setIsOpen(!isOpen);
 
   const selectLanguage = (lang) => {
+    console.log("🚀 ~ selectLanguage ~ lang:", lang);
     i18n.changeLanguage(lang.toLowerCase()); // Change language dynamically with i18n
-    localStorage.setItem("language", lang);
+     localStorage.setItem('language', lang);
     setLanguage(lang);
     setIsOpen(false);
   };
 
   return (
-    <nav className="bg-black fixed text-white w-full transition-all duration-300 ease-linear z-50 h- shadow-lg py-2 px-4 border-b border-b-gray-500 ">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-black  fixed  text-white  w-full transition-all duration-300 ease-linear z-50 h- shadow-lg py-2 px-4 border-b border-b-gray-500 ">
+      <div className="max-w-screen-xl  mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/">
             <div className="flex flex-shrink-0 justify-center items-center text-white space-x-2 text-xl font-bold">
               <img src={logo} className="w-12 h-12" />
-              <span className="lg:block hidden">Tether Zone</span>
+              <span className="lg:block hidden"> Tether Zone</span>
             </div>
           </Link>
 
@@ -84,7 +90,7 @@ const Navbar = () => {
                   } hover:text-white px-2 py-2 rounded-md text-[15px] font-medium`}
                   onClick={() => handleLinkClick(link.name)}
                 >
-                  {t(link.name)}
+                 {t(link.name)}
                 </Link>
               ))}
           </div>
@@ -96,63 +102,93 @@ const Navbar = () => {
               <span>
                 <img src={logo2} alt="" className="md:w-8 md:h-8 w-6 h-6" />
               </span>
-              <span className="text-xs md:text-sm">
-                {t("USDT/₩")}
-                {priceKRW}
-              </span>
+              <span className="text-xs md:text-sm">{t('USDT/₩')}{priceKRW}</span>
             </div>
 
             {isLoggedIn ? (
               <>
+                {/* Display Username (Mobile & Desktop) */}
+                {/* <div className="hidden md:flex flex-col items-end text-sm text-gray-200 font-medium mb-1">
+                  <span>{user?.username}</span>
+                </div> */}
+
                 {/* Profile Icon and Dropdown */}
-                <div className="relative z-50 hidden md:flex">
+                <div className="relative z-50 hidden md:flex ">
+                  {/* <button
+                    // onClick={toggleDropdown}
+                    className="flex items-center gap-2 text-white hover:text-gray-300 transition duration-200"
+                  > */}
+
+                  {/* <div className="w-10 h-10 rounded-full bg-[#26a17b] flex items-center justify-center text-white font-bold text-lg">
+                      <img
+                        src="https://i.pravatar.cc/150?img=43"
+                        className="rounded-full"
+                        alt=""
+                      />
+                    </div> */}
+                  {/* <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg> */}
+                  {/* </button> */}
+
+                  {/* Dropdown Menu */}
                   {isDropdownOpen && (
                     <div className="absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-xl overflow-hidden ring-1 ring-black/10 transition-all duration-300 z-50">
                       <div className="px-4 py-3 border-b border-gray-200">
                         <span className="text-sm font-semibold text-[#CC1747]">
-                          {t("Verify Me")}
+                           {t('Verify Me')}
                         </span>
                       </div>
                       <ul className="text-sm divide-y divide-gray-100">
                         {[
                           {
                             icon: <User className="w-4 h-4" />,
-                            label: t("My Profile"),
+                            label: "My Profile",
                             to: "/profile",
                           },
                           {
                             icon: <Settings className="w-4 h-4" />,
-                            label: t("Payment Methods"),
+                            label: "Payment Methods",
                             to: "/payment-methods",
                           },
                           {
                             icon: <FileText className="w-4 h-4" />,
-                            label: t("Settings"),
+                            label: "Settings",
                             to: "/settings",
                           },
                           {
                             icon: <FileText className="w-4 h-4" />,
-                            label: t("Trade History"),
+                            label: "Trade History",
                             to: "/trade-history",
                           },
                           {
                             icon: <Users className="w-4 h-4" />,
-                            label: t("Trade Partners"),
+                            label: "Trade Partners",
                             to: "/trade-partners",
                           },
                           {
                             icon: <Share2 className="w-4 h-4" />,
-                            label: t("Invite a Friend"),
+                            label: "Invite a Friend",
                             to: "/invite-friend",
                           },
                           {
                             icon: <ArrowUpDown className="w-4 h-4" />,
-                            label: t("My Transactions"),
+                            label: "My Transactions",
                             to: "/my-transactions",
                           },
                           {
                             icon: <X className="w-4 h-4 text-red-500" />,
-                            label: t("Log Out"),
+                            label: "Log Out",
                             to: "/logout",
                             danger: true,
                           },
@@ -184,41 +220,39 @@ const Navbar = () => {
                     className="bg-gray-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition"
                     onClick={() => handleLinkClick("signin")}
                   >
-                    {t("Sign In")}
+                      {t('Sign In')}
                   </Link>
                   <Link
                     to="/signup"
                     className="bg-green-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-green-600 transition"
                     onClick={() => handleLinkClick("signup")}
                   >
-                    {t("Sign Up")}
+                   {t('Sign Up')}
                   </Link>
                 </div>
               </>
             )}
           </div>
-
           {/* Render Admin Dashboard if user is admin */}
           {user && user.admin && (
             <div className="flex items-center gap-5 justify-between">
               <Link
                 to="/admin/dashboard"
-                className="text-white bg-green-800 hidden lg:block px-3 shadow-green-700 shadow-2xl py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
+                className="text-white bg-green-800 hidden lg:block px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
                 onClick={() => handleLinkClick("admin-dashboard")}
               >
-                {t("Admin")}
+                 {t('Admin')}
               </Link>
             </div>
           )}
-
-          {/* Language Dropdown */}
           <div className="relative inline-block z-100 text-left">
             <button
               onClick={toggleDropdownLan}
               className="flex items-center bg-gradient-to-br from-[#26a17b] via-[#3b82f6] to-[#f59b0b] gap-0.5 px-2 md:px-4 md:py-2 py-1 text-white rounded-md focus:outline-none hover:from-[#3b82f6] hover:via-[#f59b0b] hover:to-[#26a17b] text-xs md:text-base cursor-pointer"
             >
               <FaGlobe className="text-lg text-sky-900 mr-0" />
-              <span className="ml-0">{language}</span>
+              <span className="ml-0">{!language ? "ENG" : ""}</span>
+              <span>{language}</span>
             </button>
 
             {isOpen && (
@@ -226,7 +260,7 @@ const Navbar = () => {
                 <button
                   onClick={() => selectLanguage("EN")}
                   className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
-                    language === "EN"
+                    language === "ENG"
                       ? "font-semibold text-gray-900"
                       : "text-gray-600"
                   }`}
@@ -241,7 +275,7 @@ const Navbar = () => {
                 <button
                   onClick={() => selectLanguage("KO")}
                   className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
-                    language === "KO"
+                    language === "KOR"
                       ? "font-semibold text-gray-900"
                       : "text-gray-600"
                   }`}
@@ -255,6 +289,33 @@ const Navbar = () => {
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Mobile Navbar Hamburger */}
+          <div className="md:hidden">
+            <button
+              type="button"
+              className="text-white hover:text-yellow-500 focus:outline-none"
+              aria-controls="mobile-menu"
+              aria-expanded={isMenuOpen ? "true" : "false"}
+              onClick={toggleMenu} // Toggle menu on click
+            >
+              <span className="sr-only">Open main menu</span>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -277,6 +338,48 @@ const Navbar = () => {
                   {t(link.name)}
                 </Link>
               ))}
+            {isLoggedIn ? (
+              <Link
+                to="/logout"
+                className="logout-button inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white px-5 py-2.5 rounded-full text-base font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+                onClick={() => handleLinkClick("logout")}
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10v1"
+                  />
+                </svg>
+                Sign Out
+              </Link>
+            ) : (
+              <>
+                <div className="flex flex-col  sm:flex-row items-center gap-3 sm:gap-4 mt-4 sm:mt-0">
+                  <Link
+                    to="/signin"
+                    className="w-full sm:w-auto bg-gray-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
+                    onClick={() => handleLinkClick("signin")}
+                  >
+                    {t('Sign In')}
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="w-full sm:w-auto bg-green-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
+                    onClick={() => handleLinkClick("signup")}
+                  >
+                    {t('Sign Up')}
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
