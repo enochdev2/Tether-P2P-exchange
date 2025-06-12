@@ -6,6 +6,7 @@ import TradeCard from "../../components/TradeCard";
 import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
 import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import { SuccessToast } from "../../utils/Success";
 
 const TradingPage = () => {
   const [orders, setOrders] = useState([]);
@@ -17,6 +18,7 @@ const TradingPage = () => {
   useEffect(() => {
     fetchInProgressOrders();
     fetchBuyOrders();
+     fetchNotifications();
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
@@ -43,6 +45,7 @@ const TradingPage = () => {
       const buyOrders = await response.json();
 
       if (!response.ok) {
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -91,6 +94,7 @@ const TradingPage = () => {
       const buyInProgressOrders = await response.json();
 
       if (!response.ok) {
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -104,9 +108,43 @@ const TradingPage = () => {
     }
   }
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  const handleMarkAllAsRead = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      // Make an API call to mark all notifications as read
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+           body: JSON.stringify({
+        userId: user._id, 
+        type: "buyOrder", 
+        isForAdmin: false,
+      }),
+        }
+      );
+
+      const result = await response.json();
+      if (response.ok) {
+        // Handle success (for example, reset notifications)
+        SuccessToast("All notifications marked as read");
+        setNotifications([]); // Clear the notifications or update the state accordingly
+      } else {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
+
+
+  
+
 
   async function fetchNotifications() {
     try {
@@ -160,7 +198,7 @@ const TradingPage = () => {
       );
 
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -220,7 +258,6 @@ const TradingPage = () => {
                     key={offer._id}
                     offer={offer}
                     showChatButton={offer.status === "On Sale"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
                   />
                 ))}
               </div>
@@ -243,7 +280,7 @@ const TradingPage = () => {
                 My Orders
               </h2>
               {orders.map((offer, index) => (
-                <TradeCard key={index} offer={offer} />
+                <TradeCard key={index} offer={offer} fetchOrders={fetchBuyOrders} />
               ))}
             </div>
           )}
@@ -253,6 +290,7 @@ const TradingPage = () => {
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
       />
     </div>
   );

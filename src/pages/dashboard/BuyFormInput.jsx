@@ -22,7 +22,7 @@ const BuyFormInput = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const openModal = () => setIsModalOpen(true);
+  // const openModal = () => setIsModalOpen(true);
   const closeModal = () => navigate("/dashboard/buy-history");
   if (isLoading) return <LoadingSpiner />;
 
@@ -43,34 +43,16 @@ const BuyFormInput = () => {
 export default BuyFormInput;
 
 const Modal = ({ isModalOpen, closeModal }) => {
-  if (!isModalOpen) return null;
   const { priceKRW, setPriceKRW } = useAuth();
-
   const [usdtAmount, setUsdtAmount] = useState("");
   const [wonAmount, setWonAmount] = useState("");
   const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [depositNetwork, setDepositNetwork] = useState("SOL");
-  const [agreed, setAgreed] = useState(false);
+  // const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
-  // Korean currency button values in won (number format)
-  const krwButtons = [
-    10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000,
-  ];
-
-  //   const krwButtons = [
-  //   "₩10,000",
-  //   "₩30,000",
-  //   "₩50,000",
-  //   "₩100,000",
-  //   "₩200,000",
-  //   "₩300,000",
-  //   "₩500,000",
-  //   "₩1,000,000",
-  // ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,16 +61,6 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
     return () => clearTimeout(timer);
   }, [error]);
-
-  // When KRW button clicked, set won amount (string) and clear USDT for now
-  const handleKRWButtonClick = (value) => {
-    const currentWon = Number(wonAmount) || 0;
-    const newWonAmount = currentWon + value;
-    setWonAmount(newWonAmount.toString());
-    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
-    setUsdtAmount(calculatedUSDT);
-  };
-
   useEffect(() => {
     if (!refreshing) return;
     const fetchPrice = async () => {
@@ -113,6 +85,39 @@ const Modal = ({ isModalOpen, closeModal }) => {
       setRefreshing(false);
     });
   }, [refreshing]);
+
+
+  if (!isModalOpen) return null;
+
+
+  // Korean currency button values in won (number format)
+  const krwButtons = [
+    10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000,
+  ];
+
+  //   const krwButtons = [
+  //   "₩10,000",
+  //   "₩30,000",
+  //   "₩50,000",
+  //   "₩100,000",
+  //   "₩200,000",
+  //   "₩300,000",
+  //   "₩500,000",
+  //   "₩1,000,000",
+  // ];
+
+ 
+
+  // When KRW button clicked, set won amount (string) and clear USDT for now
+  const handleKRWButtonClick = (value) => {
+    const currentWon = Number(wonAmount) || 0;
+    const newWonAmount = currentWon + value;
+    setWonAmount(newWonAmount.toString());
+    const calculatedUSDT = (newWonAmount / rate).toFixed(4);
+    setUsdtAmount(calculatedUSDT);
+  };
+
+ 
 
   const handleRefresh = async () => {
     if (refreshing) return;
@@ -168,7 +173,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
           body: JSON.stringify({
             amount: Number(usdtAmount),
             krwAmount: Number(wonAmount),
-            price: Number(rate),
+            price: Number(wonAmount),
             // Add other data fields you want to submit
           }),
         }

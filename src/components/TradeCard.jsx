@@ -1,6 +1,10 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import { Link, useNavigate } from "react-router-dom";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
+import { useState } from "react";
+import ConfirmModal from "./confirmModal";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -8,12 +12,66 @@ const statusColors = {
   "Sell completed": "#f59e0b", // Amber
 };
 
-const TradeCard = ({ offer, sell }) => {
+const TradeCard = ({ offer, sell, fetchOrders }) => {
   const navigate = useNavigate();
-  const isPending = sell ? offer.status === " " : offer.status === " ";
+  // const isPending = sell ? offer.status === " " : offer.status === " ";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+const [pendingOrderId, setPendingOrderId] = useState(null);
+
+const openCancelModal = (orderId) => {
+  setPendingOrderId(orderId);
+  setIsModalOpen(true);
+};
+
+
+  
 
   // If this offer is "In Progress", don't render anything
   if (offer.status === "In Progress") return null;
+
+  const handleCancleMatch = async (orderId) => {
+      try {
+        if (!orderId)
+          return ErrorToast(" Order ID not found. Please try again.");
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user"));
+        console.log("🚀 ~ handleCancleMatch ~ user:", user)
+        console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id)
+
+        const url = sell ? `http://localhost:3000/api/v1/sell/sell-orders/${orderId}/cancel` : `http://localhost:3000/api/v1/buy/buy-orders/${orderId}/cancel`;
+  
+        const response = await fetch(
+          url,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ nickname: user.nickname }),
+            // body: JSON.stringify({ orderId, nickname: user.nickname }),  
+
+          }
+        );
+        const data = await response.json();
+  
+        if (!response.ok) {
+          const data = await response.json();
+          const errorMsg =
+            data.error || data.message || "Failed to register user";
+          ErrorToast(errorMsg);
+        } else {
+          await fetchOrders();
+          const message = data.message || "Orders cancelled successfully!";
+          SuccessToast(message);
+        }
+      } catch (error) {
+        console.error("Error matching orders:", error);
+      }
+    };
+
+
 
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
@@ -73,6 +131,14 @@ const TradeCard = ({ offer, sell }) => {
             1:1 Chat
           </button>
         )}
+       {offer.status === "Pending Approval" && (
+  <button
+    onClick={() => openCancelModal(offer._id)}
+    className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+  >
+    Cancel
+  </button>
+)}
       </div>
 
       {/* Right Section */}
@@ -100,6 +166,13 @@ const TradeCard = ({ offer, sell }) => {
         </div>
         <div className="text-center sm:text-right">{dateOnly}</div>
       </div>
+      <ConfirmModal
+  open={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onConfirm={() => handleCancleMatch(pendingOrderId)}
+  message="Are you sure you want to delete your buy Order?"
+/>
+
     </div>
   );
 };

@@ -2,29 +2,79 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
+import ConfirmModal from "./confirmModal";
 
-const statusColors = {
-  "On sell": "#26a17b", // Green
-  "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Amber
-};
 
 // import your logo and statusColors accordingly
 
-const AdminTradeCard = ({ offer, sell, onMatch }) => {
+const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
+
+
+   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingOrderId, setPendingOrderId] = useState(null);
+  
+  const openCancelModal = (orderId) => {
+    setPendingOrderId(orderId);
+    setIsModalOpen(true);
+  };
 
   // Adjust isPending logic if needed
   const isPending = sell
     ? offer.status === "Pending Approval"
     : offer.status === "Waiting for uy";
 
+
+
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
 
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
+
+   const handleCancleMatch = async (orderId) => {
+        try {
+          if (!orderId)
+            return ErrorToast(" Order ID not found. Please try again.");
+          const token = localStorage.getItem("token");
+          const user = JSON.parse(localStorage.getItem("user"));
+          console.log("🚀 ~ handleCancleMatch ~ user:", user)
+          console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id)
+  
+          const url = sell ? `http://localhost:3000/api/v1/sell/sell-orders/${orderId}/cancel` : `http://localhost:3000/api/v1/buy/buy-orders/${orderId}/cancel`;
+    
+          const response = await fetch(
+            url,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ nickname: user.nickname }),
+              // body: JSON.stringify({ orderId, nickname: user.nickname }),  
+  
+            }
+          );
+          const data = await response.json();
+    
+          if (!response.ok) {
+            const data = await response.json();
+            const errorMsg =
+              data.error || data.message || "Failed to register user";
+            ErrorToast(errorMsg);
+          } else {
+            await fetchOrders();
+            const message = data.message || "Orders cancelled successfully!";
+            SuccessToast(message);
+          }
+        } catch (error) {
+          console.error("Error matching orders:", error);
+        }
+      };
 
   const handleMatchClick = () => {
     setIsMatchModalOpen(true);
@@ -111,6 +161,13 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           1:1 Chat
         </button>
 
+  <button
+    onClick={() => openCancelModal(offer._id)}
+    className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+  >
+    Cancel
+  </button>
+
         {sell && (
           <button
             onClick={handleMatchClick}
@@ -148,6 +205,12 @@ const AdminTradeCard = ({ offer, sell, onMatch }) => {
           {dateOnly}
         </div>
       </div>
+         <ConfirmModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => handleCancleMatch(pendingOrderId)}
+        message="Are you sure you want to delete your buy Order?"
+      />
 
       {/* Modal */}
       {isMatchModalOpen && (

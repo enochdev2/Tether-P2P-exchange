@@ -6,6 +6,7 @@ import NotificationPopup from "./NotificationPopup";
 import TradeCard from "./TradeCard";
 import { ErrorToast } from "../utils/Error";
 import { LongSuccessToast } from "../utils/LongSuccess";
+import { SuccessToast } from "../utils/Success";
 
 const History = () => {
   const [orders, setOrders] = useState([]);
@@ -28,7 +29,7 @@ const History = () => {
             status
           )}`
         : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-      // "http://localhost:5173/api/v1/sell/sell-orders";
+  
 
       const token = localStorage.getItem("token");
 
@@ -169,6 +170,40 @@ const History = () => {
     }
   }
 
+   const handleMarkAllAsRead = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user"));
+        // Make an API call to mark all notifications as read
+        const response = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+             body: JSON.stringify({
+          userId: user._id, 
+          type: "sellOrder", 
+          isForAdmin: false,
+        }),
+          }
+        );
+  
+        const result = await response.json();
+        if (response.ok) {
+          // Handle success (for example, reset notifications)
+          SuccessToast("All notifications marked as read");
+          setNotifications([]); // Clear the notifications or update the state accordingly
+        } else {
+          console.error(result.error);
+        }
+      } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+      }
+    };
+
   if (loading) return <LoadingSpiner />;
 
   const Sell = true;
@@ -219,7 +254,6 @@ const History = () => {
                     offer={offer}
                     sell={Sell}
                     showChatButton={offer.status === "On Sale"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
                   />
                 ))}
               </div>
@@ -241,17 +275,18 @@ const History = () => {
                 My Orders
               </h2>
               {orders.map((offer, index) => (
-                <TradeCard key={index} offer={offer} sell={Sell} />
+                <TradeCard key={index} offer={offer} sell={Sell} fetchOrders={fetchSellOrders} />
               ))}
             </div>
           )}
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-      />
+     <NotificationPopup
+             loading={loadingNotifications}
+             notifications={notifications}
+             onMarkRead={markNotificationRead}
+             onMarkAllAsRead={handleMarkAllAsRead}
+           />
     </div>
   );
 };
