@@ -1,8 +1,10 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import { Link, useNavigate } from "react-router-dom";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
 import { useState } from "react";
-import Modal from "./Modal";
+import ConfirmModal from "./confirmModal";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -10,13 +12,57 @@ const statusColors = {
   "Sell completed": "#f59e0b", // Amber
 };
 
-const TradeCard = ({ offer, sell }) => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+const TradeCard = ({ offer, sell, fetchOrders }) => {
   const navigate = useNavigate();
-  const isPending = sell ? offer.status === " " : offer.status === " ";
+  // const isPending = sell ? offer.status === " " : offer.status === " ";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingOrderId, setPendingOrderId] = useState(null);
+
+  const openCancelModal = (orderId) => {
+    setPendingOrderId(orderId);
+    setIsModalOpen(true);
+  };
 
   // If this offer is "In Progress", don't render anything
   if (offer.status === "In Progress") return null;
+
+  const handleCancleMatch = async (orderId) => {
+    try {
+      if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("🚀 ~ handleCancleMatch ~ user:", user);
+      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
+
+      const url = sell
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel`
+        : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nickname: user.nickname }),
+        // body: JSON.stringify({ orderId, nickname: user.nickname }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      } else {
+        await fetchOrders();
+        const message = data.message || "Orders cancelled successfully!";
+        SuccessToast(message);
+      }
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
+  };
 
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
@@ -24,9 +70,6 @@ const TradeCard = ({ offer, sell }) => {
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
   const orderType = sell ? "sell" : "buy";
-
-  const openModal = () => setIsOpenModal(true);
-  const closeModal = () => setIsOpenModal(false);
 
   return (
     <div
@@ -50,11 +93,7 @@ const TradeCard = ({ offer, sell }) => {
 
       {/* Center Left Section */}
       <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img
-          src={logo2}
-          alt="Tether logo"
-          className="w-5 h-5 md:w-7 md:h-7 mr-3"
-        />
+        <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
         <div className="flex flex-col">
           <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
             Total: {parseFloat(offer.amount).toFixed(4)} USDT
@@ -74,15 +113,6 @@ const TradeCard = ({ offer, sell }) => {
 
       <div>
         {/* Cancel the order */}
-        {offer.status === "Pending Approval" && (
-          <button
-            // to={`chat/${offer._id}`}
-            onClick={openModal}
-            className="mt-2 px-3 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
-          >
-            Cancel
-          </button>
-        )}
 
         {/* Chat button for buy orders waiting for buy */}
         {offer.status !== "Pending Approval" && (
@@ -92,6 +122,14 @@ const TradeCard = ({ offer, sell }) => {
             className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
           >
             1:1 Chat
+          </button>
+        )}
+        {offer.status === "Pending Approval" && (
+          <button
+            onClick={() => openCancelModal(offer._id)}
+            className="mt-2 px-3 py-2 cursor-pointer bg-[#dd2911] hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
+          >
+            Cancel
           </button>
         )}
       </div>
@@ -110,8 +148,7 @@ const TradeCard = ({ offer, sell }) => {
             className={`font-semibold md:text-base select-none truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
                 ? "text-gray-400"
-                : offer.status === "Sell completed" ||
-                  offer.status === "Buy Completed"
+                : offer.status === "Sell completed" || offer.status === "Buy Completed"
                 ? "text-orange-500"
                 : "text-lime-600"
             }`}
@@ -121,28 +158,12 @@ const TradeCard = ({ offer, sell }) => {
         </div>
         <div className="text-center sm:text-right">{dateOnly}</div>
       </div>
-
-      <Modal onClose={closeModal} isOpen={isOpenModal}>
-        <div className="  px-4 text-center">
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">
-            Are you sure you want to delete this post?
-          </h2>
-          <div className="flex pt-4  justify-center space-x-11 gap-4">
-            <button
-              onClick={closeModal}
-              className="rounded-md border cursor-pointer border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
-            >
-              No
-            </button>
-            <button
-              // onClick={handleConfirm}
-              className="rounded-md cursor-pointer bg-[#26a17b] px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
-            >
-              Yes
-            </button>
-          </div>
-        </div>
-      </Modal>
+      <ConfirmModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => handleCancleMatch(pendingOrderId)}
+        message="Are you sure you want to delete your buy Order?"
+      />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { ErrorToast } from "./Error";
 
 // Create the context
@@ -143,7 +142,6 @@ export const AuthProvider = ({ children }) => {
       console.error("Error during sign-up:", error);
       // Handle any errors (e.g., show an error message)
     }
-    console.log("🚀 ~ signUp ~ data.user:", data.user);
   };
 
   const allUser = async () => {

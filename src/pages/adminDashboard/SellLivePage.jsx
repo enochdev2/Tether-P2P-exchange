@@ -583,7 +583,6 @@ const SellLivePage = () => {
               rejectOrders={() => rejectOrders(offer._id)}
               setPendingOrders={setPendingOrders}
               showChatButton={offer.status === "Pending Approval"}
-              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
             />
           ))}
         </div>
@@ -606,7 +605,6 @@ const SellLivePage = () => {
               sell={Sell}
               onMatch={handleMatch}
               showChatButton={offer.status === "On Sale"}
-              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
             />
           ))}
         </div>

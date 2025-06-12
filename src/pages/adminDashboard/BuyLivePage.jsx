@@ -18,7 +18,6 @@ const BuyLivePage = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   // Amount filter state for buy orders: "all", "lt500", "500to1000", "gt1000"
-  const [buyAmountFilter, setBuyAmountFilter] = useState("all");
 
   useEffect(() => {
     fetchInProgressOrders();
@@ -51,10 +50,10 @@ const BuyLivePage = () => {
 
       data?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-      const statusPriority = {
-        "Waiting for Buy": 1,
-        "Buy Completed": 2,
-      };
+      // const statusPriority = {
+      //   "Waiting for Buy": 1,
+      //   "Buy Completed": 2,
+      // };
 
       setBuyOrders(data);
     } catch (error) {
@@ -114,7 +113,7 @@ const BuyLivePage = () => {
       const buyInProgressOrders = await response.json();
 
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -165,10 +164,12 @@ const BuyLivePage = () => {
 
       const result = await response.json();
 
+      const message = result.message || "Orders cancelled successfully!";
+
       await fetchInProgressOrders();
       await fetchBuyOrders();
       await fetchBuyPendingOrders();
-      SuccessToast("Orders Cancelled successfully!");
+      SuccessToast(message);
     } catch (error) {
       console.error("Error cancelling orders:", error);
     }
@@ -196,7 +197,12 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      SuccessToast("Buy Order Approve Successful");
+      const message = result.message || "Buy Order Approved Successfully";
+
+      await fetchInProgressOrders();
+      await fetchBuyOrders();
+      await fetchBuyPendingOrders();
+      SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) =>
@@ -231,7 +237,8 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      SuccessToast("Buyer Order Rejected Successful");
+      const message = result.message || "Buy Order Rejected Successfully";
+      SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) =>
@@ -262,7 +269,7 @@ const BuyLivePage = () => {
       );
 
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg =
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -488,7 +495,6 @@ const BuyLivePage = () => {
                     sell={false}
                     onCancel={handleCancleMatch}
                     showChatButton={offer.status === "On Sale"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
                   />
                 ))}
               </div>
@@ -510,7 +516,7 @@ const BuyLivePage = () => {
                     rejectOrders={() => rejectOrders(offer._id)}
                     setPendingOrders={setPendingOrders}
                     showChatButton={offer.status === "Pending Approval"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                    
                   />
                 ))}
               </div>
@@ -531,7 +537,7 @@ const BuyLivePage = () => {
                     key={offer._id}
                     offer={offer}
                     showChatButton={offer.status === "Waiting for Buy"}
-                    onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
+                    fetchOrders={fetchBuyOrders}
                   />
                 ))
               )}
