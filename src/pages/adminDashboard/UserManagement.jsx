@@ -163,6 +163,8 @@ const UserManagement = () => {
 
   const Sell = true;
 
+
+
   return (
     <div>
       <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-12">
@@ -210,23 +212,23 @@ const UserManagement = () => {
         </div>
 
         {/* User Cards Grid */}
-        <section className="">
-          {allUsers?.length === 0 ? (
-            <div className="col-span-full text-center text-gray-500 py-10">
-              No users available.
-            </div>
-          ) : (
-            filteredUsers?.map((offer) => (
-              <AdminUserCard
-                key={offer._id}
-                offer={offer}
-                handleSubmit={() => handleSubmit(offer.nickname)}
-                setChange={setChange}
-                handleUpdate={allUser}
-              />
-            ))
-          )}
-        </section>
+       <section className="">
+  {allUsers?.length === 0 ? (
+    <div className="col-span-full text-center text-gray-500 py-10">
+      No users available.
+    </div>
+  ) : (
+    <AdminUserCard
+      users={filteredUsers}
+      handleStatusChange={(user, status) => {
+        // Handle the status change here
+        handleSubmit(user.nickname, status);
+        setChange(prev => !prev);
+      }}
+      handleUpdate={allUser}
+    />
+  )}
+</section>
       </div>
 
       {/* Notification Alert Box */}

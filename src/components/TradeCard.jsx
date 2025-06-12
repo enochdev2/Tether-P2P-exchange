@@ -1,6 +1,8 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Modal from "./Modal";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -9,6 +11,7 @@ const statusColors = {
 };
 
 const TradeCard = ({ offer, sell }) => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const navigate = useNavigate();
   const isPending = sell ? offer.status === " " : offer.status === " ";
 
@@ -20,18 +23,25 @@ const TradeCard = ({ offer, sell }) => {
 
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
-   const orderType = sell ? "sell" : "buy";
+  const orderType = sell ? "sell" : "buy";
+
+  const openModal = () => setIsOpenModal(true);
+  const closeModal = () => setIsOpenModal(false);
 
   return (
     <div
       className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm
-        ${offer.status === 'Pending Approval' ? "border border-red-700" : ""}
+        ${offer.status === "Pending Approval" ? "border border-red-700" : ""}
       `}
     >
       {/* Left Section */}
       <div className="flex items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr-6 justify-center sm:justify-start">
         <div className="flex items-center space-x-1 md:space-x-2">
-          <div className={`bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap ${offer.status === 'Pending Approval' ? "filter grayscale" : ""} `}>
+          <div
+            className={`bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap ${
+              offer.status === "Pending Approval" ? "filter grayscale" : ""
+            } `}
+          >
             {sell ? "Sell" : "Buy"}
           </div>
           <div className="w-3 h-3 hidden sm:block bg-green-700 rounded-full mt-1" />
@@ -63,6 +73,17 @@ const TradeCard = ({ offer, sell }) => {
       </div>
 
       <div>
+        {/* Cancel the order */}
+        {offer.status === "Pending Approval" && (
+          <button
+            // to={`chat/${offer._id}`}
+            onClick={openModal}
+            className="mt-2 px-3 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
+          >
+            Cancel
+          </button>
+        )}
+
         {/* Chat button for buy orders waiting for buy */}
         {offer.status !== "Pending Approval" && (
           <button
@@ -100,6 +121,28 @@ const TradeCard = ({ offer, sell }) => {
         </div>
         <div className="text-center sm:text-right">{dateOnly}</div>
       </div>
+
+      <Modal onClose={closeModal} isOpen={isOpenModal}>
+        <div className="  px-4 text-center">
+          <h2 className="mb-4 text-lg font-semibold text-gray-800">
+            Are you sure you want to delete this post?
+          </h2>
+          <div className="flex pt-4  justify-center space-x-11 gap-4">
+            <button
+              onClick={closeModal}
+              className="rounded-md border cursor-pointer border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+            >
+              No
+            </button>
+            <button
+              // onClick={handleConfirm}
+              className="rounded-md cursor-pointer bg-[#26a17b] px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

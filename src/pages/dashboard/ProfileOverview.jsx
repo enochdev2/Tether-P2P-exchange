@@ -16,6 +16,7 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { SuccessToast } from "../../utils/Success";
 import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import toast from "react-hot-toast";
 
 function ProfileOverview() {
   const { user, setIsLoggedIn, setUser } = useAuth();
@@ -147,6 +148,19 @@ function ProfileOverview() {
 
   const tether = `Wallet Address:  ${user?.tetherAddress}`;
 
+
+  // const copyToClipboard = (text) => {
+  //   navigator.clipboard.writeText(text);
+  //   toast.success("Referral link copied to clipboard");
+  // };
+
+  const copyToClipboard = (text, label = "Copied") => {
+  navigator.clipboard.writeText(text);
+  toast.success(`${label} Copied Successfully`);
+};
+
+
+
   return (
     <div className=" relative w-full space-y-6">
       <div className="w-full md:w-[90%] mx-auto space-y-6">
@@ -154,15 +168,6 @@ function ProfileOverview() {
 
         <ProfileCard user={user} />
         <ProfileSetting user={user} />
-        <div className="flex flex-wrap md:flex-row gap-8 w-full lg:space-x-28 my-4 overflow-x-auto sm:overflow-visible">
-          <InfoCard
-            icon={<Wallet2Icon size={24} />}
-            title="Refferal Code"
-            actionText={user?.referralCode}
-            // actionText="Set answers"
-            // onAction={() => console.log("Navigate to security questions")}
-          />
-        </div>
 
         <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
           <div className="min-w-[280px] sm:min-w-0 flex-1">
@@ -171,6 +176,7 @@ function ProfileOverview() {
               title="Bank Name"
               actionText={user?.bankName}
               onAction={() => console.log("Navigate to security questions")}
+                copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
             />
           </div>
           <div className="min-w-[280px] sm:min-w-0 flex-1">
@@ -178,18 +184,35 @@ function ProfileOverview() {
               icon={<BanknoteIcon size={24} />}
               title="Bank Account Number"
               actionText={user?.bankAccount}
+               copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
 
           {/* <InfoCard /> */}
         </div>
-        <InfoCard
-          icon={<Wallet2Icon size={24} />}
-          title={tether.slice(0, 15)}
-          actionText={tether.slice(15, 60)}
-          // onAction={() => console.log("Navigate to security questions")}
-        />
+
+        <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
+          <div className="min-w-[280px]  sm:min-w-0 flex-1">
+            <InfoCard
+              className=""
+              icon={<Wallet2Icon size={24} />}
+              title={tether.slice(0, 15)}
+              actionText={tether.slice(15, 60)}
+              copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
+              
+            />
+          </div>
+
+          <div className="min-w-[280px] sm:min-w-0 flex-1">
+            <InfoCard
+              icon={<Wallet2Icon size={24} />}
+              title="Refferal Code"
+              actionText={user?.referralCode}
+               copyToClipboard={() => copyToClipboard(user?.referralCode, "Referral Code")}
+            />
+          </div>
+        </div>
       </div>
       <NotificationPopup
         loading={loadingNotifications}
