@@ -439,11 +439,7 @@ const BuyLivePage = () => {
           <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl">
             <div className="px-5 py-2 rounded-2xl">
               <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
-                Buy Orders (
-                <span className="text-emerald-70 text-shadow-emerald-400">
-                  Live
-                </span>
-                )
+                Buy Orders (<span className="text-emerald-70 text-shadow-emerald-400">Live</span>)
               </h1>
             </div>
             <div className="space-x-4">
@@ -454,31 +450,33 @@ const BuyLivePage = () => {
           </div>
 
           {/* Filter Buttons */}
-          <div className="mb-6 flex flex-wrap gap-2 text-sm">
-            {[
-              { label: "All", value: "all" },
-              { label: "10,000 ↑\n30,000 ↓", value: "10000to30000" },
-              { label: "30,000 ↑\n50,000 ↓", value: "30000to50000" },
-              { label: "50,000 ↑\n100,000 ↓", value: "50000to100000" },
-              { label: "100,000 ↑\n200,000 ↓", value: "100000to200000" },
-              { label: "200,000 ↑\n300,000 ↓", value: "200000to300000" },
-              { label: "300,000 ↑\n500,000 ↓", value: "300000to500000" },
-              { label: "500,000 ↑\n1,000,000 ↓", value: "500000to1000000" },
-              { label: "1,000,000 ↑", value: "gt1000000" },
-            ].map(({ label, value }) => (
-              <button
-                key={value}
-                onClick={() => handleAmountFilterChange(value)}
-                className={`px-4 py-2 rounded-md font-semibold whitespace-pre-line transition-all duration-200 ${
-                  selectedFilters.includes(value) ||
-                  (value === "all" && selectedFilters.length === 0)
-                    ? "bg-[#26a17b] text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="mb-10 w-full flex justify-center">
+            <div className="mb-6 flex flex-wrap gap-2 text-sm ">
+              {[
+                { label: "All", value: "all" },
+                { label: "10,000 ↑\n30,000 ↓", value: "10000to30000" },
+                { label: "30,000 ↑\n50,000 ↓", value: "30000to50000" },
+                { label: "50,000 ↑\n100,000 ↓", value: "50000to100000" },
+                { label: "100,000 ↑\n200,000 ↓", value: "100000to200000" },
+                { label: "200,000 ↑\n300,000 ↓", value: "200000to300000" },
+                { label: "300,000 ↑\n500,000 ↓", value: "300000to500000" },
+                { label: "500,000 ↑\n1,000,000 ↓", value: "500000to1000000" },
+                { label: "1,000,000 ↑", value: "gt1000000" },
+              ].map(({ label, value }) => (
+                <button
+                  key={value}
+                  onClick={() => handleAmountFilterChange(value)}
+                  className={`px-5 py-2 rounded-md font-semibold whitespace-pre-line transition-all duration-200 ${
+                    selectedFilters.includes(value) ||
+                    (value === "all" && selectedFilters.length === 0)
+                      ? "bg-[#26a17b] text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* In Progress Orders */}
@@ -516,7 +514,6 @@ const BuyLivePage = () => {
                     rejectOrders={() => rejectOrders(offer._id)}
                     setPendingOrders={setPendingOrders}
                     showChatButton={offer.status === "Pending Approval"}
-                    
                   />
                 ))}
               </div>

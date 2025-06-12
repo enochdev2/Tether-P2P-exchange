@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
+import ConfirmModal from "./confirmModal";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -12,13 +15,8 @@ const statusColors = {
 
 // import your logo and statusColors accordingly
 
-const AdminTradeInProgressCard = ({
-  offer,
-  sell,
-  onMatch,
-  onCancel,
-  onMatchs,
-}) => {
+const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fetchOrders }) => {
+  console.log("🚀 ~ AdminTradeInProgressCard ~ offer:", offer);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -27,6 +25,14 @@ const AdminTradeInProgressCard = ({
   // Adjust isPending logic if needed
   const isPending = offer.status === "In Progress";
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingOrderId, setPendingOrderId] = useState(offer?.sellerNickname || null);
+
+  const openCancelModal = (orderId) => {
+    setPendingOrderId(orderId);
+    setIsModalOpen(true);
+  };
+
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
 
@@ -34,6 +40,43 @@ const AdminTradeInProgressCard = ({
 
   const handleMatchClick = () => {
     setIsMatchModalOpen(true);
+  };
+
+  const handleCancleMatch = async (orderId) => {
+    try {
+      if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("🚀 ~ handleCancleMatch ~ user:", user);
+      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
+
+      const url = sell
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nickname: offer?.sellerNickname }),
+        // body: JSON.stringify({ orderId, nickname: user.nickname }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      } else {
+        await fetchOrders();
+        const message = data.message || "Orders cancelled successfully!";
+        SuccessToast(message);
+      }
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -63,9 +106,7 @@ const AdminTradeInProgressCard = ({
   const orderType = sell ? "sell" : "buy";
 
   const buildMatchedTableRows = (offer, sell) => {
-    const matchedOrders = sell
-      ? offer.matchedBuyOrders
-      : offer.matchedSellOrders;
+    const matchedOrders = sell ? offer.matchedBuyOrders : offer.matchedSellOrders;
 
     const rows = [];
 
@@ -97,9 +138,7 @@ const AdminTradeInProgressCard = ({
     "Sell completed": "#f59e0b", // Amber
   };
 
-  const matchedOrders = sell
-    ? offer?.matchedBuyOrders
-    : offer?.matchedSellOrders;
+  const matchedOrders = sell ? offer?.matchedBuyOrders : offer?.matchedSellOrders;
 
   return (
     <div className="relative  w-full flex flex-col gap-4 items-center mb-4 rounded-xl bg-white p-2 shadow-lg border border-green-600">
@@ -135,37 +174,37 @@ const AdminTradeInProgressCard = ({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="bg-[#26a17b] hover:bg-green-700 text-white p-2 cursor-pointer rounded-md shadow-sm"
           >
-            {isDropdownOpen ? (
-              <FaChevronUp size={14} />
-            ) : (
-              <FaChevronDown size={14} />
-            )}
+            {isDropdownOpen ? <FaChevronUp size={14} /> : <FaChevronDown size={14} />}
           </button>
 
           <button
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+            className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
           >
             1:1 Chat
           </button>
-
+          <button
+            onClick={() => openCancelModal(offer._id)}
+            className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
+          >
+            <FaTrash size={14} />
+          </button>
 
           {sell &&
             (offer.status === "In Progress" ? (
               <div>
-          <button
-            onClick={handleMatchCancel}
-            className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
-          >
-            Cancel
-          </button>
-              <button
-                onClick={handleMatchComplete}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
-              >
-                Complete-Match
-              </button>
-
+                <button
+                  onClick={handleMatchCancel}
+                  className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleMatchComplete}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
+                >
+                  Complete-Match
+                </button>
               </div>
             ) : (
               <button
@@ -179,13 +218,18 @@ const AdminTradeInProgressCard = ({
 
         {/* ID, Status, Date */}
         <div className="text-xs text-gray-600 text-right space-y-0.5 leading-snug">
-          <p className="truncate  max-w-[120px] font-mono text-gray-500">
-            {offer._id}
-          </p>
+          <p className="break-all  max-w-[120px] font-mono text-gray-500">{offer._id}</p>
           <p className="font-bold text-green-700">{offer.status}</p>
           <p className="text-gray-500">{dateOnly}</p>
         </div>
       </div>
+
+      <ConfirmModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => handleCancleMatch(pendingOrderId)}
+        message="Are you sure you want to delete the buy Order?"
+      />
 
       {/* Dropdown Table */}
       {isDropdownOpen && (
@@ -208,9 +252,7 @@ const AdminTradeInProgressCard = ({
               ))}
               <tr className="bg-slate-100 font-semibold text-sm">
                 <td className="px-4 py-2">Remaining</td>
-                <td className="px-4 py-2">
-                  {parseFloat(offer.amountRemaining).toFixed(4)} USDT
-                </td>
+                <td className="px-4 py-2">{parseFloat(offer.amountRemaining).toFixed(4)} USDT</td>
                 <td className="px-4 py-2">{offer.userId?.nickname || "N/A"}</td>
               </tr>
             </tbody>
@@ -222,9 +264,7 @@ const AdminTradeInProgressCard = ({
       {isMatchModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[95%] max-w-md border border-green-600 shadow-xl">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">
-              Match Seller with Buyer
-            </h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Match Seller with Buyer</h3>
             <input
               type="text"
               placeholder="Enter Buyer Order ID"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { SuccessToast } from "../utils/Success";
 
-const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
+const InquiryModal = ({ isOpen, onCancel }) => {
   const [inquiryType, setInquiryType] = useState("Edit Account Info");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,8 +44,9 @@ const InquiryModal = ({ isOpen, onCancel, onSubmit }) => {
       // Optionally, reset form or close modal here
       setInquiryType("Edit Account Info");
       setMessage("");
+      onCancel();
+      SuccessToast("Your inquiry has been submitted.");
       // onCancel();
-      setShowModal(false);
     } catch (err) {
       setError(err.message);
     } finally {

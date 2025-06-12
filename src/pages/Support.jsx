@@ -5,7 +5,6 @@ import LoadingSpiner from "../components/LoadingSpiner";
 const Support = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   
 
   useEffect(() => {

@@ -35,8 +35,7 @@ const SellLivePage = () => {
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
     try {
-      if (!buyerOrderId || !sellerOrderId)
-        return ErrorToast("input buyer Order ID");
+      if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -54,8 +53,7 @@ const SellLivePage = () => {
 
       if (!response.ok) {
         const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       } else {
         await fetchInProgressOrders();
@@ -70,8 +68,7 @@ const SellLivePage = () => {
 
   const handleCompleteMatch = async (buyerOrderId, sellerOrderId) => {
     try {
-      if (!buyerOrderId || !sellerOrderId)
-        return ErrorToast("input buyer Order ID");
+      if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -88,8 +85,7 @@ const SellLivePage = () => {
 
       if (!response.ok) {
         const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -105,8 +101,7 @@ const SellLivePage = () => {
 
   const handleCancleMatch = async (buyerOrderId, sellerOrderId) => {
     try {
-      if (!buyerOrderId || !sellerOrderId)
-        return ErrorToast("input buyer Order ID");
+      if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -124,8 +119,7 @@ const SellLivePage = () => {
 
       if (!response.ok) {
         const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       } else {
         await fetchInProgressOrders();
@@ -162,9 +156,8 @@ const SellLivePage = () => {
       );
 
       if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -237,9 +230,8 @@ const SellLivePage = () => {
       );
 
       if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -248,11 +240,7 @@ const SellLivePage = () => {
       // 🔽 Sort to prioritize "In Progress" over "Partially Matched"
       sellInProgressOrders.sort((a, b) => {
         if (a.status === "In Progress" && b.status !== "In Progress") return -1;
-        if (
-          a.status === "Partially Matched" &&
-          b.status !== "Partially Matched"
-        )
-          return 1;
+        if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
         return 0;
       });
 
@@ -286,12 +274,11 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      SuccessToast("Sell Order Approve Successful");
+      const message = result.message || "Sell Order Approve Successful"; 
+      SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
-      setPendingOrders((prevOrders) =>
-        prevOrders.filter((order) => order._id !== orderId)
-      );
+      setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
       return null;
@@ -323,9 +310,7 @@ const SellLivePage = () => {
       SuccessToast("Buy Order Rejected Successful");
 
       // Remove the approved order from the current pendingOrders state
-      setPendingOrders((prevOrders) =>
-        prevOrders.filter((order) => order._id !== orderId)
-      );
+      setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
       return null;
@@ -347,9 +332,8 @@ const SellLivePage = () => {
       );
 
       if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -382,14 +366,11 @@ const SellLivePage = () => {
 
       if (!response.ok) {
         const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -398,14 +379,14 @@ const SellLivePage = () => {
   const handleMarkAllAsRead = async () => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
-  
+
     const { success, error } = await markAllNotificationsAsRead({
       userId: user._id,
       type: "sellOrder", // or another type
-      isForAdmin: true,     // or false depending on the context
+      isForAdmin: true, // or false depending on the context
       token,
     });
-  
+
     if (success) {
       SuccessToast("All notifications marked as read");
       setNotifications([]); // or any state update
@@ -433,11 +414,7 @@ const SellLivePage = () => {
     if (selectedFilters.length === 0) return true;
 
     // Check for the different filter ranges
-    if (
-      selectedFilters.includes("500to1000") &&
-      order.krwAmount >= 500 &&
-      order.krwAmount <= 1000
-    )
+    if (selectedFilters.includes("500to1000") && order.krwAmount >= 500 && order.krwAmount <= 1000)
       return true;
 
     if (
@@ -490,8 +467,7 @@ const SellLivePage = () => {
       return true;
 
     // Filter for amounts greater than 1,000,000 (gt1000000)
-    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
-      return true;
+    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000) return true;
 
     return false;
   });
@@ -502,122 +478,123 @@ const SellLivePage = () => {
 
   return (
     <div>
-     <div className="flex bg-gray-50 pt-4 min-h-screen">
-  <div className="flex-1 px-4 md:px-8 py-6 overflow-y-auto">
-    {/* Page Header */}
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center bg-white shadow rounded-2xl px-6 py-4 mb-8 border border-gray-200">
-      <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center gap-2">
-        Sell Orders <span className="text-emerald-600">(Live)</span>
-      </h1>
-      <button className="bg-gray-200 text-sm text-gray-800 px-5 py-2 rounded-md font-medium hover:bg-gray-300 mt-4 md:mt-0 transition">
-        Sort By
-      </button>
-    </div>
+      <div className="flex bg-gray-50 pt-4 min-h-screen">
+        <div className="flex-1 px-4 md:px-8 py-6 overflow-y-auto">
+          {/* Page Header */}
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center bg-white shadow rounded-2xl px-6 py-4 mb-8 border border-gray-200">
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center gap-2">
+              Sell Orders <span className="text-emerald-600">(Live)</span>
+            </h1>
+            <button className="bg-gray-200 text-sm text-gray-800 px-5 py-2 rounded-md font-medium hover:bg-gray-300 mt-4 md:mt-0 transition">
+              Sort By
+            </button>
+          </div>
 
-    {/* Filter Buttons */}
-    <div className="mb-10">
-      <div className="flex flex-wrap gap-3">
-        {[
-          { label: "All", key: "all" },
-          { label: "10,000 ↑\n30,000 ↓", key: "10000to30000" },
-          { label: "30,000 ↑\n50,000 ↓", key: "30000to50000" },
-          { label: "50,000 ↑\n100,000 ↓", key: "50000to100000" },
-          { label: "100,000 ↑\n200,000 ↓", key: "100000to200000" },
-          { label: "200,000 ↑\n300,000 ↓", key: "200000to300000" },
-          { label: "300,000 ↑\n500,000 ↓", key: "300000to500000" },
-          { label: "500,000 ↑\n1,000,000 ↓", key: "500000to1000000" },
-          { label: "1,000,000 ↑", key: "gt1000000" },
-        ].map(({ label, key }) => (
-          <button
-            key={key}
-            onClick={() => handleAmountFilterChange(key)}
-            className={`whitespace-pre-line cursor-pointer px-4 py- rounded-md text-[15px] font-medium shadow-sm transition duration-150 ${
-              (key === "all" && selectedFilters.length === 0) ||
-              selectedFilters.includes(key)
-                ? "bg-[#26a17b] text-white"
-                : "bg-gray-100 text-gray-700 border border-slate-300 hover:bg-gray-200"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-    </div>
+          {/* Filter Buttons */}
+          <div className="mb-10 w-full flex justify-center">
+            <div className="flex flex-wrap gap-3 mx-auto">
+              {[
+                { label: "All", key: "all" },
+                { label: "10,000 ↑\n30,000 ↓", key: "10000to30000" },
+                { label: "30,000 ↑\n50,000 ↓", key: "30000to50000" },
+                { label: "50,000 ↑\n100,000 ↓", key: "50000to100000" },
+                { label: "100,000 ↑\n200,000 ↓", key: "100000to200000" },
+                { label: "200,000 ↑\n300,000 ↓", key: "200000to300000" },
+                { label: "300,000 ↑\n500,000 ↓", key: "300000to500000" },
+                { label: "500,000 ↑\n1,000,000 ↓", key: "500000to1000000" },
+                { label: "1,000,000 ↑", key: "gt1000000" },
+              ].map(({ label, key }) => (
+                <button
+                  key={key}
+                  onClick={() => handleAmountFilterChange(key)}
+                  className={`whitespace-pre-line cursor-pointer px-4 py- rounded-md text-[15px] font-medium shadow-sm transition duration-150 ${
+                    (key === "all" && selectedFilters.length === 0) || selectedFilters.includes(key)
+                      ? "bg-[#26a17b] text-white"
+                      : "bg-gray-100 text-gray-700 border border-slate-300 hover:bg-gray-200"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-    {/* Orders In Progress */}
-    {inProgressOrders.length > 0 && (
-      <div className="mb-10">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-          All Orders In Progress
-        </h2>
-        <div className="space-y-4">
-          {inProgressOrders.map((offer) => (
-            <AdminTradeInProgressCard
-              key={offer._id}
-              offer={offer}
-              sell={Sell}
-              onMatch={handleCompleteMatch}
-              onMatchs={handleMatch}
-              onCancel={handleCancleMatch}
-              showChatButton={offer.status === "On Sale"}
-              onChatClick={() => navigate(`/admin/chat/${offer._id}`)}
-            />
-          ))}
+          {/* Orders In Progress */}
+          {inProgressOrders.length > 0 && (
+            <div className="mb-10">
+              <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+                All Orders In Progress
+              </h2>
+              <div className="space-y-4">
+                {inProgressOrders.map((offer) => (
+                  <AdminTradeInProgressCard
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    fetchOrders={fetchInProgressOrders}
+                    onMatch={handleCompleteMatch}
+                    onMatchs={handleMatch}
+                    onCancel={handleCancleMatch}
+                    showChatButton={offer.status === "On Sale"}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pending Orders */}
+          {pendingOrders.length > 0 && (
+            <div className="mb-10">
+              <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+                All Pending Sell Orders
+              </h2>
+              <div className="space-y-4">
+                {pendingOrders.map((offer) => (
+                  <AdminTradeCard2
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    approveOrders={() => approveOrders(offer._id)}
+                    rejectOrders={() => rejectOrders(offer._id)}
+                    setPendingOrders={setPendingOrders}
+                    showChatButton={offer.status === "Pending Approval"}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Live Sell Orders */}
+          <div className="mb-6">
+            <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
+              All Live Sell Orders
+            </h2>
+            {filteredSellOrders.length === 0 ? (
+              <p className="text-gray-500 italic text-sm">No sell orders match the filter.</p>
+            ) : (
+              <div className="space-y-4">
+                {filteredSellOrders.map((offer) => (
+                  <AdminTradeCard
+                    key={offer._id}
+                    offer={offer}
+                    sell={Sell}
+                    fetchOrders={fetchSellOrders}
+                    onMatch={handleMatch}
+                    showChatButton={offer.status === "On Sale"}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    )}
-
-    {/* Pending Orders */}
-    {pendingOrders.length > 0 && (
-      <div className="mb-10">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-          All Pending Sell Orders
-        </h2>
-        <div className="space-y-4">
-          {pendingOrders.map((offer) => (
-            <AdminTradeCard2
-              key={offer._id}
-              offer={offer}
-              sell={Sell}
-              approveOrders={() => approveOrders(offer._id)}
-              rejectOrders={() => rejectOrders(offer._id)}
-              setPendingOrders={setPendingOrders}
-              showChatButton={offer.status === "Pending Approval"}
-            />
-          ))}
-        </div>
-      </div>
-    )}
-
-    {/* Live Sell Orders */}
-    <div className="mb-6">
-      <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-        All Live Sell Orders
-      </h2>
-      {filteredSellOrders.length === 0 ? (
-        <p className="text-gray-500 italic text-sm">No sell orders match the filter.</p>
-      ) : (
-        <div className="space-y-4">
-          {filteredSellOrders.map((offer) => (
-            <AdminTradeCard
-              key={offer._id}
-              offer={offer}
-              sell={Sell}
-              onMatch={handleMatch}
-              showChatButton={offer.status === "On Sale"}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-</div>
 
       {/* Notification Alert Box */}
       <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
       />
     </div>
   );

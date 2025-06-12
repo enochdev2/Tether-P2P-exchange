@@ -73,7 +73,7 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
 
   return (
     <div
-      className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-2 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm
+      className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-1 md:px-1 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm overflow-x-hidden justify-between
         ${offer.status === "Pending Approval" ? "border border-red-700" : ""}
       `}
     >
@@ -91,73 +91,85 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
         </div>
       </div>
 
-      {/* Center Left Section */}
-      <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
-        <div className="flex flex-col">
-          <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
-            Total: {parseFloat(offer.amount).toFixed(4)} USDT
-          </span>
-          <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
-            Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
-          </span>
+      {/* center Section */}
+
+      <div className="flex flex-1 flex-col sm:flex-row items-center justify-between w-full sm:w-auto  space-y-2 sm:space-y-0 sm:space-x-4">
+        {/* Center Left Section */}
+        <div className="flex-col md:flex-row md:flex-1 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
+          <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
+          <div className="flex flex-col">
+            <span className="font-bold text-xs sm:text-base text-gray-400 truncate">
+              Total: {parseFloat(offer.amount).toFixed(4)} USDT
+            </span>
+            <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
+              Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* Center Right Section */}
-      <div className="flex-1 w-full sm:w-auto font-semibold text-gray-900 text-xs sm:text-base mb-4 sm:mb-0 text-center sm:text-left truncat">
-        {offer.krwAmount
-          ? `₩${offer.krwAmount.toLocaleString()} KRW`
-          : `₩${offer.price.toLocaleString()} KRW`}
-      </div>
-
-      <div>
-        {/* Cancel the order */}
-
-        {/* Chat button for buy orders waiting for buy */}
-        {offer.status !== "Pending Approval" && (
-          <button
-            // to={`chat/${offer._id}`}
-            onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-          >
-            1:1 Chat
-          </button>
-        )}
-        {offer.status === "Pending Approval" && (
-          <button
-            onClick={() => openCancelModal(offer._id)}
-            className="mt-2 px-3 py-2 cursor-pointer bg-[#dd2911] hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
-          >
-            Cancel
-          </button>
-        )}
+        {/* Center Right Section */}
+        <div className="flex-1 w-full md:ml-8 sm:w-auto font-semibold text-gray-900 text-xs sm:text-sm mb-4 sm:mb-0 text-center sm:text-left truncat">
+          {offer.krwAmount
+            ? `₩${offer.krwAmount.toLocaleString()} KRW`
+            : `₩${offer.price.toLocaleString()} KRW`}
+        </div>
       </div>
 
       {/* Right Section */}
-      <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">
-        <div className="break-words text-center sm:text-right w-full font-bold sm:w-auto truncate">
-          {offer._id}
+
+      <div className="flex flex-col flex- sm:flex-row items-center justify-between w-full sm:w-auto">
+        <div className="md:mr-10 sm:mr-5">
+          {/* Cancel the order */}
+
+          {/* Chat button for buy orders waiting for buy */}
+          {offer.status !== "Pending Approval" && (
+            <button
+              // to={`chat/${offer._id}`}
+              onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
+              className="mt-2 px-1 md:px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+            >
+              1:1 Chat
+            </button>
+          )}
+          {offer.status === "Pending Approval" && (
+            <button
+              onClick={() => openCancelModal(offer._id)}
+              className="mt-2 px-2 md:px-3 py-2 cursor-pointer bg-[#dd2911] hover:bg-red-700 text-white rounded text-xs md:text-sm font-bold"
+            >
+              Cancel
+            </button>
+          )}
         </div>
-        <div className="flex items-center space-x-2">
+
+        {/* Right Section */}
+        <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">
           <div
-            className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"
-            style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
-          />
-          <span
-            className={`font-semibold md:text-base select-none truncate max-w-[8rem] ${
-              offer.status === "Pending Approval"
-                ? "text-gray-400"
-                : offer.status === "Sell completed" || offer.status === "Buy Completed"
-                ? "text-orange-500"
-                : "text-lime-600"
-            }`}
+            className="break-words break-all
+ text-center text-xs md:text-sm sm:text-right w-full font-bold sm:w-auto "
           >
-            {offer.status}
-          </span>
+            {offer._id}
+          </div>
+          <div className="flex items-center space-x-2">
+            <div
+              className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"
+              style={{ backgroundColor: statusColors[offer.status] || "#ccc" }}
+            />
+            <span
+              className={`font-semibold md:text-base select-none truncate max-w-[8rem] ${
+                offer.status === "Pending Approval"
+                  ? "text-gray-400"
+                  : offer.status === "Sell completed" || offer.status === "Buy Completed"
+                  ? "text-orange-500"
+                  : "text-lime-600"
+              }`}
+            >
+              {offer.status}
+            </span>
+          </div>
+          <div className="text-center sm:text-right">{dateOnly}</div>
         </div>
-        <div className="text-center sm:text-right">{dateOnly}</div>
       </div>
+
       <ConfirmModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

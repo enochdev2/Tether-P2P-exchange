@@ -5,76 +5,68 @@ import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./confirmModal";
-
+import { FaTrash } from "react-icons/fa";
 
 // import your logo and statusColors accordingly
 
 const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
+  console.log("🚀 ~ AdminTradeCard ~ offer:", offer)
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
 
-
-   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingOrderId, setPendingOrderId] = useState(null);
-  
+
   const openCancelModal = (orderId) => {
     setPendingOrderId(orderId);
     setIsModalOpen(true);
   };
 
   // Adjust isPending logic if needed
-  const isPending = sell
-    ? offer.status === "Pending Approval"
-    : offer.status === "Waiting for uy";
-
-
+  const isPending = sell ? offer.status === "Pending Approval" : offer.status === "Waiting for uy";
 
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
 
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
-   const handleCancleMatch = async (orderId) => {
-        try {
-          if (!orderId)
-            return ErrorToast(" Order ID not found. Please try again.");
-          const token = localStorage.getItem("token");
-          const user = JSON.parse(localStorage.getItem("user"));
-          console.log("🚀 ~ handleCancleMatch ~ user:", user)
-          console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id)
-  
-          const url = sell ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel` : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;
-    
-          const response = await fetch(
-            url,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ nickname: user.nickname }),
-              // body: JSON.stringify({ orderId, nickname: user.nickname }),  
-  
-            }
-          );
-          const data = await response.json();
-    
-          if (!response.ok) {
-            const data = await response.json();
-            const errorMsg =
-              data.error || data.message || "Failed to register user";
-            ErrorToast(errorMsg);
-          } else {
-            await fetchOrders();
-            const message = data.message || "Orders cancelled successfully!";
-            SuccessToast(message);
-          }
-        } catch (error) {
-          console.error("Error matching orders:", error);
-        }
-      };
+  const handleCancleMatch = async (orderId) => {
+    try {
+      if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("🚀 ~ handleCancleMatch ~ user:", user);
+      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
+
+      const url = sell
+        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nickname: user.nickname }),
+        // body: JSON.stringify({ orderId, nickname: user.nickname }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      } else {
+        await fetchOrders();
+        const message = data.message || "Orders cancelled successfully!";
+        SuccessToast(message);
+      }
+    } catch (error) {
+      console.error("Error matching orders:", error);
+    }
+  };
 
   const handleMatchClick = () => {
     setIsMatchModalOpen(true);
@@ -127,17 +119,13 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
 
       {/* Nickname */}
       <div className="sm:mr-4 font-semibold w-full sm:w-auto bg-slate-100 px-4 py-2 rounded-lg flex items-center text-gray-700 text-sm shadow-inner">
-        {offer?.userId?.nickname || "nickname"}
+        {sell ? offer?.sellerNickname : offer.buyerNickname}
       </div>
 
       {/* Center Left Section */}
       <div className="flex flex-col md:flex-row space-x-3 md:flex-1 w-full sm:w-auto items-center mb-4 sm:mb-0">
         <div className="flex items-center">
-          <img
-            src={logo2}
-            alt="Tether logo"
-            className="w-6 h-6 md:w-7 md:h-7 mr-3"
-          />
+          <img src={logo2} alt="Tether logo" className="w-6 h-6 md:w-7 md:h-7 mr-3" />
           <div className="flex flex-col space-y-1 text-sm text-gray-800">
             <span className="font-medium">Total: {offer.amount} USDT</span>
             <span className="font-medium">
@@ -161,12 +149,12 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
           1:1 Chat
         </button>
 
-  <button
-    onClick={() => openCancelModal(offer._id)}
-    className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-  >
-    Cancel
-  </button>
+        <button
+          onClick={() => openCancelModal(offer._id)}
+          className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
+        >
+          <FaTrash size={14} />
+        </button>
 
         {sell && (
           <button
@@ -180,7 +168,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
 
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap ml-10 lg:ml-20 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
-        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate text-gray-500 font-mono">
+        <div className="break-all text-center sm:text-right w-full sm:w-auto truncate text-gray-500 font-mono">
           {offer._id}
         </div>
         <div className="flex items-center text-sm space-x-2">
@@ -192,8 +180,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
             className={`font-semibold truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
                 ? "text-yellow-600"
-                : offer.status === "Sell completed" ||
-                  offer.status === "Buy Completed"
+                : offer.status === "Sell completed" || offer.status === "Buy Completed"
                 ? "text-orange-500"
                 : "text-green-600"
             }`}
@@ -201,11 +188,9 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
             {offer.status}
           </span>
         </div>
-        <div className="text-center sm:text-right text-gray-500 text-sm">
-          {dateOnly}
-        </div>
+        <div className="text-center sm:text-right text-gray-500 text-sm">{dateOnly}</div>
       </div>
-         <ConfirmModal
+      <ConfirmModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => handleCancleMatch(pendingOrderId)}
@@ -216,9 +201,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       {isMatchModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl border-green-700 border-2 shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">
-              Match Seller with Buyer
-            </h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Match Seller with Buyer</h3>
             <input
               type="text"
               className="border border-gray-300 rounded-md p-2 mb-4 w-full focus:ring-2 focus:ring-green-500 outline-none"
@@ -226,7 +209,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
               value={buyerOrderId}
               onChange={(e) => setBuyerOrderId(e.target.value)}
             />
-            <div className="flex justify-end space-x-3">
+            <div className=" w-full flex justify-between space-x-3">
               <button
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-gray-800"

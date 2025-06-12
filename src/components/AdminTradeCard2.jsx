@@ -1,25 +1,19 @@
-import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 
-const statusColors = {
-  "On sell": "#26a17b", // Green
-  "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Amber
-};
+
 
 // import your logo and statusColors accordingly
 
 const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) => {
-  const navigate = useNavigate();
 
-  const handleMatchClick = () => {
-    setIsMatchModalOpen(true);
-  };
+  // const handleMatchClick = () => {
+  //   setIsMatchModalOpen(true);
+  // };
 
-  const handleCloseModal = () => {
-    setIsMatchModalOpen(false);
-  };
+  // const handleCloseModal = () => {
+  //   setIsMatchModalOpen(false);
+  // };
 
   const handleMatchSubmit = () => {
     onMatch(buyerOrderId, offer._id); // Trigger matching in the parent component
@@ -82,13 +76,13 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
     <div className="flex gap-3 items-center">
       <button
         onClick={() => approveOrders(offer._id)}
-        className="px-4 py-1.5 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm shadow-md font-bold transition"
+        className="px-4 py-1.5 bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white rounded-md text-sm shadow-md font-bold transition"
       >
         Approve
       </button>
       <button
         onClick={() => rejectOrders(offer._id)}
-        className="px-4 py-1.5 bg-[#a12626] hover:bg-red-700 text-white rounded-md text-sm shadow-md font-bold transition"
+        className="px-4 py-1.5 bg-[#a12626] hover:bg-red-700 text-white rounded-md text-sm shadow-md font-bold transition cursor-pointer"
       >
         Reject
       </button>
