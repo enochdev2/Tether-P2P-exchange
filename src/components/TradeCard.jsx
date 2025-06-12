@@ -39,7 +39,7 @@ const openCancelModal = (orderId) => {
         console.log("🚀 ~ handleCancleMatch ~ user:", user)
         console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id)
 
-        const url = sell ? `http://localhost:3000/api/v1/sell/sell-orders/${orderId}/cancel` : `http://localhost:3000/api/v1/buy/buy-orders/${orderId}/cancel`;
+        const url = sell ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel` : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;
   
         const response = await fetch(
           url,
