@@ -4,7 +4,7 @@ import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
-import ConfirmModal from "./confirmModal";
+import ConfirmModal from "./ConfirmModal";
 import { FaTrash } from "react-icons/fa";
 
 // import your logo and statusColors accordingly

@@ -1,6 +1,6 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
-import ConfirmModal from "./confirmModal";
+import ConfirmModal from "./ConfirmModal";
 import { useState } from "react";
 
 // import your logo and statusColors accordingly

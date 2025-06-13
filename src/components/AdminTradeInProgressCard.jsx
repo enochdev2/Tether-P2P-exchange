@@ -5,7 +5,7 @@ import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
-import ConfirmModal from "./confirmModal";
+import ConfirmModal from "./ConfirmModal";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
