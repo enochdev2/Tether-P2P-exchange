@@ -7,8 +7,10 @@ import TradeCard from "./TradeCard";
 import { ErrorToast } from "../utils/Error";
 import { LongSuccessToast } from "../utils/LongSuccess";
 import { SuccessToast } from "../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const History = () => {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
@@ -227,7 +229,7 @@ const History = () => {
           <BuyTetherComponent />
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text mt-5">
-              Transaction History
+              {t("buytether.transactionHistory")}
             </h1>
 
             <div className="space-x-4">
@@ -239,6 +241,7 @@ const History = () => {
             {inProgressOrders.length !== 0 && (
               <div className="">
                 <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
+                  {t("buytether.myOrdersInProgress")}
                   My Orders In Progress
                 </h2>
                 {inProgressOrders.map((offer) => (
@@ -265,7 +268,7 @@ const History = () => {
           ) : (
             <div className="space-y-4">
               <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                My Orders
+                {t("buytether.myOrders")}
               </h2>
               {orders.map((offer, index) => (
                 <TradeCard key={index} offer={offer} sell={Sell} fetchOrders={fetchSellOrders} />
