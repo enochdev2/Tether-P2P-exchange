@@ -5,8 +5,10 @@ import PopupModal from "../../components/PopupModal";
 import { Settings2Icon, SettingsIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
+import { useTranslation } from "react-i18next";
 
 function AccountSettings() {
+  const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(true);
@@ -63,8 +65,7 @@ function AccountSettings() {
         <div className="flex justify-center items-center md:h-[50vh]  ">
           {showModal && (
             <PopupModal
-              message={` → Please leave the details you wish to 
-edit in the 1:1 Inquiry info.`}
+              message={t("editinfo.inquiryInstruction")}
               // onClose={() => setShowModal(false)}
               onClose={() => navigate("/dashboard/one-on-one")}
             />

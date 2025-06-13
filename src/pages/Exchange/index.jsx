@@ -7,8 +7,10 @@ import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
 import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { SuccessToast } from "../../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const TradingPage = () => {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
@@ -18,7 +20,7 @@ const TradingPage = () => {
   useEffect(() => {
     fetchInProgressOrders();
     fetchBuyOrders();
-     fetchNotifications();
+    fetchNotifications();
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
@@ -46,8 +48,7 @@ const TradingPage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -95,8 +96,7 @@ const TradingPage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -121,11 +121,11 @@ const TradingPage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-           body: JSON.stringify({
-        userId: user._id, 
-        type: "buyOrder", 
-        isForAdmin: false,
-      }),
+          body: JSON.stringify({
+            userId: user._id,
+            type: "buyOrder",
+            isForAdmin: false,
+          }),
         }
       );
 
@@ -141,10 +141,6 @@ const TradingPage = () => {
       console.error("Error marking all notifications as read:", error);
     }
   };
-
-
-  
-
 
   async function fetchNotifications() {
     try {
@@ -199,13 +195,10 @@ const TradingPage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -215,21 +208,6 @@ const TradingPage = () => {
 
   return (
     <div>
-      {/* <div className="block w-full"> */}
-      {/* Filters and Export Section */}
-      {/* <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-4">
-              <button className="py-2 px-4 bg-gray-200 rounded-md">Filters</button>
-              <button className="py-2 px-4 bg-gray-200 rounded-md">Export Trades</button>
-            </div>
-            <div className="flex space-x-4">
-              <p className="text-sm">Completed Trades: 0%</p>
-              <p className="text-sm">(0 trades out of 0)</p>
-            </div>
-          </div>
-        </div> */}
-
       {/* </div> */}
       <div className="flex bg-gray-100 pt-2 min-h-screen">
         {/* Main Content Section */}
@@ -237,13 +215,11 @@ const TradingPage = () => {
           <BuyTetherComponent />
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text mt-5">
-              Transaction History
+              {t("buytether.transactionHistory")}
             </h1>
 
             <div className="space-x-4">
-              <button className="bg-gray-200 px-4 py-2 rounded-md">
-                Sort By
-              </button>
+              <button className="bg-gray-200 px-4 py-2 rounded-md">Sort By</button>
             </div>
           </div>
 
@@ -251,7 +227,7 @@ const TradingPage = () => {
             {inProgressOrders.length !== 0 && (
               <div className="">
                 <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                  My Orders In Progress
+                  {t("buytether.myOrdersInProgress")}
                 </h2>
                 {inProgressOrders.map((offer) => (
                   <UserTradeInProgressCard
@@ -270,14 +246,14 @@ const TradingPage = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               {/* My Past Trades */}
               <div className="text-center text-gray-500 text-2xl">
-                <p>You haven’t traded yet or you don't have any sell Order.</p>
-                <p className="mt-2 text-gray-600">Start trading now!</p>
+                <p>{t("buytether.noOrdersTitle")}</p>
+                <p className="mt-2 text-gray-600">{t("buytether.noOrdersSubtitle")}</p>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
-                My Orders
+                {t("buytether.myOrders")}
               </h2>
               {orders.map((offer, index) => (
                 <TradeCard key={index} offer={offer} fetchOrders={fetchBuyOrders} />

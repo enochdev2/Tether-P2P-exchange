@@ -280,7 +280,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
         {/* Amount to Sell */}
         <div className="flex justify-between mt-7 lg:px-6 mb-1">
-          <h4 className="md:text-lg text-sm  font-semibold mb-6"> {t("sellorder.amountToSell")}</h4>
+          <h4 className="md:text-lg text-sm  font-semibold mb-6"> {t("sellorder.amountToBuy")}</h4>
         </div>
 
         <div className=" lg:px-6">

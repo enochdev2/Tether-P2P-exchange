@@ -106,9 +106,10 @@
     "tetherWalletAddressSolana": "Tether Wallet Address (Solana)",
     "activated": "Activated"
   },
-  "sellorder":{
+  "sellorder": {
     "sellOrder": "Sell Order",
     "amountToSell": "Amount to Sell",
+    "amountToBuy": "Amount to Buy",
     "enterAmount": "Enter Amount",
     "clear": "Clear",
     "depositWalletAddress": "Deposit Wallet Address",
@@ -133,7 +134,59 @@
     "accountLevel": "Account Level",
     "reset": "Reset",
     "underPreparation": "Level system is currently under preparation."
+  },
+
+  "buytether": {
+    "tradeTitle": "Trade your Tether (USDT).",
+    "fastTransaction": "Fast Transaction",
+    "transactionHistory": "Transaction History",
+    "sortBy": "Sort By",
+    "myOrdersInProgress": "My Orders In Progress",
+    "myOrders": "My Orders",
+    "noOrdersTitle": "You haven’t traded yet or you don't have any sell Order.",
+    "noOrdersSubtitle": "Start trading now!",
+    "totalSellAmount": "Total Sell Amount:",
+    "remainingAmount": "Remaining Amount:",
+    "statusWaitingApproval": "Waiting Approval",
+    "statusOnSale": "On Sale",
+    "accountLevel": "Account Level:"
+  },
+
+  "tradecard": {
+    "sell": "Sell",
+    "buy": "Buy",
+    "total": "Total: {{amount}} USDT",
+    "balance": "Bal: {{amount}} USDT",
+    "chat": "1:1 Chat",
+    "cancel": "Cancel",
+    "cancelConfirmMessage": "Are you sure you want to delete your {{type}} Order?",
+    "krwPrice": "{{price}} KRW",
+    "orderId": "Order ID",
+    "status": {
+      "pendingApproval": "Pending Approval",
+      "sellCompleted": "Sell completed",
+      "buyCompleted": "Buy Completed"
+    }
+  },
+  "editinfo": {
+    "inquiryInstruction": "→ Please leave the details you wish to edit in the 1:1 Inquiry info."
+  },
+  "inquirys": {
+    "title": "1:1 Inquiry",
+    "placeholder": "Type your message here...",
+    "editAccount": "Edit Account Info",
+    "sellInquiry": "Sell Inquiry",
+    "buyInquiry": "Buy Inquiry",
+    "otherInquiry": "Other Inquiry",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "selectType": "Select Inquiry Type",
+    "allInquiries": "All Inquiries",
+    "titles": "Title",
+    "description": "Description",
+    "comment": "Comment",
+    "noComment": "No comment yet",
+    "status": "Pending",
+    "date": "Date"
   }
-  
-  
 }

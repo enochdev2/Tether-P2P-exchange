@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { SuccessToast } from "../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const InquiryModal = ({ isOpen, onCancel }) => {
+  const { t } = useTranslation();
   const [inquiryType, setInquiryType] = useState("Edit Account Info");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -64,9 +66,7 @@ const InquiryModal = ({ isOpen, onCancel }) => {
         className="w-full max-w-md md:max-w-xl bg-white rounded-2xl shadow-lg p-5 md:p-8 font-sans text-gray-800 space-y-6 overflow-y-auto max-h-[90vh]"
       >
         {/* Title */}
-        <h3 className="text-center text-lg md:text-xl font-bold">
-          1:1 Inquiry
-        </h3>
+        <h3 className="text-center text-lg md:text-xl font-bold">{t("inquirys.title")}</h3>
 
         {/* Form */}
         <div className="space-y-4">
@@ -78,19 +78,19 @@ const InquiryModal = ({ isOpen, onCancel }) => {
             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#26a17b] bg-white"
           >
             <option value="" disabled hidden>
-              Select Inquiry Type
+              {t("inquirys.selectType")}
             </option>
-            <option value="Edit Account Info">Edit Account Info</option>
-            <option value="Sell Inquiry">Sell Inquiry</option>
-            <option value="Buy Inquiry">Buy Inquiry</option>
-            <option value="Other Inquiry">Other Inquiry</option>
+            <option value="Edit Account Info">{t("inquirys.editAccount")}</option>
+            <option value="Sell Inquiry">{t("inquirys.sellInquiry")}</option>
+            <option value="Buy Inquiry">{t("inquirys.buyInquiry")}</option>
+            <option value="Other Inquiry">{t("inquirys.otherInquiry")}</option>
           </select>
 
           {/* Message */}
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your message here..."
+            placeholder={t("inquirys.placeholder")}
             rows={6}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm md:text-base resize-none focus:outline-none focus:ring-2 focus:ring-[#26a17b]"
           />
@@ -101,13 +101,13 @@ const InquiryModal = ({ isOpen, onCancel }) => {
             onClick={onCancel}
             className="w-[90px] py-1 rounded-md border border-gray-500 bg-gray-200 text-sm cursor-pointer"
           >
-            Cancle
+            {t("inquirys.cancel")}
           </button>
           <button
             onClick={() => handleSubmit()}
             className="w-[90px] py-1 rounded-md border border-slate-500 bg-slate-300 hover:bg-slate-600 text-sm cursor-pointer"
           >
-            Submit
+            {t("inquirys.submit")}
           </button>
         </div>
       </div>

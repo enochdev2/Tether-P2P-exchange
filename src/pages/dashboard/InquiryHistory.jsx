@@ -3,35 +3,33 @@ import React, { useEffect, useState } from "react";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
+import { useTranslation } from "react-i18next";
 
-const inquiries = [
-  {
-    title: "Edit Account Info",
-    username: "user",
-    description: "I need ...",
-    conmment: "",
-    date: "2025-05-20",
-  },
-  {
-    title: "Other inquiries",
-    username: "user",
-    description: "Help...",
-    comment: <MessageCircle size={18} />,
-    date: "2025-04-13",
-  },
-  {
-    title: "Inquiries about Buy",
-    username: "user",
-    description: "Help...",
-    comment: <MessageCircle size={18} />,
-    date: "2025-03-13",
-  },
-];
+// const inquiries = [
+//   {
+//     title: "Edit Account Info",
+//     username: "user",
+//     description: "I need ...",
+//     conmment: "",
+//     date: "2025-05-20",
+//   },
+//   {
+//     title: "Other inquiries",
+//     username: "user",
+//     description: "Help...",
+//     comment: <MessageCircle size={18} />,
+//     date: "2025-04-13",
+//   },
+//   {
+//     title: "Inquiries about Buy",
+//     username: "user",
+//     description: "Help...",
+//     comment: <MessageCircle size={18} />,
+//     date: "2025-03-13",
+//   },
+// ];
 
-// Sort inquiries by date descending
-const sortedInquiries = inquiries.sort(
-  (a, b) => new Date(b.date) - new Date(a.date)
-);
+// Sort inquiries by date descending;
 
 export default function InquiryHistory() {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +52,7 @@ export default function InquiryHistory() {
 }
 
 const AllInquiries = () => {
+  const { t } = useTranslation();
   const [allInquiry, setAllInquiry] = useState([]);
   // const { allUser } = useAuth();
   const [notifications, setNotifications] = useState([]);
@@ -75,23 +74,22 @@ const AllInquiries = () => {
           },
         }
       );
-     if (!response.ok) {
-      const data = await res.json();
-      const errorMsg =
-        data.error || data.message || "Failed to register user";
-      ErrorToast(errorMsg);
-    }
+      if (!response.ok) {
+        const data = await res.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        ErrorToast(errorMsg);
+      }
 
       const data = await response.json();
-      
+
       setAllInquiry(data); // return parsed user data
     } catch (error) {
       console.error("Error fetching users:", error);
-    } finally  {
+    } finally {
       setIsLoading(false);
     }
   };
-  
+
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
     // navigate(`/`);
@@ -116,10 +114,9 @@ const AllInquiries = () => {
         }
       );
 
-       if (!response.ok) {
+      if (!response.ok) {
         const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -149,19 +146,16 @@ const AllInquiries = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   }
 
-  if ( !isLoading && allInquiry.length === 0) {
+  if (!isLoading && allInquiry.length === 0) {
     return (
       <div className=" flex items-center justify-center p-8 bg-gray-50">
         <p className="text-gray-500 text-lg">No new inquiry made yet</p>
@@ -172,7 +166,7 @@ const AllInquiries = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-2 sm:px-8 sm:py-2">
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-gray-900 tracking-tight">
-        All Inquiries
+        {t("inquirys.allInquiries")}
       </h1>
 
       {/* Desktop Table: visible from sm and up */}
@@ -181,19 +175,19 @@ const AllInquiries = () => {
           <thead className="bg-gradient-to-r from-green-400 via-green-500 to-green-700 text-white">
             <tr>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Title
+                {t("inquirys.titles")}
               </th>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Description
+                {t("inquirys.description")}
               </th>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Comment
+                {t("inquirys.comment")}
               </th>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Status
+                {t("inquirys.status")}
               </th>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
-                Date
+                {t("inquirys.date")}
               </th>
             </tr>
           </thead>
@@ -208,13 +202,16 @@ const AllInquiries = () => {
                 onClick={() => handleViewUser(user.id)}
               >
                 <td className="px-6 py-4 whitespace-nowrap  text-gray-900">
-                  {user.title}
+                  {user.title === "Edit Account Info" && t("inquirys.editAccount")}
+                  {user.title === "Sell Inquiry" && t("inquirys.sellInquiry")}
+                  {user.title === "Buy Inquiry" && t("inquirys.buyInquiry")}
+                  {user.title === "Other Inquiry" && t("inquirys.otherInquiry")}
                 </td>
                 <td className="px-6 py-4 text-gray-700 bg-slate-100 max-w-sm break-words">
                   {user.description}
                 </td>
-               <td className="px-6 py-4 text-gray-700  max-w-sm break-words">
-                  {user?.comment || "No comment yet"}
+                <td className="px-6 py-4 text-gray-700  max-w-sm break-words">
+                  <td>{user?.comment || t("inquirys.noComment")}</td>
                 </td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap bg-slate-100 font-semibold ${
@@ -225,7 +222,7 @@ const AllInquiries = () => {
                       : "text-red-600"
                   }`}
                 >
-                  {user.status}
+                  {user.status === "Pending" && t("inquirys.status")}
                 </td>
                 <td className="px-3 text-xs py-4 whitespace-nowrap text-gray-700">
                   {formatDateTime(user.date) || "Unknown"}
@@ -244,16 +241,12 @@ const AllInquiries = () => {
             className="bg-white rounded-lg shadow p-4 cursor-pointer hover:bg-indigo-50 transition"
             onClick={() => handleViewUser(user.id)}
           >
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              {user.title}
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">{user.title}</h2>
             <p className="text-sm text-gray-700 mb-1">
-              <span className="font-semibold">Description:</span>{" "}
-              {user.description}
+              <span className="font-semibold">Description:</span> {user.description}
             </p>
             <p className="text-sm text-gray-600 mb-1 truncate">
-              <span className="font-semibold">Comment:</span>{" "}
-              {user.comment || "No comment yet"}
+              <span className="font-semibold">Comment:</span> {user.comment || "No comment yet"}
             </p>
             <p
               className={`text-sm font-semibold mb-1 ${
@@ -266,9 +259,7 @@ const AllInquiries = () => {
             >
               Status: {user.status}
             </p>
-            <p className="text-sm text-gray-600">
-              Date: {user.date || "Unknown"}
-            </p>
+            <p className="text-sm text-gray-600">Date: {user.date || "Unknown"}</p>
           </div>
         ))}
       </div>
