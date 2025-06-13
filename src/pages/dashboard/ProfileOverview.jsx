@@ -149,7 +149,7 @@ function ProfileOverview() {
     }
   }
 
-  const tether = `Wallet Address:  ${user?.tetherAddress}`;
+  const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
 
 
   // const copyToClipboard = (text) => {
@@ -176,7 +176,7 @@ function ProfileOverview() {
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<PiggyBank size={24} />}
-              title="Bank Name"
+              title={t("profile.bankName")}
               actionText={user?.bankName}
               onAction={() => console.log("Navigate to security questions")}
               copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}

@@ -100,9 +100,40 @@
     "dateOfBirth": "Date of Birth",
     "username": "Username",
     "referralCode": "Referral Code",
+    "bankName": "Bank Name",
+    "walletAddress": "Wallet Address (Solana)",
     "bankAccountNumber": "Bank Account Number",
     "tetherWalletAddressSolana": "Tether Wallet Address (Solana)",
     "activated": "Activated"
+  },
+  "sellorder":{
+    "sellOrder": "Sell Order",
+    "amountToSell": "Amount to Sell",
+    "enterAmount": "Enter Amount",
+    "clear": "Clear",
+    "depositWalletAddress": "Deposit Wallet Address",
+    "depositNetwork": "Deposit Network",
+    "solanaOnly": "Only one Solana chain can be selected.",
+    "noticeTitle": "[Notice] Please read the following carefully before proceeding to the next step.",
+    "noticePoints": {
+      "checkAddress": "Before making a deposit, make sure the copied wallet address is correct. Paste it into a memo to double-check.",
+      "wrongAddress": "If you deposit to the wrong wallet address, we cannot recover your funds.",
+      "solanaSupport": "Only Solana (SOL) chain is supported. Platforms like Binance, Bybit, and wallets like Phantom support Solana.",
+      "otherChainsUnsupported": "Deposits via TRC-20, ERC-20, or other chains are not supported.",
+      "usdtRateVaries": "The USDT price may vary based on Korean exchange rates.",
+      "usdtFixedPriceNote": "USDT rates may slightly fluctuate depending on transaction completion time."
+    },
+    "confirmationText": "I hereby acknowledge that I have carefully read and understood all of the above notices. I accept full responsibility for any financial loss caused by not following them.",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "tetherRate": "Tether Rate Calculator",
+    "refresh": "Refresh",
+    "krw": "KRW",
+    "usdt": "USDT",
+    "accountLevel": "Account Level",
+    "reset": "Reset",
+    "underPreparation": "Level system is currently under preparation."
   }
+  
   
 }
