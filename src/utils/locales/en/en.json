@@ -188,5 +188,17 @@
     "noComment": "No comment yet",
     "status": "Pending",
     "date": "Date"
+  },
+  "chat": {
+    "title": "Open Chat Sessions",
+    "description": "Click any active Order ID below to jump into its chatroom and continue the conversation.",
+    "search": "Search",
+    "searchPlaceholder": "Enter Order Number",
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "orderIdLabel": "Order ID",
+    "noChatsTitle": "🚫 No active chat sessions yet.",
+    "noChatsDescription": "Once an order is active, chats will show here.",
+    "supportNote": "Need help? Contact support or visit the admin panel."
   }
 }

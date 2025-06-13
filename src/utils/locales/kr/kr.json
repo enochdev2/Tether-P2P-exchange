@@ -184,5 +184,17 @@
     "noComment": "아직 답변이 없습니다",
     "status": "상태",
     "date": "날짜"
+  },
+  "chat": {
+    "title": "활성 채팅 세션",
+    "description": "아래의 활성화된 주문 ID를 클릭하면 해당 채팅방으로 이동하여 대화를 계속할 수 있습니다.",
+    "search": "검색",
+    "searchPlaceholder": "주문 번호로 찾기",
+    "seller": "판매자",
+    "buyer": "구매자",
+    "orderIdLabel": "주문번호",
+    "noChatsTitle": "🚫 아직 활성화된 채팅 세션이 없습니다.",
+    "noChatsDescription": "주문이 활성화되면 채팅이 여기에 표시됩니다.",
+    "supportNote": "도움이 필요하신가요? 고객 지원에 문의하거나 관리자 패널을 방문하세요."
   }
 }

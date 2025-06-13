@@ -5,8 +5,10 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { markAllNotificationsAsRead } from "../../utils";
 import { SuccessToast } from "../../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const AllChatPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
@@ -154,15 +156,10 @@ const handleMarkAllAsRead = async () => {
       <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md shadow-xl rounded-3xl p-8 border border-green-200">
         <div className="flex items-center gap-3 mb-6">
           <FaComments className="text-green-600 text-3xl" />
-          <h2 className="text-3xl font-bold text-green-800">
-            Open Chat Sessions
-          </h2>
+          <h2 className="text-3xl font-bold text-green-800">{t("chat.title")}</h2>
         </div>
 
-        <p className="text-gray-700 mb-6">
-          Click any active Order ID below to jump into its chatroom and continue
-          the conversation.
-        </p>
+        <p className="text-gray-700 mb-6">{t("chat.description")}</p>
 
         <div className="flex gap-4 mb-6">
           <div className="flex flex-1 space-x-3">
@@ -172,7 +169,7 @@ const handleMarkAllAsRead = async () => {
                 selectedTab === "Seller" ? "bg-green-600" : "bg-green-300"
               }`}
             >
-              Seller
+              {t("chat.seller")}
             </button>
             <button
               onClick={() => handleTabChange("Buyer")}
@@ -180,7 +177,7 @@ const handleMarkAllAsRead = async () => {
                 selectedTab === "Buyer" ? "bg-green-600" : "bg-green-300"
               }`}
             >
-              Buyer
+              {t("chat.buyer")}
             </button>
           </div>
           <div className="flex flex-1 items-center mb-6">
@@ -188,40 +185,31 @@ const handleMarkAllAsRead = async () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Enter Order Number"
+              placeholder={t("chat.searchPlaceholder")}
               className="p-2 border rounded-lg w-full mr-2"
             />
-            <button
-              onClick={handleSearch}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg"
-            >
-              Search
+            <button onClick={handleSearch} className="bg-green-600 text-white px-4 py-2 rounded-lg">
+              {t("chat.search")}
             </button>
           </div>
         </div>
 
         {filteredMessages.length === 0 ? (
           <div className="text-center py-20 text-gray-500">
-            <p className="text-lg">🚫 No active chat sessions yet.</p>
-            <p className="mt-2">
-              Once an order is active, chats will show here.
-            </p>
+            <p className="text-lg">{t("chat.noChatsTitle")}</p>
+            <p className="mt-2">{t("chat.noChatsDescription")}</p>
           </div>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-1 gap-4">
             {filteredMessages.map((chat) => (
               <li
                 key={chat._id}
-                onClick={() =>
-                  navigate(`/chats/${chat.orderType}/${chat.orderId}`)
-                }
+                onClick={() => navigate(`/chats/${chat.orderType}/${chat.orderId}`)}
                 className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
                 <div>
-                  <p className="text-sm text-gray-500">Order ID</p>
-                  <p className="text-lg font-semibold text-green-800">
-                    {chat.orderId}
-                  </p>
+                  <p className="text-sm text-gray-500">{t("chat.orderIdLabel")}</p>
+                  <p className="text-lg font-semibold text-green-800">{chat.orderId}</p>
                 </div>
                 <div className="flex space-x-10 items-center">
                   <p className="text-lg font-semibold text-green-800 bg-green-50 px-3 py-3 rounded-lg">
@@ -235,7 +223,7 @@ const handleMarkAllAsRead = async () => {
         )}
 
         <div className="mt-10 text-center text-sm text-gray-500">
-          <p>Need help? Contact support or visit the admin panel.</p>
+          <p>{t("chat.supportNote")}</p>
         </div>
       </div>
       <NotificationPopup
