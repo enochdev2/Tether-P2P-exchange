@@ -1,7 +1,9 @@
 import { useState } from "react";
 import UserDetail from "./UserDetail";
+import { useTranslation } from "react-i18next";
 
 const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
+  const { t } = useTranslation();
   const [viewingUsers, setViewingUsers] = useState({});
 
   const toggleViewDetails = (userId) => {
@@ -17,9 +19,9 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
         <table className="min-w-[600px] w-full table-auto text-left text-sm text-gray-800">
           <thead className="bg-gray-100 border-b border-gray-300">
             <tr>
-              <th className="px-4 py-3">Nickname</th>
-              <th className="px-4 py-3">Phone</th>
-              <th className="px-4 py-3 text-center">Status Toggle</th>
+              <th className="px-4 py-3">{t("usermanagement.nickname")}</th>
+              <th className="px-4 py-3">{t("usermanagement.phone")}</th>
+              <th className="px-4 py-3 text-center">{t("usermanagement.statusToggle")}</th>
               <th className="px-4 py-3 text-center">View Details</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Date</th>
@@ -34,9 +36,7 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                 <tr key={user._id} className="border-b border-gray-200">
                   {/* Nickname */}
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="truncate block max-w-xs">
-                      {user?.nickname}
-                    </span>
+                    <span className="truncate block max-w-xs">{user?.nickname}</span>
                   </td>
 
                   {/* Phone */}
@@ -52,14 +52,14 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                           onClick={() => handleStatusChange(user, false)}
                           className="px-3 lg:py-3 cursor-pointer py-1 bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs font-semibold"
                         >
-                          Set to Inactive
+                          {t("usermanagement.setToInactive")}
                         </button>
                       ) : (
                         <button
                           onClick={() => handleStatusChange(user, true)}
                           className="px-3 py-1 lg:py-3 cursor-pointer bg-[#e70d0d] hover:bg-red-700 text-white rounded text-xs font-semibold"
                         >
-                          Set to Active
+                          {t("usermanagement.setToActive")}
                         </button>
                       )}
                     </div>
@@ -79,9 +79,7 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={`font-semibold ${
-                        user.status === "inactive"
-                          ? "text-red-600"
-                          : "text-lime-600"
+                        user.status === "inactive" ? "text-red-600" : "text-lime-600"
                       }`}
                     >
                       {user.status}
@@ -89,9 +87,7 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                   </td>
 
                   {/* Date */}
-                  <td className="px-4 py-3 whitespace-nowrap text-center">
-                    {dateOnly}
-                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-center">{dateOnly}</td>
                 </tr>
               );
             })}
@@ -100,16 +96,17 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
       </div>
 
       {/* Render UserDetail modals for each user that's being viewed */}
-      {users.map(user => (
-        viewingUsers[user._id] && (
-          <UserDetail
-            key={`detail-${user._id}`}
-            user={user}
-            setIsViewing={() => toggleViewDetails(user._id)}
-            handleUpdate={handleUpdate}
-          />
-        )
-      ))}
+      {users.map(
+        (user) =>
+          viewingUsers[user._id] && (
+            <UserDetail
+              key={`detail-${user._id}`}
+              user={user}
+              setIsViewing={() => toggleViewDetails(user._id)}
+              handleUpdate={handleUpdate}
+            />
+          )
+      )}
     </div>
   );
 };

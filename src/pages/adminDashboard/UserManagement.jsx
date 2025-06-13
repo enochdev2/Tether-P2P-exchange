@@ -8,8 +8,10 @@ import { useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { markAllNotificationsAsRead } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const UserManagement = () => {
+  const { t } = useTranslation();
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
@@ -173,12 +175,12 @@ const UserManagement = () => {
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3 mb-3 sm:mb-0">
             <UserPlus2Icon className="w-6 h-6 sm:w-7 sm:h-7 text-green-600" />
             <span className="bg-gradient-to-r from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
-              User Management
+              {t("usermanagement.title")}
             </span>
           </h1>
 
           <button className="w-full sm:w-auto bg-green-600 hover:bg-green-700 transition text-white font-medium px-5 py-2 rounded-md shadow">
-            All Users
+            {t("usermanagement.allUsers")}
           </button>
         </header>
 
@@ -189,7 +191,7 @@ const UserManagement = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search user by name..."
+              placeholder={t("usermanagement.searchPlaceholder")}
               className="w-full border border-gray-300 px-4 py-3 pr-10 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -212,23 +214,23 @@ const UserManagement = () => {
         </div>
 
         {/* User Cards Grid */}
-       <section className="">
-  {allUsers?.length === 0 ? (
-    <div className="col-span-full text-center text-gray-500 py-10">
-      No users available.
-    </div>
-  ) : (
-    <AdminUserCard
-      users={filteredUsers}
-      handleStatusChange={(user, status) => {
-        // Handle the status change here
-        handleSubmit(user.nickname, status);
-        setChange(prev => !prev);
-      }}
-      handleUpdate={allUser}
-    />
-  )}
-</section>
+        <section className="">
+          {allUsers?.length === 0 ? (
+            <div className="col-span-full text-center text-gray-500 py-10">
+              {t("usermanagement.noUsers")}
+            </div>
+          ) : (
+            <AdminUserCard
+              users={filteredUsers}
+              handleStatusChange={(user, status) => {
+                // Handle the status change here
+                handleSubmit(user.nickname, status);
+                setChange((prev) => !prev);
+              }}
+              handleUpdate={allUser}
+            />
+          )}
+        </section>
       </div>
 
       {/* Notification Alert Box */}

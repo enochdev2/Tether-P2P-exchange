@@ -200,5 +200,23 @@
     "noChatsTitle": "🚫 No active chat sessions yet.",
     "noChatsDescription": "Once an order is active, chats will show here.",
     "supportNote": "Need help? Contact support or visit the admin panel."
+  },
+  "usermanagement": {
+    "title": "User Management",
+    "searchPlaceholder": "Search user by name...",
+    "nickname": "Nickname",
+    "phone": "Phone",
+    "status": "Status",
+    "statusToggle": "Status Toggle",
+    "viewDetails": "View Details",
+    "hideDetails": "Hide Details",
+    "setToInactive": "Set to Inactive",
+    "setToActive": "Set to Active",
+    "statusInactive": "Inactive",
+    "statusActive": "Active",
+    "date": "Date",
+    "allUsers": "All Users",
+    "noUsers": "No users available.",
+    "accountLevel": "Account Level:"
   }
 }

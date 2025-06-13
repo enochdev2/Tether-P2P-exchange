@@ -197,5 +197,23 @@
     "noChatsTitle": "🚫 아직 활성화된 채팅 세션이 없습니다.",
     "noChatsDescription": "주문이 활성화되면 채팅이 여기에 표시됩니다.",
     "supportNote": "도움이 필요하신가요? 고객 지원에 문의하거나 관리자 패널을 방문하세요."
+  },
+  "usermanagement": {
+    "title": "유저 관리",
+    "searchPlaceholder": "닉네임 검색으로 찾기",
+    "nickname": "닉네임",
+    "phone": "전화번호",
+    "status": "상태",
+    "statusToggle": "상태 변경",
+    "viewDetails": "더보기",
+    "hideDetails": "닫기",
+    "setToInactive": "비활성화로 설정",
+    "setToActive": "활성화로 설정",
+    "statusInactive": "비활성화",
+    "statusActive": "활성화",
+    "date": "날짜",
+    "allUsers": "모든 유저",
+    "noUsers": "사용 가능한 유저가 없습니다.",
+    "accountLevel": "계정 레벨:"
   }
 }
