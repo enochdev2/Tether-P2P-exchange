@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import { useState } from "react";
-import ConfirmModal from "./confirmModal";
+import ConfirmModal from "./ConfirmModal";
 import { useTranslation } from "react-i18next";
 
 const statusColors = {
