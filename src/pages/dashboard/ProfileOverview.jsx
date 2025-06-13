@@ -17,8 +17,11 @@ import { SuccessToast } from "../../utils/Success";
 import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+
 
 function ProfileOverview() {
+  const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
@@ -176,15 +179,15 @@ function ProfileOverview() {
               title="Bank Name"
               actionText={user?.bankName}
               onAction={() => console.log("Navigate to security questions")}
-                copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
+              copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
             />
           </div>
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<BanknoteIcon size={24} />}
-              title="Bank Account Number"
+              title={t("profile.bankAccountNumber")}
               actionText={user?.bankAccount}
-               copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
+              copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
               onAction={() => console.log("Navigate to security questions")}
             />
           </div>
@@ -200,16 +203,15 @@ function ProfileOverview() {
               title={tether.slice(0, 15)}
               actionText={tether.slice(15, 60)}
               copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
-              
             />
           </div>
 
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<Wallet2Icon size={24} />}
-              title="Refferal Code"
+              title={t("profile.referralCode")}
               actionText={user?.referralCode}
-               copyToClipboard={() => copyToClipboard(user?.referralCode, "Referral Code")}
+              copyToClipboard={() => copyToClipboard(user?.referralCode, "Referral Code")}
             />
           </div>
         </div>

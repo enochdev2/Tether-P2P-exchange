@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { markAllNotificationsAsRead } from "../../utils";
+import { SuccessToast } from "../../utils/Success";
 
 const AllChatPage = () => {
   const navigate = useNavigate();

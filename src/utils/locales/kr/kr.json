@@ -41,10 +41,66 @@
     "descriptionAccessTheGlobe": "Tether Zone을 사용하여 지역적 인프라 제한을 극복할 수 있습니다.",
     "largestP2PMarketplace": "세계 최대의 P2P 마켓플레이스"
   },
-   "Home": "홈",
-  "Transaction History": "거래 내역",
-  "My Page": "내 페이지",
+  "Home": "홈",
+  "Transaction History": "거래 기록",
+  "My Page": "마이 페이지",
   "Admin": "관리자",
   "Verify Me": "내 인증하기",
-  "USDT/₩": "USDT/₩"
+  "USDT/₩": "USDT/₩",
+  "AccountLevel": "계정 레벨",
+  "LevelPrepared": " 레벨 시스템은 현재 준비 중입니다.",
+  "adminPanel": {
+    "adminPanel": "어드민 패널",
+    "sections": {
+      "general": "일반",
+      "live": "실시간",
+      "user": "유저",
+      "inquiry": "문의"
+    },
+    "items": {
+      "dashboard": "대쉬보드",
+      "transactions": "기록",
+      "sellOrders": "판매 주문(Live)",
+      "buyOrders": "구매 주문(Live)",
+      "sellBuyChat": "판매/구매 주문 1:1 채팅(Live)",
+      "userManagement": "유저 관리",
+      "inquiryBox": "1:1 문의함 (Live)",
+      "logout": "로그아웃"
+    }
+  },
+  "signUp": {
+    "title": "회원가입",
+    "username": "아이디",
+    "nickname": "닉네임 (플랫폼 이름)",
+    "password": "비밀번호",
+    "fullName": "이름",
+    "dob": "생년월일",
+    "phone": "핸드폰 번호",
+    "bankName": "은행 이름",
+    "bankAccount": "계좌 번호",
+    "tetherAddress": "테더 주소(솔라나 주소)",
+    "referralCode": "래퍼럴 코드",
+    "bankPlaceholder": "은행",
+    "phonePlaceholder": " “ - ”를 제외하고 숫자만 기입하여 주세요",
+    "submit": "회원가입"
+  },
+  "signIn": {
+    "title": "다시 오신 것을 환영합니다",
+    "nickname": "닉네임 (플랫폼 이름)",
+    "password": "비밀번호",
+    "submit": "로그인"
+  },
+  "profile": {
+    "accountLevel": "계정 레벨: 1",
+    "levelSystemPending": "레벨 시스템은 현재 준비 중입니다.",
+    "phoneNumber": "전화번호",
+    "nickname": "닉네임",
+    "dateOfBirth": "생년월일",
+    "username": "유저네임",
+    "referralCode": "레퍼럴 코드",
+    "bankAccountNumber": "은행 계좌번호",
+    "tetherWalletAddressSolana": "테더 지갑주소(솔라나)",
+    "activated": "활성화됨"
+  }
+  
 }

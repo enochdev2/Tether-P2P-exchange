@@ -2,23 +2,18 @@ import React, { useState } from "react";
 import InfoCard from "./InfoCard";
 import { FaUserAlt, FaShieldAlt, FaPhoneAlt, FaBirthdayCake } from "react-icons/fa";
 import { AiOutlineUser } from "react-icons/ai";
+import { useTranslation } from "react-i18next";
+
+
 
 export default function ProfileSetting({user}) {
-  const [phone, setPhone] = useState("+234567891");
-  const [username, setUsername] = useState("ChoiceKoala891");
-  const [currency, setCurrency] = useState("KRW");
-  const [bio, setBio] = useState("");
-  const [image, setImage] = useState(null);
+  const { t } = useTranslation();
+  // const [phone, setPhone] = useState("+234567891");
+  // const [username, setUsername] = useState("ChoiceKoala891");
+  // const [currency, setCurrency] = useState("KRW");
+  // const [bio, setBio] = useState("");
+  // const [image, setImage] = useState(null);
 
-  const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
-    // add validation if needed
-  };
-
-  const handleUsernameSave = () => {
-    // call API to save username
-    console.log("Save username", username);
-  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0] ?? null;
@@ -35,7 +30,7 @@ export default function ProfileSetting({user}) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <div className="flex items-center gap-2">
               <FaPhoneAlt className="text-[#26a17b]" />
-              Phone Number
+              {t("profile.phoneNumber")}
             </div>
           </label>
           <input
@@ -51,7 +46,7 @@ export default function ProfileSetting({user}) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <div className="flex items-center gap-2">
               <FaUserAlt className="text-[#26a17b]" />
-              Nickname
+              {t("profile.nickname")}
             </div>
           </label>
           <input
@@ -67,7 +62,7 @@ export default function ProfileSetting({user}) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <div className="flex items-center gap-2">
               <FaBirthdayCake className="text-[#26a17b]" />
-              Date of Birth
+              {t("profile.dateOfBirth")}
             </div>
           </label>
           <input
@@ -83,7 +78,7 @@ export default function ProfileSetting({user}) {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <div className="flex items-center gap-2">
               <AiOutlineUser className="text-[#26a17b]" />
-              Username
+              {t("profile.username")}
             </div>
           </label>
           <input

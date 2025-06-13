@@ -6,52 +6,33 @@ import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { BiChat } from "react-icons/bi";
 import { FaUserCog } from "react-icons/fa";
+import { t } from "i18next";
 
 const sidebarSections = [
   {
-    title: "General",
+    title: t("adminPanel.sections.general"),
     items: [
-      { label: "Dashboard", to: "/admin/dashboard", icon: <User /> },
-      { label: "Transactions", to: "/admin/transactions", icon: <HiOutlineSwitchHorizontal /> },
+      { key: "dashboard", to: "/admin/dashboard", icon: <User /> },
+      { key: "transactions", to: "/admin/transactions", icon: <HiOutlineSwitchHorizontal /> },
     ],
   },
   {
-    title: "Live",
+    title: t("adminPanel.sections.live"),
     items: [
-      {
-        label: "Sell Orders (Live)",
-        to: "/admin/sell-orders",
-        icon: <TrendingUp />,
-      },
-      {
-        label: "Buy Orders (Live)",
-        to: "/admin/buy-orders",
-        icon: <TrendingUp />,
-      },
-      {
-        label: "Sell/Buy 1:1 Chat (Live)",
-        to: "/admin/chat",
-        icon: <BiChat />,
-      },
+      { key: "sellOrders", to: "/admin/sell-orders", icon: <TrendingUp /> },
+      { key: "buyOrders", to: "/admin/buy-orders", icon: <TrendingUp /> },
+      { key: "sellBuyChat", to: "/admin/chat", icon: <BiChat /> },
     ],
   },
-  // {
-  //   title: "User",
-  //   items: [{ label: "User Management", to: "/admin/users", icon: <FaUserCog /> }],
-  // },
-  // {
-  //   title: "Inquiry",
-  //   items: [{ label: "1:1 Inquiry Box (Live)", to: "/admin/inquiries", icon: <HelpCircle />, }],
-  // },
 ];
 const sidebarSections2 = [
   {
-    title: "User",
-    items: [{ label: "User Management", to: "/admin/users", icon: <FaUserCog /> }],
+    title: t("adminPanel.sections.user"),
+    items: [{ key: "userManagement", to: "/admin/users", icon: <FaUserCog /> }],
   },
   {
-    title: "Inquiry",
-    items: [{ label: "1:1 Inquiry Box (Live)", to: "/admin/inquiries", icon: <HelpCircle />, }],
+    title: t("adminPanel.sections.inquiry"),
+    items: [{ key: "inquiryBox", to: "/admin/inquiries", icon: <HelpCircle /> }],
   },
 ];
 
@@ -66,7 +47,7 @@ export default function AdminSidebar() {
 
   const handleLogout = async () => {
     const res = await logout();
-    if(res){
+    if (res) {
       navigate("/");
     }
   };
@@ -74,8 +55,16 @@ export default function AdminSidebar() {
   const Section = ({ title, children }) => (
     <div className="mt-6 px-4">
       <div className="flex gap-2 items-center mb-2">
-          <h3 className={` uppercase ${collapsed && title ? 'text-[10px] font-[500] text-shadow-white' : 'text-gray-400 text-xs font-semibold'}`}>{title}</h3>
-      <div className={`h-px bg-blue-500 w-[60%] my-2 ${collapsed ? 'hidden' : 'block'}`}></div>
+        <h3
+          className={` uppercase ${
+            collapsed && title
+              ? "text-[10px] font-[500] text-shadow-white"
+              : "text-gray-400 text-xs font-semibold"
+          }`}
+        >
+          {title}
+        </h3>
+        <div className={`h-px bg-blue-500 w-[60%] my-2 ${collapsed ? "hidden" : "block"}`}></div>
       </div>
       <ul className="space-y-1">{children}</ul>
     </div>
@@ -86,9 +75,7 @@ export default function AdminSidebar() {
       <Link
         to={to}
         className={`flex items-center gap-3 py-2 px-3 rounded-md transition-colors ${
-          isActive(to)
-            ? "bg-[#26a17b] text-white"
-            : "hover:bg-gray-700 text-gray-300"
+          isActive(to) ? "bg-[#26a17b] text-white" : "hover:bg-gray-700 text-gray-300"
         }`}
       >
         {children}
@@ -107,19 +94,13 @@ export default function AdminSidebar() {
         {!collapsed && (
           <div className="flex items-center space-x-4">
             <div className="rounded-full bg-[#26a17b flex items-center pl- justify-center text-white font-bold text-lg space-x-3 md:space-x-6">
-              
-              <h3 className="hidden sm:block p-3 rounded-full bg-[#26a17b] font-bold">
-                AD
-              </h3>
-              <span className="ml-3 font-medium text-base">Admin Panel</span>
+              <h3 className="hidden sm:block p-3 rounded-full bg-[#26a17b] font-bold">AD</h3>
+              <span className="ml-3 font-medium text-base"> {t("adminPanel.adminPanel")}</span>
             </div>
           </div>
         )}
 
-        <button
-          className="cursor-pointer lg:hidden"
-          onClick={() => setCollapsed(!collapsed)}
-        >
+        <button className="cursor-pointer lg:hidden" onClick={() => setCollapsed(!collapsed)}>
           {/* {collapsed ? <Menu size={24} /> : <X size={24} />} */}
 
           {collapsed ? <FiArrowRight size={25} /> : <FiArrowLeft size={25} />}
@@ -132,8 +113,8 @@ export default function AdminSidebar() {
             <ul className="space-y-1">
               {section.items.map((item) => (
                 <Item key={item.to} to={item.to}>
-                  {item.icon} 
-                  {!collapsed && <span>{item.label}</span>}
+                  {item.icon}
+                  {!collapsed && <span>{t(`adminPanel.items.${item.key}`)}</span>}
                 </Item>
               ))}
             </ul>
@@ -146,8 +127,8 @@ export default function AdminSidebar() {
             <ul className="space-y-1">
               {section.items.map((item) => (
                 <Item key={item.to} to={item.to}>
-                  {item.icon} 
-                  {!collapsed && <span>{item.label}</span>}
+                  {item.icon}
+                  {!collapsed && <span>{t(`adminPanel.items.${item.key}`)}</span>}
                 </Item>
               ))}
             </ul>
@@ -162,7 +143,7 @@ export default function AdminSidebar() {
           className="w-full flex items-center cursor-pointer gap-2 px-4 py-2 rounded hover:bg-red-600 transition"
         >
           <LogOutIcon size={16} />
-         {!collapsed &&  <span className="text-white">Log out</span>}
+          {!collapsed && <span className="text-white">{t("adminPanel.items.logout")}</span>}
         </button>
       </div>
     </aside>

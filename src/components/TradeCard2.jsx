@@ -1,6 +1,4 @@
-import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
-import LoadingSpiner from "./LoadingSpiner";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -9,12 +7,7 @@ const statusColors = {
 };
 
 const TradeCard2 = ({ offer }) => {
-  // offer object expected to have:
-  // action: "Sell"
-  // usdtAmount: e.g. 503.56
-  // krwAmount: e.g. 700000
-  // status: e.g. "On sell", "Pending Approval", "Sell completed"
-  // statusDate: e.g. "2025-05-20"
+
 
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);

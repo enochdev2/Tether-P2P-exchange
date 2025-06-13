@@ -5,8 +5,11 @@ import { CheckCircle, Shield, Phone, ShieldAlertIcon } from "lucide-react";
 import { useAuth } from "../../utils/AuthProvider";
 import InfoCard from "../../components/InfoCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import { useTranslation } from "react-i18next";
+import { ErrorToast } from "../../utils/Error";
 
 function Dashboard() {
+  const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser, isTokenExpired } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -85,10 +88,9 @@ function Dashboard() {
               <div className=" min-w-0 mx-auto">
                 <InfoCard
                   icon={<CheckCircle className="w-6 h-6" />}
-                  title="Account Level: 1"
-                  children="The level is currently being prepared"
+                  title={t("AccountLevel")}
+                  children={t("LevelPrepared")}
                 />
-                
               </div>
             </div>
           </div>

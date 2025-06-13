@@ -5,8 +5,9 @@ import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ErrorToast } from "../../utils/Error";
-
+import { useTranslation } from "react-i18next";
 const SignIn = () => {
+  const { t } = useTranslation();
   const { login, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
@@ -55,21 +56,18 @@ const SignIn = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
-        if(data.message === "User not Verified") return navigate("/verify");
+        if (data.message === "User not Verified") return navigate("/verify");
         //  return response;
       }
 
-      
-      
       // Save user data to localStorage (could be just user object or a token)
-      
+
       if (!data.user.isVerified) {
         // navigate("/verify"); // Redirect to the verification page
         return;
-      }else {
+      } else {
         localStorage.setItem("token", data.token);
         setIsLoggedIn(true);
         setUser(data.user);
@@ -77,7 +75,7 @@ const SignIn = () => {
         localStorage.setItem("isLoggedIn", "true");
         SuccessToast(" Login successfully");
         navigate("/dashboard/profile");
-      } 
+      }
 
       console.log("User signed up:", user);
     } catch (error) {
@@ -95,16 +93,13 @@ const SignIn = () => {
     >
       <div className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-gray-900/80 rounded-2xl shadow-xl  backdrop-blur-md">
         <h2 className="text-2xl font-bold text-center text-white mb-6 tracking-wide">
-          Welcome Back
+          {t("signIn.title")}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Nickname Input */}
           <div>
-            <label
-              htmlFor="nickname"
-              className="block text-sm font-medium text-gray-300 mb-1"
-            >
-              Nickname
+            <label htmlFor="nickname" className="block text-sm font-medium text-gray-300 mb-1">
+              {t("signUp.nickname")}
             </label>
             <input
               type="text"
@@ -119,11 +114,8 @@ const SignIn = () => {
 
           {/* Password Input with Toggle */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-300 mb-1"
-            >
-              Password
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+              {t("signUp.password")}
             </label>
             <div className="relative">
               <input
@@ -150,7 +142,7 @@ const SignIn = () => {
             className="w-full bg-green-600 hover:bg-green-700 text-white cursor-pointer text-base sm:text-lg font-semibold py-3 rounded-md shadow-md transition disabled:opacity-50"
             disabled={isLoading}
           >
-            {isLoading ? <LoadingSpinner /> : "Sign In"}
+            {isLoading ? <LoadingSpinner /> : t("signIn.submit")}
           </button>
         </form>
       </div>

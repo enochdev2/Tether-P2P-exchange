@@ -62,63 +62,6 @@ const TransactionHistory = () => {
     }
   }
 
-  // Example data for trading offers
-  const offers = [
-    {
-      id: 1,
-      action: "Sell",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      status: "Sell completed",
-      statusDate: "2025-05-20",
-      statusTime: "18:55:57",
-    },
-    {
-      id: 2,
-      action: "Buy",
-      usdtAmount: 510.12,
-      krwAmount: 705000,
-      status: "Buy Completed",
-      statusDate: "2025-05-19",
-      statusTime: "18:55:57",
-    },
-    {
-      id: 3,
-      action: "Buy",
-      usdtAmount: 499.98,
-      krwAmount: 695000,
-      status: "Buy completed",
-      statusDate: "2025-05-13",
-      statusTime: "18:55:57",
-    },
-    {
-      id: 4,
-      action: "Sell",
-      usdtAmount: 503.56,
-      krwAmount: 700000,
-      status: "Sell completed",
-      statusDate: "2025-04-28",
-      statusTime: "18:55:57",
-    },
-    {
-      id: 5,
-      action: "Sell",
-      usdtAmount: 502.34,
-      krwAmount: 699000,
-      status: "Sell completed",
-      statusDate: "2025-04-20",
-      statusTime: "18:55:57",
-    },
-    {
-      id: 6,
-      action: "Buy",
-      usdtAmount: 508.44,
-      krwAmount: 702000,
-      status: "Buy Completed",
-      statusDate: "2025-05-20",
-      statusTime: "18:55:57",
-    },
-  ];
 
   const handleLinkClick = (link) => {
     setActiveLink(link); // Set active link when clicked

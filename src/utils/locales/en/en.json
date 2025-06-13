@@ -15,7 +15,7 @@
   "Invite a Friend": "Invite a Friend",
   "My Transactions": "My Transactions",
   "Log Out": "Log Out",
-   "Trade crypto": "Trade crypto",
+  "Trade crypto": "Trade crypto",
   "Sell Tether": "Sell Tether",
   "Buy Tether": "Buy Tether",
   "Support": "Support",
@@ -41,12 +41,68 @@
     "descriptionAccessTheGlobe": "By using Tether Zone, we can overcome local infrastructure limitations.",
     "largestP2PMarketplace": "The world's largest P2P marketplace"
   },
-   "Home": "Home",
+  "Home": "Home",
   "Transaction History": "Transaction History",
   "My Page": "My Page",
   "Explore  Offers": "Explore Trade Offers",
   "Admin": "Admin",
   "Verify Me": "Verify Me",
   " Methods": "Payment Methods",
-  "USDT/₩": "USDT/₩"
+  "USDT/₩": "USDT/₩",
+  "AccountLevel:1": "Account Level: 1",
+  "LevelPrepared": " The level is currently being Prepared",
+  "adminPanel": {
+    "adminPanel": "Admin Panel",
+    "sections": {
+      "general": "General",
+      "live": "Live",
+      "user": "User",
+      "inquiry": "Inquiry"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "transactions": "Transactions",
+      "sellOrders": "Sell Orders (Live)",
+      "buyOrders": "Buy Orders (Live)",
+      "sellBuyChat": "Sell/Buy 1:1 Chat (Live)",
+      "userManagement": "User Management",
+      "inquiryBox": "1:1 Inquiry Box (Live)",
+      "logout": "Log out"
+    }
+  },
+  "signUp": {
+    "title": "Sign Up",
+    "username": "Username",
+    "nickname": "Nickname (Platform Name)",
+    "password": "Password",
+    "fullName": "Full Name",
+    "dob": "Date of Birth",
+    "phone": "Phone Number",
+    "bankName": "Bank Name",
+    "bankAccount": "Bank Account Number",
+    "tetherAddress": "Tether Address (Solana address)",
+    "referralCode": "Referral Code",
+    "bankPlaceholder": "Bank",
+    "phonePlaceholder": "Please enter only the number without dashes",
+    "submit": "Sign Up"
+  },
+  "signIn": {
+    "title": "Welcome Back",
+    "nickname": "Nickname (Platform Name)",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+  "profile": {
+    "accountLevel": "Account Level: 1",
+    "levelSystemPending": "The level system is currently being prepared.",
+    "phoneNumber": "Phone Number",
+    "nickname": "Nickname",
+    "dateOfBirth": "Date of Birth",
+    "username": "Username",
+    "referralCode": "Referral Code",
+    "bankAccountNumber": "Bank Account Number",
+    "tetherWalletAddressSolana": "Tether Wallet Address (Solana)",
+    "activated": "Activated"
+  }
+  
 }

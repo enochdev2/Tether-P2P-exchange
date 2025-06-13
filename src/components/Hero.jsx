@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 // import { useEffect } from 'react';
 
 const Hero = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 

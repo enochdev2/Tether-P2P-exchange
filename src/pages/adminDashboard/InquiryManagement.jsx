@@ -8,14 +8,11 @@ import { SuccessToast } from "../../utils/Success";
 import { markAllNotificationsAsRead } from "../../utils";
 
 const InquiryManagement = () => {
-  const [pendingOrders, setPendingOrders] = useState([]);
-  const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
 
-  const [sellAmountFilter, setSellAmountFilter] = useState("all");
 
   useEffect(() => {
     fetchNotifications();
@@ -146,53 +143,53 @@ const InquiryManagement = () => {
   return (
     <div>
       <div className="flex bg-gray-50 pt-2 min-h-screen">
-  <div className="flex-1 p-4 md:p-6 overflow-y-auto">
-    {/* Header */}
-    <div className="flex justify-between items-center mb-8 bg-slate-50 border border-slate-300 px-6 py-5 rounded-2xl shadow-md">
-  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center">
-    <FaQuestionCircle className="text-green-600 mr-3 text-xl sm:text-2xl md:text-3xl" />
-    All Inquiries Management
-  </h1>
-</div>
+        <div className="flex-1 p-4 md:p-6 overflow-y-auto">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-8 bg-slate-50 border border-slate-300 px-6 py-5 rounded-2xl shadow-md">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center">
+              <FaQuestionCircle className="text-green-600 mr-3 text-xl sm:text-2xl md:text-3xl" />
+              All Inquiries Management
+            </h1>
+          </div>
 
+          {/* Section Title */}
+          <div className="mb-5">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">All Inquiries</h2>
 
-    {/* Section Title */}
-    <div className="mb-5">
-      <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">All Inquiries</h2>
+            {/* Table Header */}
+            <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
+              <div>Title</div>
+              <div>Nickname</div>
+              <div>Description</div>
+              <div>Comment</div>
+              <div>Action</div>
+              <div>Status</div>
+            </div>
 
-      {/* Table Header */}
-      <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
-        <div>Title</div>
-        <div>Nickname</div>
-        <div>Description</div>
-        <div>Comment</div>
-        <div>Action</div>
-        <div>Status</div>
+            {/* Render Data */}
+            {allUsers?.length === 0 ? (
+              <p className="text-gray-500 mt-4">No User Available.</p>
+            ) : (
+              sortedOffers?.map((offer) => (
+                <AdminInquiryCard
+                  key={offer._id}
+                  offer={offer}
+                  sell={Sell}
+                  showChatButton={offer.status === "On Sale"}
+                  onChatClick={() => Navigate(`/admin/chat/${offer._id}`)}
+                />
+              ))
+            )}
+          </div>
+        </div>
       </div>
-
-      {/* Render Data */}
-      {allUsers?.length === 0 ? (
-        <p className="text-gray-500 mt-4">No User Available.</p>
-      ) : (
-        sortedOffers?.map((offer) => (
-          <AdminInquiryCard
-            key={offer._id}
-            offer={offer}
-            sell={Sell}
-            showChatButton={offer.status === "On Sale"}
-            onChatClick={() => Navigate(`/admin/chat/${offer._id}`)}
-          />
-        ))
-      )}
-    </div>
-  </div>
-</div>
 
       {/* Notification Alert Box */}
       <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}
         onMarkRead={markNotificationRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
       />
     </div>
   );

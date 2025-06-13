@@ -90,10 +90,11 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
+      const message = result.message || "Orders matched successfully!";
       await fetchInProgressOrders();
       await fetchSellOrders();
       await fetchSellPendingOrders();
-      SuccessToast("Orders matched successfully!");
+      SuccessToast(message);
     } catch (error) {
       console.error("Error matching orders:", error);
     }

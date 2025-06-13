@@ -4,8 +4,10 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../utils/AuthProvider";
 import { SuccessToast } from "../../utils/Success";
 import { ErrorToast } from "../../utils/Error";
+import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const { signUp } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -99,18 +101,13 @@ const SignUp = () => {
       }}
     >
       <div className="w-full max-w-5xl bg-gray-900/80  rounded-lg shadow-2xl p-6 md:p-10">
-        <h2 className="text-2xl  font-bold text-white text-center mb-8">
-          Sign Up
-        </h2>
+        <h2 className="text-2xl  font-bold text-white text-center mb-8">{t("signUp.title")}</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Username */}
             <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Username <span className="text-red-500">*</span>
+              <label htmlFor="username" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.username")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -125,11 +122,8 @@ const SignUp = () => {
 
             {/* Nickname */}
             <div>
-              <label
-                htmlFor="nickname"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Nickname (Platform Name) <span className="text-red-500">*</span>
+              <label htmlFor="nickname" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.nickname")} (Platform Name) <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -144,11 +138,8 @@ const SignUp = () => {
 
             {/* Password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Password <span className="text-red-500">*</span>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.password")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
@@ -163,11 +154,8 @@ const SignUp = () => {
 
             {/* Full Name */}
             <div>
-              <label
-                htmlFor="fullName"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Full Name <span className="text-red-500">*</span>
+              <label htmlFor="fullName" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.fullName")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -182,11 +170,8 @@ const SignUp = () => {
 
             {/* Date of Birth */}
             <div>
-              <label
-                htmlFor="dob"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Date of Birth <span className="text-red-500">*</span>
+              <label htmlFor="dob" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.dob")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -201,11 +186,8 @@ const SignUp = () => {
 
             {/* Phone Number */}
             <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Phone Number <span className="text-red-500">*</span>
+              <label htmlFor="phone" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.phone")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -213,7 +195,7 @@ const SignUp = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="Please enter only the number without dashes"
+                placeholder={t("signUp.phonePlaceholder")}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic"
                 required
               />
@@ -221,11 +203,8 @@ const SignUp = () => {
 
             {/* Bank Name */}
             <div>
-              <label
-                htmlFor="bankName"
-                className="block text-sm font-semibold text-gray-100 mb-1"
-              >
-                Bank Name <span className="text-red-500">*</span>
+              <label htmlFor="bankName" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.bankName")} <span className="text-red-500">*</span>
               </label>
 
               <div className="relative w-full">
@@ -239,7 +218,8 @@ const SignUp = () => {
                   required
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 text-sm pointer-events-none">
-                  Bank
+                  {/* Bank */}
+                  {t("signUp.bankPlaceholder")}
                 </span>
               </div>
             </div>
@@ -250,7 +230,7 @@ const SignUp = () => {
                 htmlFor="bankAccount"
                 className="block text-sm font-semibold text-gray-100 mb-1"
               >
-                Bank Account Number <span className="text-red-500">*</span>
+                {t("signUp.bankAccount")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -269,8 +249,7 @@ const SignUp = () => {
                 htmlFor="tetherAddress"
                 className="block text-sm font-semibold text-gray-100 mb-1"
               >
-                Tether Address (Solana address){" "}
-                <span className="text-red-500">*</span>
+                {t("signUp.tetherAddress")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -289,7 +268,7 @@ const SignUp = () => {
                 htmlFor="referralCode"
                 className="block text-sm font-semibold text-gray-100 mb-1"
               >
-                Referral Code <span className="text-red-500">*</span>
+                {t("signUp.referralCode")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -308,7 +287,7 @@ const SignUp = () => {
             disabled={isLoading}
             className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white cursor-pointer font-semibold rounded-md transition duration-200"
           >
-            {isLoading ? <LoadingSpinner /> : "Sign Up"}
+            {isLoading ? <LoadingSpinner /> : t("signUp.submit")}
           </button>
         </form>
       </div>

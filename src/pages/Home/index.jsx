@@ -1,11 +1,7 @@
-import { useState } from "react";
-import React from "react";
-import Hero from "../../components/Hero";
-import CryptoBuyPage from "../../components/CryptoBuyPage";
 import FeaturesSection from "../../components/FeaturesSection";
+import Hero from "../../components/Hero";
 
 const Home = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="">

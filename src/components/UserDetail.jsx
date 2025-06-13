@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
+import { ErrorToast } from "../utils/Error";
 
 const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const { updateUser, setUser } = useAuth();
@@ -112,7 +113,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       }
     } catch (error) {
       console.error("Error during sign-up:", error);
-      SuccessToast(`something went wrong ${error}`);
+      ErrorToast(`something went wrong ${error}`);
     } finally {
       setIsSaving(false);
       setIsViewing(false);

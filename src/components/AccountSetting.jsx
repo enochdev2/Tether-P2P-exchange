@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
+import { ErrorToast } from "../utils/Error";
 
 export default function AccountSetting({ isEditing, setIsEditing, user }) {
   const { updateUser, setUser } = useAuth();
@@ -70,7 +71,7 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
       console.log("User Info updated:", updatedUser);
     } catch (error) {
       console.error("Error during sign-up:", error);
-      SuccessToast(`something went wrong ${error}`);
+      ErrorToast(`something went wrong ${error}`);
       // Optionally handle error here (e.g., show error message)
     } finally {
       setIsLoading(false); // Hide loading state after completion
