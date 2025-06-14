@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
 
-const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) => {
+const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isApprove, setIsApprove] = useState(false)
