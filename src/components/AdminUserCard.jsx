@@ -4,35 +4,35 @@ import { useTranslation } from "react-i18next";
 
 const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
   const { t } = useTranslation();
-  const [viewingUsers, setViewingUsers] = useState({});
+  const [expandedUsers, setExpandedUsers] = useState({});
 
-  const toggleViewDetails = (userId) => {
-    setViewingUsers(prev => ({
+  const toggleUserExpansion = (userId) => {
+    setExpandedUsers(prev => ({
       ...prev,
       [userId]: !prev[userId]
     }));
   };
 
   return (
-    <div className="space-y-4">
-      <div className="overflow-x-auto w-full rounded-lg border border-gray-200 bg-white shadow-sm">
-        <table className="min-w-[600px] w-full table-auto text-left text-sm text-gray-800">
-          <thead className="bg-gray-100 border-b border-gray-300">
-            <tr>
-              <th className="px-4 py-3">{t("usermanagement.nickname")}</th>
-              <th className="px-4 py-3">{t("usermanagement.phone")}</th>
-              <th className="px-4 py-3 text-center">{t("usermanagement.statusToggle")}</th>
-              <th className="px-4 py-3 text-center">View Details</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => {
-              const dateObj = new Date(user.createdAt);
-              const dateOnly = dateObj.toLocaleDateString("en-CA");
+    <div className="overflow-x-auto w-full rounded-lg border border-gray-200 bg-white shadow-sm">
+      <table className="min-w-[600px] w-full table-auto text-left text-sm text-gray-800">
+        <thead className="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th className="px-4 py-3">{t("usermanagement.nickname")}</th>
+            <th className="px-4 py-3">{t("usermanagement.phone")}</th>
+            <th className="px-4 py-3 text-center">{t("usermanagement.statusToggle")}</th>
+            <th className="px-4 py-3 text-center">View Details</th>
+            <th className="px-4 py-3">Status</th>
+            <th className="px-4 py-3">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => {
+            const dateObj = new Date(user.createdAt);
+            const dateOnly = dateObj.toLocaleDateString("en-CA");
 
-              return (
+            return (
+              <>
                 <tr key={user._id} className="border-b border-gray-200">
                   {/* Nickname */}
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -68,10 +68,10 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                   {/* View Details */}
                   <td className="px-4 py-3 text-center">
                     <button
-                      onClick={() => toggleViewDetails(user._id)}
+                      onClick={() => toggleUserExpansion(user._id)}
                       className="px-3 py-1 lg:py-3 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs font-semibold"
                     >
-                      {viewingUsers[user._id] ? "Hide Details" : "View Details"}
+                      {expandedUsers[user._id] ? "Hide Details" : "View Details"}
                     </button>
                   </td>
 
@@ -89,24 +89,26 @@ const AdminUserCard = ({ users, handleStatusChange, handleUpdate }) => {
                   {/* Date */}
                   <td className="px-4 py-3 whitespace-nowrap text-center">{dateOnly}</td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
 
-      {/* Render UserDetail modals for each user that's being viewed */}
-      {users.map(
-        (user) =>
-          viewingUsers[user._id] && (
-            <UserDetail
-              key={`detail-${user._id}`}
-              user={user}
-              setIsViewing={() => toggleViewDetails(user._id)}
-              handleUpdate={handleUpdate}
-            />
-          )
-      )}
+                {/* Expanded user details row */}
+                {expandedUsers[user._id] && (
+                  <tr>
+                    <td colSpan="6" className="p-0">
+                      <div className="p-4 bg-gray-50">
+                        <UserDetail
+                          user={user}
+                          setIsViewing={() => toggleUserExpansion(user._id)}
+                          handleUpdate={handleUpdate}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

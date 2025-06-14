@@ -96,16 +96,16 @@ const InquiryModal = ({ isOpen, onCancel }) => {
           />
         </div>
 
-        <div className="flex justify-center space-x-10 md:space-x-26">
+        <div className="flex justify-center space-x-6 md:space-x-8">
           <button
             onClick={onCancel}
-            className="w-[90px] py-1 rounded-md border border-gray-500 bg-gray-200 text-sm cursor-pointer"
+            className="cursor-pointer w-24 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-150"
           >
             {t("inquirys.cancel")}
           </button>
           <button
             onClick={() => handleSubmit()}
-            className="w-[90px] py-1 rounded-md border border-slate-500 bg-slate-300 hover:bg-slate-600 text-sm cursor-pointer"
+            className="w-24 py-2 rounded-lg border border-transparent bg-[#26a17b] hover:bg-green-700 text-white text-sm font-medium shadow-sm focus:outline-none cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-150"
           >
             {t("inquirys.submit")}
           </button>
