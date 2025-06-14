@@ -6,8 +6,8 @@ const LongSuccessToast = (message) =>
       <div
         style={{
           position: "fixed",
-          top: "70px", // Adjust to your navbar height
-          right: "10%",
+          bottom: "-70px", // Adjust to your navbar height
+          left: "10%",
           zIndex: 9999,
         }}
       >
@@ -56,7 +56,7 @@ const LongSuccessToast = (message) =>
         </div>
       </div>
     ),
-    { duration: 60000 } // stays for 60 seconds
+    { duration: 300 } // stays for 60 seconds
   );
 
 export { LongSuccessToast };

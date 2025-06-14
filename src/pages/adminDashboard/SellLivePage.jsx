@@ -276,6 +276,7 @@ const SellLivePage = () => {
 
       const result = await response.json();
       const message = result.message || "Sell Order Approve Successful"; 
+      await fetchSellOrders();
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
@@ -308,7 +309,9 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      SuccessToast("Buy Order Rejected Successful");
+      const message = result.message ||  "Buy Order Rejected Successful"
+      await fetchSellOrders();
+      SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
