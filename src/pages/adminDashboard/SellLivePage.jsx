@@ -8,13 +8,14 @@ import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { markAllNotificationsAsRead } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const SellLivePage = () => {
-  const [activeLink, setActiveLink] = useState("findOffers");
+  const { t } = useTranslation();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
   console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
@@ -116,10 +117,9 @@ const SellLivePage = () => {
           body: JSON.stringify({ buyerOrderId, sellerOrderId }),
         }
       );
-      const data = await response.json();
 
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       } else {
@@ -133,7 +133,7 @@ const SellLivePage = () => {
     }
   };
 
-  async function fetchSellOrders(status = "") {
+  async function fetchSellOrders() {
     try {
       //   const url = status
       //     ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
@@ -178,7 +178,7 @@ const SellLivePage = () => {
     }
   }
 
-  async function fetchSellPendingOrders(status = "") {
+  async function fetchSellPendingOrders() {
     try {
       const token = localStorage.getItem("token");
 
@@ -276,6 +276,7 @@ const SellLivePage = () => {
 
       const result = await response.json();
       const message = result.message || "Sell Order Approve Successful"; 
+      await fetchSellOrders();
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
@@ -308,7 +309,9 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      SuccessToast("Buy Order Rejected Successful");
+      const message = result.message ||  "Buy Order Rejected Successful"
+      await fetchSellOrders();
+      SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
       setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
@@ -484,10 +487,11 @@ const SellLivePage = () => {
           {/* Page Header */}
           <div className="flex flex-col md:flex-row md:justify-between md:items-center bg-white shadow rounded-2xl px-6 py-4 mb-8 border border-gray-200">
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center gap-2">
-              Sell Orders <span className="text-emerald-600">(Live)</span>
+              {t("adminPanel.items.sellOrders")} 
+              {/* <span className="text-emerald-600">(Live)</span> */}
             </h1>
             <button className="bg-gray-200 text-sm text-gray-800 px-5 py-2 rounded-md font-medium hover:bg-gray-300 mt-4 md:mt-0 transition">
-              Sort By
+            {t("buytether.sortBy")}
             </button>
           </div>
 
@@ -506,13 +510,13 @@ const SellLivePage = () => {
                 { label: "1,000,000 ↑", key: "gt1000000" },
               ].map(({ label, key }) => (
                 <button
-                  key={key}
-                  onClick={() => handleAmountFilterChange(key)}
-                  className={`whitespace-pre-line cursor-pointer px-4 py- rounded-md text-[15px] font-medium shadow-sm transition duration-150 ${
-                    (key === "all" && selectedFilters.length === 0) || selectedFilters.includes(key)
-                      ? "bg-[#26a17b] text-white"
-                      : "bg-gray-100 text-gray-700 border border-slate-300 hover:bg-gray-200"
-                  }`}
+                key={key}
+                onClick={() => handleAmountFilterChange(key)}
+                className={`whitespace-pre-line cursor-pointer px-4 py- rounded-md text-[15px] font-medium shadow-sm transition duration-150 ${
+                  (key === "all" && selectedFilters.length === 0) || selectedFilters.includes(key)
+                  ? "bg-[#26a17b] text-white"
+                  : "bg-gray-100 text-gray-700 border border-slate-300 hover:bg-gray-200"
+                }`}
                 >
                   {label}
                 </button>
@@ -524,12 +528,12 @@ const SellLivePage = () => {
           {inProgressOrders.length > 0 && (
             <div className="mb-10">
               <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-                All Orders In Progress
+              {t("buytether.allOrdersInProgress")}
               </h2>
               <div className="space-y-4">
                 {inProgressOrders.map((offer) => (
                   <AdminTradeInProgressCard
-                    key={offer._id}
+                  key={offer._id}
                     offer={offer}
                     sell={Sell}
                     fetchOrders={fetchInProgressOrders}
@@ -547,20 +551,20 @@ const SellLivePage = () => {
           {pendingOrders.length > 0 && (
             <div className="mb-10">
               <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-                All Pending Sell Orders
+              {t("buytether.allPendingOrders")}
               </h2>
               <div className="space-y-4">
                 {pendingOrders.map((offer) => (
                   <AdminTradeCard2
-                    key={offer._id}
+                  key={offer._id}
                     offer={offer}
                     sell={Sell}
                     approveOrders={() => approveOrders(offer._id)}
                     rejectOrders={() => rejectOrders(offer._id)}
                     setPendingOrders={setPendingOrders}
                     showChatButton={offer.status === "Pending Approval"}
-                  />
-                ))}
+                    />
+                  ))}
               </div>
             </div>
           )}
@@ -568,7 +572,7 @@ const SellLivePage = () => {
           {/* Live Sell Orders */}
           <div className="mb-6">
             <h2 className="text-lg md:text-xl font-semibold mb-4 px-4 py-2 bg-slate-100 border border-gray-300 rounded-xl shadow-sm">
-              All Live Sell Orders
+          {t("buytether.allSellOrders")}
             </h2>
             {filteredSellOrders.length === 0 ? (
               <p className="text-gray-500 italic text-sm">No sell orders match the filter.</p>

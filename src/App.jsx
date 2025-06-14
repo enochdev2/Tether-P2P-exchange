@@ -9,12 +9,13 @@ import UserProtectedRoute from "./components/UserProtectedRoute";
 import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
 import AdminTransactions from "./pages/adminDashboard/AdminTransactions";
 import AllChatPage from "./pages/adminDashboard/AllChatPage";
-import AllUsers from "./pages/adminDashboard/AllUsers";
 import BuyLivePage from "./pages/adminDashboard/BuyLivePage";
 import Dashboards from "./pages/adminDashboard/Dashboard";
+import InquiryManagement from "./pages/adminDashboard/InquiryManagement";
 import SellLivePage from "./pages/adminDashboard/SellLivePage";
 import TransactionDetails from "./pages/adminDashboard/TransactionDetails";
 import UserDetails from "./pages/adminDashboard/UserDetails";
+import UserManagement from "./pages/adminDashboard/UserManagement";
 import ChatRoom from "./pages/ChatRoom";
 import AccountSettings from "./pages/dashboard/AccountSetting";
 import BuyFormInput from "./pages/dashboard/BuyFormInput";
@@ -24,14 +25,11 @@ import ProfileOverview from "./pages/dashboard/ProfileOverview";
 import TradingOffers from "./pages/dashboard/TradingOffers";
 import TradingPage from "./pages/Exchange";
 import Home from "./pages/Home";
+import OtpVerificationPage from "./pages/OtpVerificationPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
-import UserManagement from "./pages/adminDashboard/UserManagement";
-import InquiryManagement from "./pages/adminDashboard/InquiryManagement";
-import ChatRoom2 from "./pages/ChatRoom2";
-import OtpVerificationPage from "./pages/OtpVerificationPage";
 
 function App() {
   return (

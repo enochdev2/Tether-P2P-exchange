@@ -9,7 +9,7 @@ const FeaturesSection = () => {
 
   useEffect(() => {
     AOS.init({ duration: 700, once: true });
-  }, []);
+  }, [t]);
 
   const features = [
     {

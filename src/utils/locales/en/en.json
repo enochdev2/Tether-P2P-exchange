@@ -141,7 +141,17 @@
     "fastTransaction": "Fast Transaction",
     "transactionHistory": "Transaction History",
     "sortBy": "Sort By",
+    "selling": "Selling",
+    "findTransactionHistory": "Find Transaction History",
+    "findHistory": "Find history",
+    "recentltTraded": "Recently traded:",
+    "completedsale": "Sale Completed",
+    "completedbuy": "Buy Completed",
     "myOrdersInProgress": "My Orders In Progress",
+    "allPendingOrders": " All Pending Sell Orders",
+    "allSellOrders": "  All Live Sell Orders",
+    "allBuyOrders": "  All Live Buy Orders",
+    "allOrdersInProgress": "My Orders In Progress",
     "myOrders": "My Orders",
     "noOrdersTitle": "You haven’t traded yet or you don't have any sell Order.",
     "noOrdersSubtitle": "Start trading now!",
@@ -158,6 +168,11 @@
     "total": "Total: {{amount}} USDT",
     "balance": "Bal: {{amount}} USDT",
     "chat": "1:1 Chat",
+    "match": "match",
+    "approve": "Approve",
+    "reject": "Reject",
+    "completematch": "Complete-Match",
+    "matchInProgress": "Matching In Progress ",
     "cancel": "Cancel",
     "cancelConfirmMessage": "Are you sure you want to delete your {{type}} Order?",
     "krwPrice": "{{price}} KRW",
@@ -182,9 +197,11 @@
     "submit": "Submit",
     "selectType": "Select Inquiry Type",
     "allInquiries": "All Inquiries",
+    "allInquiriesManagement": "All Inquiries Management",
     "titles": "Title",
     "description": "Description",
     "comment": "Comment",
+    "addcomment": "Add Comment",
     "noComment": "No comment yet",
     "status": "Pending",
     "date": "Date"
@@ -218,5 +235,42 @@
     "allUsers": "All Users",
     "noUsers": "No users available.",
     "accountLevel": "Account Level:"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "searchPlaceholder": "Search by Posting Number",
+    "searchButton": "Search",
+    "tabs": {
+      "sell": "Sell",
+      "buy": "Buy"
+    },
+    "table": {
+      "postingNumber": "Posting Number",
+      "buyer": "Buyer",
+      "seller": "Seller",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions",
+      "noTransactions": "No transactions found."
+    },
+    "details": {
+      "buyerNickname": "Buyer Nickname",
+      "buyerNumber": "Buyer Number",
+      "buyRequestAmount": "Buy Request Amount",
+      "sellerNickname": "Seller Nickname",
+      "sellerNumber": "Seller Number",
+      "sellRequestAmount": "Sell Request Amount",
+      "progressTitle": "Buy Progress Record",
+      "type": "Type",
+      "amount": "Amount",
+      "nickname": "Nickname",
+      "fee": "Fee",
+      "registrationDate": "Registration Date",
+      "completionDate": "Completed Date"
+    },
+    "status": {
+      "completed": "Completed"
+    },
+    "viewDetails": "View Details"
   }
 }
