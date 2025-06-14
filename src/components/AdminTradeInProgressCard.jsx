@@ -180,36 +180,39 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           >
             {t("tradecard.chat")}
           </button>
-          <button
-            onClick={() => openCancelModal(offer._id)}
-            className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
-          >
-            <FaTrash size={14} />
-          </button>
+          
 
           {sell &&
             (offer.status === "In Progress" ? (
-              <div>
+              <div className="space-x-3">
                 <button
                   onClick={handleMatchCancel}
-                  className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+                  className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
                 >
                   {t("tradecard.cancel")}
                 </button>
                 <button
                   onClick={handleMatchComplete}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
+                  className="bg-cyan-600  hover:bg-cyan-700 text-white  text-xs px-2 py-3 rounded-md font-medium cursor-pointer shadow-sm"
                 >
                    {t("tradecard.completematch")}
                 </button>
               </div>
             ) : (
+              <div className="space-x-2">
+                <button
+            onClick={() => openCancelModal(offer._id)}
+            className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
+          >
+            <FaTrash size={14} />
+          </button>
               <button
                 onClick={handleMatchClick}
                 className="bg-cyan-600  hover:bg-cyan-600 text-white text-xs px-3 py-3 rounded-md font-semibold shadow-sm cursor-pointer"
-              >
+                >
                 {t("tradecard.match")}
               </button>
+                </div>
             ))}
         </div>
 
