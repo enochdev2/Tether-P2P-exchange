@@ -13,7 +13,7 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
   const [pendingOrderId, setPendingOrderId] = useState(null);
 
   const openCancelModal = (orderId, isAprove) => {
-    if(isApprove){
+    if(isAprove){
       setIsApprove(true)
     }else{
       setIsApprove(false)
