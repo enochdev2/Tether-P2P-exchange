@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { ErrorToast } from "../utils/Error";
+import { useTranslation } from "react-i18next";
 
 const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
+  const { t } = useTranslation();
   const { allUser } = useAuth();
   const navigate = useNavigate();
   const [status, setStatus] = useState(offer?.status);
@@ -66,7 +68,14 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
     <div className="relative rounded-lg py-3 px-4 mb-4 border border-gray-200 shadow-sm bg-white">
   <div className="flex flex-col sm:grid sm:grid-cols-6 gap-4 items-start sm:items-center">
     {/* Title */}
-    <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">{offer?.title}</div>
+    <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">
+    {offer?.title}
+    {offer.title === "Edit Account Info" && t("inquirys.editAccount")}
+                  {offer.title === "Sell Inquiry" && t("inquirys.sellInquiry")}
+                  {offer.title === "Buy Inquiry" && t("inquirys.buyInquiry")}
+                  {offer.title === "Other Inquiry" && t("inquirys.otherInquiry")}
+    </div>
+    
 
     {/* Nickname */}
     <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">{offer?.userId?.username}</div>
@@ -76,7 +85,7 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
 
     {/* Comment */}
     <div className="text-xs sm:text-sm text-gray-700 break-words">
-      {offer?.comment || "No comment added yet"}
+      {offer?.comment || t("inquirys.noComment")}
     </div>
 
     {/* Action */}

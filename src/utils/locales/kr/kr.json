@@ -140,6 +140,10 @@
     "transactionHistory": "거래 기록",
     "sortBy": "정렬",
     "myOrdersInProgress": "승인 대기 중판매 중",
+    "allPendingOrders": "승인 대기 중인 판매 주문",
+    "allOrdersInProgress": "매칭 진행 중인 주문",
+    "allSellOrders": "승인 된 판매 주문",
+     "allBuyOrders": "승인 된 구매 주문",
     "myOrders": "내 주문",
     "noOrdersTitle": "아직 거래를 하지 않았거나 판매 주문이 없습니다.",
     "noOrdersSubtitle": "지금 바로 거래를 시작해보세요!",
@@ -155,7 +159,12 @@
     "total": "총액: {{amount}} USDT",
     "balance": "잔액: {{amount}} USDT",
     "chat": "1:1 채팅",
+    "match": "매칭f",
+    "approve": "승인",
+    "reject": "거절",
     "cancel": "취소",
+    "matchInProgress": "매칭 중",
+    "completematch": "매칭 중",
     "cancelConfirmMessage": "{{type}} 주문을 정말로 삭제하시겠습니까?",
     "krwPrice": "{{price}} 원",
     "orderId": "주문 ID",
@@ -215,5 +224,42 @@
     "allUsers": "모든 유저",
     "noUsers": "사용 가능한 유저가 없습니다.",
     "accountLevel": "계정 레벨:"
+  },
+  "transactions": {
+    "title": "기록",
+    "searchPlaceholder": "게시글 번호를 검색하세요",
+    "searchButton": "검색",
+    "tabs": {
+      "sell": "판매",
+      "buy": "구매"
+    },
+    "table": {
+      "postingNumber": "게시글 번호",
+      "buyer": "구매자",
+      "seller": "판매자",
+      "amount": "금액",
+      "status": "상태",
+      "actions": "비고",
+      "noTransactions": "거래 내역이 없습니다."
+    },
+    "details": {
+      "buyerNickname": "구매자 닉네임",
+      "buyerNumber": "구매자 전화 번호",
+      "buyRequestAmount": "구매 요청 금액",
+      "sellerNickname": "판매자 닉네임",
+      "sellerNumber": "판매자 전화번호",
+      "sellRequestAmount": "판매 요청 금액",
+      "progressTitle": "판매 진행 상황",
+      "type": "유형",
+      "amount": "금액",
+      "nickname": "닉네임",
+      "fee": "수수료",
+      "registrationDate": "등록일",
+      "completionDate": "완료일"
+    },
+    "status": {
+      "completed": "완료"
+    },
+    "viewDetails": "더보기"
   }
 }

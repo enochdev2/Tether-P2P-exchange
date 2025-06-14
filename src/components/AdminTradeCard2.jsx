@@ -2,10 +2,12 @@ import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import ConfirmModal from "./ConfirmModal";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
 
 const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isApprove, setIsApprove] = useState(false)
   const [pendingOrderId, setPendingOrderId] = useState(null);
@@ -29,11 +31,7 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
   //   setIsMatchModalOpen(false);
   // };
 
-  const handleMatchSubmit = () => {
-    onMatch(buyerOrderId, offer._id); // Trigger matching in the parent component
-    setIsMatchModalOpen(false); // Close the modal
-    setBuyerOrderId(""); // Reset the input field
-  };
+ 
 
   // Adjust isPending logic if needed
   const isPending = sell ? offer.status === "Pendin Approval" : offer.status === "Waiting for uy";
@@ -58,7 +56,7 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
       {/* Left Badge */}
       <div className="flex items-center gap-2 sm:w-24 justify-center sm:justify-start">
         <span className="bg-gray-700 text-white text-[13px] sm:text-sm md:text-base font-semibold px-3 py-1 rounded-lg shadow-sm">
-          {sell ? "Sell" : "Buy"}
+          {t(`tradecard.${sell ? "sell" : "buy"}`)}
         </span>
         <span className="w-3 h-3 bg-gray-500 rounded-full hidden sm:block"></span>
       </div>
@@ -71,14 +69,16 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
       {/* Amount */}
       <div className="flex items-center gap-2 text-sm sm:text-base text-gray-600">
         <img src={logo2} alt="Tether" className="w-5 h-5 sm:w-6 sm:h-6" />
-        <span className="font-semibold">{offer.amount} USDT</span>
+        <span className="font-semibold">{t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}</span>
       </div>
 
       {/* KRW Amount */}
       <div className="text-xs sm:text-sm md:text-base text-gray-700 font-medium text-center sm:text-left truncate w-full sm:w-40">
-        {offer.krwAmount
-          ? `₩${offer.krwAmount.toLocaleString()} KRW`
-          : `₩${offer.price.toLocaleString()} KRW`}
+       {t("tradecard.krwPrice", {
+            price: offer.krwAmount
+              ? `₩${offer.krwAmount.toLocaleString()}`
+              : `₩${offer.price.toLocaleString()}`,
+          })}
       </div>
 
       {/* Approve / Reject Buttons */}
@@ -89,13 +89,13 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders, onMatch }) 
             onClick={() => openCancelModal(offer._id, true)}
             className="px-4 py-1.5 bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white rounded-md text-sm shadow-md font-bold transition"
           >
-            Approve
+             {t("tradecard.approve")}
           </button>
           <button
             onClick={() => openCancelModal(offer._id, false)}
             className="px-4 py-1.5 bg-[#a12626] hover:bg-red-700 text-white rounded-md text-sm shadow-md font-bold transition cursor-pointer"
           >
-            Reject
+             {t("tradecard.reject")}
           </button>
         </div>
       )}

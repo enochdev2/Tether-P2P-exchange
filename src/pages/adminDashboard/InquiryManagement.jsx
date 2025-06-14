@@ -6,8 +6,10 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { markAllNotificationsAsRead } from "../../utils";
+import { useTranslation } from "react-i18next";
 
 const InquiryManagement = () => {
+  const { t } = useTranslation();
   const [loadingSell, setLoadingSell] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
@@ -114,7 +116,7 @@ const InquiryManagement = () => {
   
     const { success, error } = await markAllNotificationsAsRead({
       userId: user._id,
-      type: "chat", // or another type
+      type: "inquiry", // or another type
       isForAdmin: true,     // or false depending on the context
       token,
     });
@@ -158,12 +160,12 @@ const InquiryManagement = () => {
 
             {/* Table Header */}
             <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
-              <div>Title</div>
-              <div>Nickname</div>
-              <div>Description</div>
-              <div>Comment</div>
+              <div>   {t("inquirys.titles")}</div>
+              <div>{ t("profile.nickname")}</div>
+              <div> {t("inquirys.description")}</div>
+              <div>{t("inquirys.status")}</div>
               <div>Action</div>
-              <div>Status</div>
+              <div>{t("inquirys.date")}</div>
             </div>
 
             {/* Render Data */}
@@ -176,7 +178,7 @@ const InquiryManagement = () => {
                   offer={offer}
                   sell={Sell}
                   showChatButton={offer.status === "On Sale"}
-                  onChatClick={() => Navigate(`/admin/chat/${offer._id}`)}
+                  
                 />
               ))
             )}

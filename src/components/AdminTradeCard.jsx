@@ -6,10 +6,12 @@ import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./ConfirmModal";
 import { FaTrash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
 
 const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
+  const { t } = useTranslation(); 
   console.log("🚀 ~ AdminTradeCard ~ offer:", offer)
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -111,7 +113,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       <div className="flex items-center sm:w-24 mb-4 sm:mb-0 sm:mr-2 justify-center sm:justify-start">
         <div className="flex items-center space-x-2">
           <div className="bg-green-600 text-white font-semibold text-sm px-4 py-1.5 rounded-md select-none whitespace-nowrap shadow">
-            {sell ? "Sell" : "Buy"}
+             {t(`tradecard.${sell ? "sell" : "buy"}`)}
           </div>
           <div className="w-3 h-3 hidden sm:block bg-green-700 rounded-full mt-1" />
         </div>
@@ -127,17 +129,19 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         <div className="flex items-center">
           <img src={logo2} alt="Tether logo" className="w-6 h-6 md:w-7 md:h-7 mr-3" />
           <div className="flex flex-col space-y-1 text-sm text-gray-800">
-            <span className="font-medium">Total: {offer.amount} USDT</span>
+            <span className="font-medium">{t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}</span>
             <span className="font-medium">
-              Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+              {t("tradecard.balance", { amount: parseFloat(offer.amountRemaining).toFixed(4) })}
             </span>
           </div>
         </div>
       </div>
       <div className="font-semibold text-sm text-gray-700 flex-1">
-        {offer.krwAmount
-          ? `₩${offer.krwAmount.toLocaleString()} KRW`
-          : `₩${offer.price.toLocaleString()} KRW`}
+        {t("tradecard.krwPrice", {
+            price: offer.krwAmount
+              ? `₩${offer.krwAmount.toLocaleString()}`
+              : `₩${offer.price.toLocaleString()}`,
+          })}
       </div>
 
       {/* Buttons */}
@@ -146,7 +150,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
           onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
           className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
         >
-          1:1 Chat
+         {t("tradecard.chat")}
         </button>
 
         <button
@@ -161,7 +165,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
             onClick={handleMatchClick}
             className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
           >
-            Match
+            {t("tradecard.match")}
           </button>
         )}
       </div>
@@ -185,7 +189,8 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
                 : "text-green-600"
             }`}
           >
-            {offer.status}
+           {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)}
+          
           </span>
         </div>
         <div className="text-center sm:text-right text-gray-500 text-sm">{dateOnly}</div>
