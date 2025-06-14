@@ -191,9 +191,11 @@
     "submit": "Submit",
     "selectType": "Select Inquiry Type",
     "allInquiries": "All Inquiries",
+    "allInquiriesManagement": "All Inquiries Management",
     "titles": "Title",
     "description": "Description",
     "comment": "Comment",
+    "addcomment": "Add Comment",
     "noComment": "No comment yet",
     "status": "Pending",
     "date": "Date"

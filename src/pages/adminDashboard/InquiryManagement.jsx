@@ -150,14 +150,15 @@ const InquiryManagement = () => {
           <div className="flex justify-between items-center mb-8 bg-slate-50 border border-slate-300 px-6 py-5 rounded-2xl shadow-md">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text flex items-center">
               <FaQuestionCircle className="text-green-600 mr-3 text-xl sm:text-2xl md:text-3xl" />
-              All Inquiries Management
+              {t("inquirys.allInquiriesManagement")}
             </h1>
           </div>
 
           {/* Section Title */}
           <div className="mb-5">
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">All Inquiries</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">{t("inquirys.allInquiries")}</h2>
 
+              
             {/* Table Header */}
             <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
               <div>   {t("inquirys.titles")}</div>

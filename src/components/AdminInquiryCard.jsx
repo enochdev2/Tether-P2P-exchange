@@ -69,7 +69,6 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
   <div className="flex flex-col sm:grid sm:grid-cols-6 gap-4 items-start sm:items-center">
     {/* Title */}
     <div className="font-medium text-sm sm:text-[15px] text-gray-900 truncate">
-    {offer?.title}
     {offer.title === "Edit Account Info" && t("inquirys.editAccount")}
                   {offer.title === "Sell Inquiry" && t("inquirys.sellInquiry")}
                   {offer.title === "Buy Inquiry" && t("inquirys.buyInquiry")}
@@ -94,7 +93,7 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
         onClick={() => setIsCommenting(!isCommenting)}
         className="px-3 py-2 bg-[#26a17b] hover:bg-green-700 text-white text-xs md:text-sm rounded font-semibold"
       >
-        {isCommenting ? "Cancel" : "Add Comment"}
+        {isCommenting ? t("inquirys.cancel") : t("inquirys.addcomment")}
       </button>
     </div>
 
