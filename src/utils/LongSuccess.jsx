@@ -6,7 +6,7 @@ const LongSuccessToast = (message) =>
       <div
         style={{
           position: "fixed",
-          bottom: "-70px", // Adjust to your navbar height
+          bottom: "10px", // Adjust to your navbar height
           left: "10%",
           zIndex: 9999,
         }}
