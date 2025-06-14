@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import logo2 from "../assets/Tether2.png";
 
 const statusColors = {
@@ -7,6 +8,7 @@ const statusColors = {
 };
 
 const TradeCard2 = ({ offer }) => {
+  const {t} = useTranslation();
 
 
   const timestamp = offer.createdAt;
@@ -41,7 +43,7 @@ const TradeCard2 = ({ offer }) => {
 
     {/* Action - Buying/Selling */}
     <div className="text-gray-900 font-semibold text-base sm:text-lg sm:w-auto w-full">
-      {offer.action === "Buy" ? "Buying" : "Selling"}
+      {offer.action === "Buy" ? "Buying" : t("buytether.selling")}
     </div>
 
     {/* Amount and Status in One Row on All Screens */}
@@ -69,7 +71,8 @@ const TradeCard2 = ({ offer }) => {
               : "text-green-500"
           }`}
         >
-          ({offer.status})
+          ({offer.status === "Sale Completed" && t("buytether.completedsale")}
+          {offer.status === "Buy Completed" && t("buytether.completedbuy")})
         </span>
       </div>
     </div>
