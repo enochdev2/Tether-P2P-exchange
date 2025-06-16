@@ -4,6 +4,8 @@ import LoadingSpiner from "../../components/LoadingSpiner";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
 import { useTranslation } from "react-i18next";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import ConfirmModal from "../../components/confirmModal";
 
 // const inquiries = [
 //   {
@@ -34,6 +36,7 @@ import { useTranslation } from "react-i18next";
 export default function InquiryHistory() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -51,13 +54,14 @@ export default function InquiryHistory() {
   );
 }
 
-const AllInquiries = () => {
+const AllInquiries = ({ open, onClose, onConfirm, message }) => {
   const { t } = useTranslation();
   const [allInquiry, setAllInquiry] = useState([]);
   // const { allUser } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // const navigate = useNavigate();
 
@@ -163,16 +167,20 @@ const AllInquiries = () => {
     );
   }
 
+  const modalDelete = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-2 sm:px-8 sm:py-2">
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-gray-900 tracking-tight">
         {t("inquirys.allInquiries")}
       </h1>
 
-      {/* Desktop Table: visible from sm and up */}
+      {/* Desktop Table: visible from md and up */}
       <div className="hidden md:block overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table className="min-w-full table-auto border-collapse text-xs  md:text-sm">
-          <thead className="bg-gradient-to-r from-green-400 via-green-500 to-green-700 text-white">
+        <table className="min-w-full table-auto border-collapse text-xs md:text-sm">
+          <thead className="bg-[#26a17b] text-white">
             <tr>
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 {t("inquirys.titles")}
@@ -189,6 +197,9 @@ const AllInquiries = () => {
               <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
                 {t("inquirys.date")}
               </th>
+              <th className="px-6 py-3 text-left font-semibold uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
 
@@ -201,7 +212,7 @@ const AllInquiries = () => {
                 }`}
                 onClick={() => handleViewUser(user.id)}
               >
-                <td className="px-6 py-4 whitespace-nowrap  text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                   {user.title === "Edit Account Info" && t("inquirys.editAccount")}
                   {user.title === "Sell Inquiry" && t("inquirys.sellInquiry")}
                   {user.title === "Buy Inquiry" && t("inquirys.buyInquiry")}
@@ -210,8 +221,8 @@ const AllInquiries = () => {
                 <td className="px-6 py-4 text-gray-700 bg-slate-100 max-w-sm break-words">
                   {user.description}
                 </td>
-                <td className="px-6 py-4 text-gray-700  max-w-sm break-words">
-                  <td>{user?.comment || t("inquirys.noComment")}</td>
+                <td className="px-6 py-4 text-gray-700 max-w-sm break-words">
+                  {user?.comment || t("inquirys.noComment")}
                 </td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap bg-slate-100 font-semibold ${
@@ -227,13 +238,23 @@ const AllInquiries = () => {
                 <td className="px-3 text-xs py-4 whitespace-nowrap text-gray-700">
                   {formatDateTime(user.date) || "Unknown"}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
+                  <div className="flex items-center gap-3">
+                    <button className="text-blue-600 hover:text-blue-800">
+                      <FaEdit />
+                    </button>
+                    <button onClick={modalDelete} className="text-red-600 hover:text-red-800">
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Mobile Card/List view: visible only below sm */}
+      {/* Mobile Card/List view: visible only below md */}
       <div className="md:hidden space-y-4">
         {allInquiry?.map((user) => (
           <div
@@ -260,9 +281,32 @@ const AllInquiries = () => {
               Status: {user.status}
             </p>
             <p className="text-sm text-gray-600">Date: {user.date || "Unknown"}</p>
+
+            {/* Actions */}
+            <div className="mt-3 flex items-center gap-4">
+              <button className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1">
+                <FaEdit />
+                <span>Edit</span>
+              </button>
+              <button
+                onClick={modalDelete}
+                className="text-red-600 hover:text-red-800 text-sm flex items-center gap-1"
+              >
+                <FaTrash />
+                <span>Delete</span>
+              </button>
+            </div>
           </div>
         ))}
+
       </div>
+
+        <ConfirmModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          // onConfirm={() => handleCancleMatch(pendingOrderId)}
+          message='Are you sure to the delete'
+        />
       <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}
