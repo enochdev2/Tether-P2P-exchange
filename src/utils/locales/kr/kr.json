@@ -111,6 +111,7 @@
     "amountToSell": "판매 금액",
     "amountToBuy": "구매 금액",
     "enterAmount": "USDT 금액 입력",
+    "price": "만원",
     "clear": "초기화",
     "depositWalletAddress": "입금 주소",
     "depositNetwork": "입금 네트워크",

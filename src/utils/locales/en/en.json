@@ -112,6 +112,7 @@
     "amountToSell": "Amount to Sell",
     "amountToBuy": "Amount to Buy",
     "enterAmount": "Enter Amount",
+    "price": "K",
     "clear": "Clear",
     "depositWalletAddress": "Deposit Wallet Address",
     "depositNetwork": "Deposit Network",

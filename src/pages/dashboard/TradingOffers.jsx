@@ -338,7 +338,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
           }`}
             >
-              {val / 1000}k
+              {val / 1000} {t("sellorder.price")}
             </button>
           ))}
           <button
