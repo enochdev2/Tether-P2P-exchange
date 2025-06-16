@@ -9,22 +9,23 @@ const ConfirmModal = ({ open, onClose, onConfirm, message }) => {
           {message || "Are you sure you want to proceed?"}
         </h2>
         
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium transition-all"
-          >
-            No, Cancel
-          </button>
+        <div className="flex justify-between gap-4">
           <button
             onClick={() => {
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 rounded-md bg-[#26a17b] hover:bg-green-700 text-white text-sm font-medium transition-all"
+            className="px-4 py-2 cursor-pointer rounded-md bg-[#26a17b] hover:bg-green-700 text-white text-sm font-medium transition-all"
           >
             Yes, Proceed
           </button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 cursor-pointer rounded-md bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-medium transition-all"
+          >
+            No, Cancel
+          </button>
+          
         </div>
       </div>
     </div>
