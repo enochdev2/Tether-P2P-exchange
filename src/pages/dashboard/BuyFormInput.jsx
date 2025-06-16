@@ -65,15 +65,19 @@ const Modal = ({ isModalOpen, closeModal }) => {
     if (!refreshing) return;
     const fetchPrice = async () => {
       try {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
-        );
+        const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error("Failed to fetch tether price");
         }
         const data = await response.json();
-        setRate(data.tether.krw);
-        setPriceKRW(data.tether.krw);
+        setRate(data.data);
+        setPriceKRW(data.data);
         return response;
       } catch (err) {
         console.log(err.message);
@@ -100,19 +104,6 @@ const Modal = ({ isModalOpen, closeModal }) => {
     return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
   };
 
-
-
-
-  //   const krwButtons = [
-  //   "₩10,000",
-  //   "₩30,000",
-  //   "₩50,000",
-  //   "₩100,000",
-  //   "₩200,000",
-  //   "₩300,000",
-  //   "₩500,000",
-  //   "₩1,000,000",
-  // ];
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
@@ -181,6 +172,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       });
 
       const data = await response.json();
+      console.log("🚀 ~ submitOrder ~ data:", data)
       if (!response.ok) {
         const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);

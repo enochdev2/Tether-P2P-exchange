@@ -31,14 +31,18 @@ export const AuthProvider = ({ children }) => {
 
   const fetchPrice = async () => {
     try {
-      const response = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setPriceKRW(data.tether.krw);
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch tether price");
+        }
+        const data = await response.json();
+      setPriceKRW(data.data);
       return response;
     } catch (err) {
       console.log(err.message);

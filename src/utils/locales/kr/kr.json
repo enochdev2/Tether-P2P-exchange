@@ -185,6 +185,10 @@
   "editinfo": {
     "inquiryInstruction": "1:1 문의를 통해 개인정보 수정 요청을 부탁드립니다."
   },
+   "tetherprice": {
+    "setprice": "설정",
+    "settetherprice": "테더 가격 설정"
+  },
   "inquirys": {
     "title": "1:1 문의",
     "placeholder": "메시지를 입력해 주세요…",

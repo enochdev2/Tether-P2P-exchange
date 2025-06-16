@@ -24,14 +24,10 @@ const TradingPage = () => {
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
-  async function fetchBuyOrders(status = "") {
+  async function fetchBuyOrders() {
     try {
       // Build the URL with optional status query parameter
-      const url = status
-        ? `https://tether-p2p-exchang-backend.onrender.com/api/buy/buy-orders?status=${encodeURIComponent(
-            status
-          )}`
-        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders";
+      const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders";
       // : "http://localhost:3000/api/v1/buy/buy-orders";
 
       const token = localStorage.getItem("token");
@@ -45,6 +41,7 @@ const TradingPage = () => {
       });
 
       const buyOrders = await response.json();
+      console.log("🚀 ~ fetchBuyOrders ~ buyOrders:", buyOrders)
 
       if (!response.ok) {
         const data = await response.json();

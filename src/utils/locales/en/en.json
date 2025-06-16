@@ -188,6 +188,10 @@
   "editinfo": {
     "inquiryInstruction": "→ Please leave the details you wish to edit in the 1:1 Inquiry info."
   },
+  "tetherprice": {
+    "setprice": "Set Price",
+    "settetherprice": "Set Tether Price"
+  },
   "inquirys": {
     "title": "1:1 Inquiry",
     "placeholder": "Type your message here...",
