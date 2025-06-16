@@ -7,8 +7,10 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import { useTranslation } from "react-i18next";
 
 const BuyLivePage = () => {
+  const { t } = useTranslation(); 
   const [buyOrders, setBuyOrders] = useState([]);
   const [loadingBuy, setLoadingBuy] = useState(true);
   const [pendingOrders, setPendingOrders] = useState([]);
@@ -439,12 +441,13 @@ const BuyLivePage = () => {
           <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl">
             <div className="px-5 py-2 rounded-2xl">
               <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
-                Buy Orders (<span className="text-emerald-70 text-shadow-emerald-400">Live</span>)
+               {t("adminPanel.items.buyOrders")} 
+                {/* (<span className="text-emerald-70 text-shadow-emerald-400">Live</span>) */}
               </h1>
             </div>
             <div className="space-x-4">
               <button className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 font-medium transition">
-                Sort By
+                 {t("buytether.sortBy")}
               </button>
             </div>
           </div>
@@ -483,7 +486,7 @@ const BuyLivePage = () => {
           {inProgressOrders.length > 0 && (
             <div className="mb-8">
               <h2 className="text-xl text-green-700 border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
-                All Orders In Progress
+                {t("buytether.allOrdersInProgress")}
               </h2>
               <div className="mt-4 space-y-4">
                 {inProgressOrders.map((offer) => (
@@ -503,7 +506,7 @@ const BuyLivePage = () => {
           {pendingOrders.length > 0 && (
             <div className="mb-8">
               <h2 className="text-xl text-red-700 border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
-                All Pending Orders
+                {t("buytether.allPendingOrders")}
               </h2>
               <div className="mt-4 space-y-4">
                 {pendingOrders.map((offer) => (
@@ -523,7 +526,7 @@ const BuyLivePage = () => {
           {/* Live Buy Orders */}
           <div>
             <h2 className="text-xl text-black border border-slate-400 rounded-2xl bg-slate-200 px-4 py-2 font-bold shadow">
-              All Live Buy Orders
+              {t("buytether.allBuyOrders")}
             </h2>
             <div className="mt-4 space-y-4">
               {filteredBuyOrders.length === 0 ? (

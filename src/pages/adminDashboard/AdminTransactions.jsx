@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // [
 //   {
@@ -126,18 +127,19 @@ const mockData = {
 };
 
 function TransactionDetails({ details, activeTab }) {
+  const { t } = useTranslation(); 
   return (
     <div className="border border-[#26a17b] rounded-lg p-4 mt-4 bg-white shadow-md text-sm sm:text-base">
       {/* Buyer Info */}
       <div className="bg-[#f4fdf9] border border-[#26a17b] rounded-lg p-4 space-y-3">
         <div>
-          <strong> {activeTab === "buy" ? "Buyer Nickname" : "Seller Nickname"}:</strong> {details.buyerNickname}
+          <strong> {activeTab === "buy" ? t("transactions.details.buyerNickname") : t("transactions.details.sellerNickname")}:</strong> {details.buyerNickname}
         </div>
         <div>
-          <strong>{activeTab === "buy" ? "Buyer Number" : "Seller Number"}:</strong> {details.buyerPhone}
+          <strong>{activeTab === "buy" ? t("transactions.details.buyerNumber") : t("transactions.details.sellerNumber")}:</strong> {details.buyerPhone}
         </div>
         <div>
-          <strong>{activeTab === "buy" ? "Buy Request Amount" : "Sell Request Amount"}:</strong> {details.buyRequestAmount}
+          <strong>{activeTab === "buy" ? t("transactions.details.buyRequestAmount") : t("transactions.details.sellRequestAmount")}:</strong> {details.buyRequestAmount}
         </div>
       </div>
 
@@ -214,6 +216,7 @@ function TransactionDetails({ details, activeTab }) {
 }
 
 export default function AdminTransactions() {
+  const { t } = useTranslation(); 
   const [activeTab, setActiveTab] = useState("buy");
   const [searchInput, setSearchInput] = useState("");
   const [expandedPost, setExpandedPost] = useState(null);
@@ -282,18 +285,23 @@ export default function AdminTransactions() {
     setExpandedPost((prev) => (prev === postingNumber ? null : postingNumber));
   };
 
+  const tabLabels = {
+  sell: 'transactions.tabs.sell',
+  buy: 'transactions.tabs.buy'
+};
+
   return (
     <div className=" lg:mx-auto mt-8 px-4 font-sans text-gray-900 text-sm">
       {/* Heading */}
       <h2 className="mb-6 text-xl md:text-3xl font-bold text-center md:text-left text-[#26a17b]">
-        Transactions
+        {t("transactions.title")}
       </h2>
 
       {/* Search Bar */}
       <div className="flex flex-row sm:flex-row items-stretch sm:items-center gap-3 mb-6">
         <input
           type="text"
-          placeholder="Search by Posting Number"
+          placeholder={t("transactions.searchPlaceholder")}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#26a17b] text-sm"
@@ -302,7 +310,7 @@ export default function AdminTransactions() {
           onClick={handleSearch}
           className="px-5 py-2 bg-[#26a17b] text-white rounded-md font-medium hover:bg-emerald-700 transition"
         >
-          Search
+          {t("transactions.searchButton")}
         </button>
       </div>
 
@@ -317,13 +325,14 @@ export default function AdminTransactions() {
               setExpandedPost(null);
               setSearchInput("");
             }}
-            className={`w-1/2 py-2 text-sm sm:text-base font-semibold transition ${
+            className={`w-1/2 py-2 text-sm sm:text-base cursor-pointer font-semibold transition ${
               activeTab === tab
                 ? "bg-[#26a17b] text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
+             {t(tabLabels[tab])}
           </button>
         ))}
       </div>
@@ -333,12 +342,12 @@ export default function AdminTransactions() {
         <table className="min-w-full text-sm text-left table-auto">
           <thead>
             <tr className="bg-[#26a17b] text-white">
-              <th className="px-4 py-3 rounded-tl-md">Posting Number</th>
-              <th className="px-4 py-3">Buyer</th>
-              <th className="px-4 py-3">Seller</th>
-              <th className="px-4 py-3">Amount</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 text-center rounded-tr-md">Actions</th>
+              <th className="px-4 py-3 rounded-tl-md">{t("transactions.table.postingNumber")}</th>
+              <th className="px-4 py-3">{t("transactions.table.buyer")}</th>
+              <th className="px-4 py-3">{t("transactions.table.seller")}</th>
+              <th className="px-4 py-3">{t("transactions.table.amount")}</th>
+              <th className="px-4 py-3">{t("transactions.table.status")}</th>
+              <th className="px-4 py-3 text-center rounded-tr-md">{t("transactions.table.actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -367,14 +376,14 @@ export default function AdminTransactions() {
                           : "text-yellow-600"
                       }`}
                     >
-                      {status}
+                      {t("transactions.status.completed")}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button
                         onClick={() => toggleExpand(postingNumber)}
                         className="text-[#26a17b] cursor-pointer font-medium hover:underline"
                       >
-                        View Details
+                         {t("transactions.viewDetails")}
                       </button>
                     </td>
                   </tr>

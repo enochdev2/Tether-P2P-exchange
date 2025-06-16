@@ -5,7 +5,7 @@ import { useAuth } from "../../utils/AuthProvider";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { BiChat } from "react-icons/bi";
-import { FaUserCog } from "react-icons/fa";
+import { FaSortAmountUpAlt, FaUserCog } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 
@@ -15,6 +15,7 @@ const sidebarSections = [
     items: [
       { key: "dashboard", to: "/admin/dashboard", icon: <User /> },
       { key: "transactions", to: "/admin/transactions", icon: <HiOutlineSwitchHorizontal /> },
+      { key: "tetherprice", to: "/admin/setprice", icon: <FaSortAmountUpAlt /> },
     ],
   },
   {
@@ -38,7 +39,7 @@ const sidebarSections2 = [
 ];
 
 export default function AdminSidebar() {
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
@@ -152,7 +153,6 @@ export default function AdminSidebar() {
   );
 }
 
-
 // const sidebarSections = [
 //   {
 //     title: "General",
@@ -253,7 +253,7 @@ export default function AdminSidebar() {
 //         {!collapsed && (
 //           <div className="flex items-center space-x-4">
 //             <div className="rounded-full bg-[#26a17b flex items-center pl- justify-center text-white font-bold text-lg space-x-3 md:space-x-6">
-              
+
 //               <h3 className="hidden sm:block p-3 rounded-full bg-[#26a17b] font-bold">
 //                 AD
 //               </h3>
@@ -278,7 +278,7 @@ export default function AdminSidebar() {
 //             <ul className="space-y-1">
 //               {section.items.map((item) => (
 //                 <Item key={item.to} to={item.to}>
-//                   {item.icon} 
+//                   {item.icon}
 //                   {!collapsed && <span>{item.label}</span>}
 //                 </Item>
 //               ))}
@@ -292,7 +292,7 @@ export default function AdminSidebar() {
 //             <ul className="space-y-1">
 //               {section.items.map((item) => (
 //                 <Item key={item.to} to={item.to}>
-//                   {item.icon} 
+//                   {item.icon}
 //                   {!collapsed && <span>{item.label}</span>}
 //                 </Item>
 //               ))}

@@ -168,7 +168,7 @@ const TradingPage = () => {
       }
 
       if (Array.isArray(data) && data.length > 0) {
-        LongSuccessToast("You have a new notification message on buy order");
+        SuccessToast("You have a new notification message on buy order");
       }
       setNotifications(data);
     } catch (error) {

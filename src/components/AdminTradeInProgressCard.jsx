@@ -5,17 +5,14 @@ import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
-import ConfirmModal from "./confirmModal";
+import ConfirmModal from "./ConfirmModal";
+import { useTranslation } from "react-i18next";
 
-const statusColors = {
-  "On sell": "#26a17b", // Green
-  "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Amber
-};
 
 // import your logo and statusColors accordingly
 
 const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fetchOrders }) => {
+   const { t } = useTranslation();
   console.log("🚀 ~ AdminTradeInProgressCard ~ offer:", offer);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -147,7 +144,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         {/* Status & Nickname */}
         <div className="flex flex-wrap gap-2 items-center">
           <span className="bg-green-600 text-white text-sm font-semibold px-3 py-2 rounded-md shadow-sm">
-            Matching In Progress
+          {t("tradecard.matchInProgress")}
           </span>
           <button
             className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-md font-medium px-3 py-1 rounded-md transition"
@@ -161,9 +158,9 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         <div className="flex items-center gap-2 text-md text-gray-700">
           <img src={logo2} alt="Tether" className="w-5 h-5" />
           <div className="leading-tight">
-            <p className="text-gray-400 text-sm">Total: {offer.amount} USDT</p>
+            <p className="text-gray-400 text-sm">{t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}</p>
             <p className="font-semibold text-md">
-              Bal: {parseFloat(offer.amountRemaining).toFixed(4)} USDT
+              {t("tradecard.balance", { amount: parseFloat(offer.amountRemaining).toFixed(4) })}
             </p>
           </div>
         </div>
@@ -181,38 +178,41 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
             onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
             className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
           >
-            1:1 Chat
+            {t("tradecard.chat")}
           </button>
-          <button
+          
+
+          {sell &&
+            (offer.status === "In Progress" ? (
+              <div className="space-x-3">
+                <button
+                  onClick={handleMatchCancel}
+                  className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+                >
+                  {t("tradecard.cancel")}
+                </button>
+                <button
+                  onClick={handleMatchComplete}
+                  className="bg-cyan-600  hover:bg-cyan-700 text-white  text-xs px-2 py-3 rounded-md font-medium cursor-pointer shadow-sm"
+                >
+                   {t("tradecard.completematch")}
+                </button>
+              </div>
+            ) : (
+              <div className="space-x-2">
+                <button
             onClick={() => openCancelModal(offer._id)}
             className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
           >
             <FaTrash size={14} />
           </button>
-
-          {sell &&
-            (offer.status === "In Progress" ? (
-              <div>
-                <button
-                  onClick={handleMatchCancel}
-                  className="bg-red-600 cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleMatchComplete}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-md font-medium cursor-pointer shadow-sm"
-                >
-                  Complete-Match
-                </button>
-              </div>
-            ) : (
               <button
                 onClick={handleMatchClick}
                 className="bg-cyan-600  hover:bg-cyan-600 text-white text-xs px-3 py-3 rounded-md font-semibold shadow-sm cursor-pointer"
-              >
-                Match
+                >
+                {t("tradecard.match")}
               </button>
+                </div>
             ))}
         </div>
 

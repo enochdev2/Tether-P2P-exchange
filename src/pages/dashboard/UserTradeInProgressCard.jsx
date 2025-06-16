@@ -38,6 +38,8 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
     "Sell completed": "#f59e0b", // Amber
   };
 
+    const orderType = sell ? "sell" : "buy";
+
   return (
     <div
       className={`relative flex flex-col sm:flex-row items-center bg-green-100 rounded-lg py-2 px-2 sm:py-3 md:py-2 mb-4 border border-green-900 shadow-sm
@@ -84,7 +86,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
         <div className="space-x-3">
           {/* Chat button for buy orders waiting for buy */}
           <button
-            onClick={() => navigate(`/chat/${offer._id}`)}
+            onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
             className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
           >
             1:1 Chat
