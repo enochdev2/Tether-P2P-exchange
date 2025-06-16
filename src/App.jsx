@@ -30,6 +30,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
+import TetherPrice from "./pages/adminDashboard/TetherPrice";
 
 function App() {
   return (
@@ -102,6 +103,7 @@ function App() {
         >
           <Route path="dashboard" element={<Dashboards />} />
           <Route path="transactions" element={<AdminTransactions />} />{" "}
+          <Route path="setprice" element={<TetherPrice />} />{" "}
           <Route path="transaction/:id" element={<TransactionDetails />} />
           <Route path="sell-orders" element={<SellLivePage />} />
           <Route path="buy-orders" element={<BuyLivePage />} />
@@ -110,8 +112,7 @@ function App() {
           {/* <Route path="users" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
           </Route> */}
-          <Route path="chat" element={<AllChatPage />} />{" "}
-          {/* You can customize this */}
+          <Route path="chat" element={<AllChatPage />} /> {/* You can customize this */}
         </Route>
       </Routes>
 

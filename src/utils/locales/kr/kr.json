@@ -61,6 +61,7 @@
     "items": {
       "dashboard": "대쉬보드",
       "transactions": "기록",
+      "tetherprice": "테더 가격",
       "sellOrders": "판매 주문(Live)",
       "buyOrders": "구매 주문(Live)",
       "sellBuyChat": "판매/구매 주문 1:1 채팅(Live)",
