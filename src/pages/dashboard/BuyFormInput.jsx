@@ -8,6 +8,7 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { useAuth } from "../../utils/AuthProvider";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -89,6 +90,18 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
   // Korean currency button values in won (number format)
   const krwButtons = [10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
+
+
+   // Conditional formatting based on language
+  const formatCurrency = (value) => {
+    if (i18next.language === 'ko') {
+      return `${value / 10000} ${t("sellorder.price")}`; // For Korean, show '만원'
+    }
+    return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
+  };
+
+
+
 
   //   const krwButtons = [
   //   "₩10,000",
@@ -320,7 +333,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
           }`}
             >
-              {val / 1000} {t("sellorder.price")}
+              {formatCurrency(val)}
             </button>
           ))}
           <button
