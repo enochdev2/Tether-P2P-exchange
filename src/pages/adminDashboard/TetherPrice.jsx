@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ErrorToast } from "../../utils/Error";
 import { useTranslation } from "react-i18next";
+import { SuccessToast } from "../../utils/Success";
+import { useAuth } from "../../utils/AuthProvider";
 
 const TetherPrice = () => {
+     const { fetchPrice } = useAuth();
   const { t } = useTranslation();
   const [tetherPrice, setTetherPrice] = useState(null); // State to store the tether price
   const [inputPrice, setInputPrice] = useState("");
@@ -29,6 +32,7 @@ const TetherPrice = () => {
           throw new Error("Failed to fetch tether price");
         }
         const data = await response.json();
+        fetchPrice();
         setTetherPrice(data.data); // Update state with the fetched price
       } catch (err) {
         console.error(err.message);
@@ -72,6 +76,8 @@ const TetherPrice = () => {
         ErrorToast(errorMsg);
         //  return response;
       }
+      fetchPrice();
+      SuccessToast("Tether Price successfully set ");
 
       setTetherPrice(data.data.tetherPrice);
 
@@ -92,7 +98,7 @@ const TetherPrice = () => {
         </div>
         <div className="bg-gray-200 md:w-xl border-slate-400 border rounded-2xl overflow-hidden py-10 items-center space-y-4 px-3  shadow-2xl flex flex-col">
           <h1 className="font-bold text-2xl bg-[#26a17b]/30 px-4 rounded-lg">
-          {t("tetherprice.settetherprice")}
+            {t("tetherprice.settetherprice")}
           </h1>
           <input
             className="bg-slate-300 w-lg text-center px-2 py-2 rounded-xl"
