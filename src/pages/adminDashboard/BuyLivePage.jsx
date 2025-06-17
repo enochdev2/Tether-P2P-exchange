@@ -279,7 +279,7 @@ const BuyLivePage = () => {
 
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        LongSuccessToast("You have a new notification message on buy order");
+        // LongSuccessToast("You have a new notification message on buy order");
       }
       setNotifications(data);
     } catch (error) {

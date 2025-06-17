@@ -5,11 +5,11 @@ import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./ConfirmModal";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaCopy } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
-
+ 
 const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
   const { t } = useTranslation(); 
   console.log("🚀 ~ AdminTradeCard ~ offer:", offer)
@@ -23,6 +23,18 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
   const openCancelModal = (orderId) => {
     setPendingOrderId(orderId);
     setIsModalOpen(true);
+  };
+
+   const handleCopy = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        // Optionally, you can show a success message or change the icon state
+        SuccessToast("ID copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
   };
 
   // Adjust isPending logic if needed
@@ -172,9 +184,17 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
 
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap ml-10 lg:ml-20 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
-        <div className="break-all text-center sm:text-right w-full sm:w-auto truncate text-gray-500 font-mono">
-          {offer._id}
-        </div>
+        <div className="flex items-center space-x-2">
+            <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+              {offer._id}
+            </div>
+            <button
+              className="text-gray-500 hover:text-gray-700 cursor-pointer"
+              onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+            >
+              <FaCopy size={16} /> {/* Copy icon */}
+            </button>
+          </div>
         <div className="flex items-center text-sm space-x-2">
           <div
             className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"

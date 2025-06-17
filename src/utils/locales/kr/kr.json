@@ -167,7 +167,7 @@
     "total": "총액: {{amount}} USDT",
     "balance": "잔액: {{amount}} USDT",
     "chat": "1:1 채팅",
-    "match": "매칭f",
+    "match": "매칭",
     "approve": "승인",
     "reject": "거절",
     "cancel": "취소",

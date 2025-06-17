@@ -22,6 +22,7 @@ import { ErrorToast } from "../../utils/Error";
 import { useAuth } from "../../utils/AuthProvider";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import ConfirmModal2 from "../../components/ConfirmModal2";
 
 const TradingOffers = () => {
   const { t } = useTranslation();
@@ -73,6 +74,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // const [refreshed, setRefreshed] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
+  const [isModalOpens, setIsModalOpens] = useState(false);
+  // const [pendingOrderId, setPendingOrderId] = useState(offer?.sellerNickname || null);
+
+  const openCancelModal = (orderId) => {
+    // setPendingOrderId(orderId);
+    setIsModalOpens(true);
+  };
 
   const [error, setError] = useState(null);
   const [walletAddress, setWalletAddress] = useState(
@@ -93,13 +101,16 @@ const Modal = ({ isModalOpen, closeModal }) => {
     if (!refreshing) return;
     const fetchPrice = async () => {
       try {
-        const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
-          method: "GET",
-          headers: {
-            // Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          {
+            method: "GET",
+            headers: {
+              // Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch tether price");
         }
@@ -121,15 +132,14 @@ const Modal = ({ isModalOpen, closeModal }) => {
   if (!isModalOpen) return null;
   // Korean currency button values in won (number format)
   const krwButtons = [10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
-  
-     // Conditional formatting based on language
-    const formatCurrency = (value) => {
-      if (i18next.language === 'ko') {
-        return `${value / 10000} ${t("sellorder.price")}`; // For Korean, show '만원'
-      }
-      return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
-    };
 
+  // Conditional formatting based on language
+  const formatCurrency = (value) => {
+    if (i18next.language === "ko") {
+      return `${value / 10000} ${t("sellorder.price")}`; // For Korean, show '만원'
+    }
+    return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
+  };
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
@@ -459,7 +469,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
             {t("sellorder.cancel")}
           </button>
           <button
-            onClick={submitOrder}
+            // onClick={submitOrder}
+            onClick={openCancelModal}
             type="button"
             disabled={!agreed}
             className={`px-8 py-2 cursor-pointer rounded text-white transition ${
@@ -469,6 +480,16 @@ const Modal = ({ isModalOpen, closeModal }) => {
             {loading ? <LoadingSpinner /> : `${t("sellorder.submit")}`}
           </button>
         </div>
+        <ConfirmModal2
+          classname="absolute"
+          open={isModalOpens}
+          onClose={submitOrder}
+          // onConfirm={() => handleCancleMatch(pendingOrderId)}
+          message="Before the transaction, please transfer USDT 
+(phantom wallet) to the address below"
+      // message2={walletAddress}
+      message2={walletAddress}
+        />
       </div>
     </div>
   );
