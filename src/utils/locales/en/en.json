@@ -81,7 +81,7 @@
     "phone": "Phone Number",
     "bankName": "Bank Name",
     "bankAccount": "Bank Account Number",
-    "tetherAddress": "Tether Address (Solana address)",
+    "tetherAddress": "Tether Address (Phantom wallet)",
     "referralCode": "Referral Code",
     "bankPlaceholder": "Bank",
     "phonePlaceholder": "Please enter only the number without dashes",

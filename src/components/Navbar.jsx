@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
 import i18n from "i18next";
-import {
-  ArrowUpDown,
-  Eye,
-  FileText,
-  Settings,
-  Share2,
-  User,
-  Users,
-  X,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowUpDown, Eye, FileText, Settings, Share2, User, Users, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import logo2 from "../assets/Tether2.png";
 import logo from "../assets/Tether.png";
 import { useAuth } from "../utils/AuthProvider";
 import { FaGlobe } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -54,15 +46,35 @@ const Navbar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen); // Toggle the mobile menu
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Toggle the profile dropdown
   const togglePasswordVisibility = () => setShowPassword(!showPassword); // Toggle password visibility
+  const [isLoading, setIsLoading] = useState(false);
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const toggleDropdownLan = () => setIsOpen(!isOpen);
 
   const selectLanguage = (lang) => {
     console.log("🚀 ~ selectLanguage ~ lang:", lang);
     i18n.changeLanguage(lang.toLowerCase()); // Change language dynamically with i18n
-     localStorage.setItem('language', lang);
+    localStorage.setItem("language", lang);
     setLanguage(lang);
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      localStorage.removeItem("token");
+      const response = await logout();
+      if (response) {
+        toast.success("You have just logged out successfully");
+        setIsLoading(false);
+        navigate("/");
+        setIsMenuOpen(false);
+      }
+    } catch (error) {
+      console.error("Logout Error:", error);
+    }
   };
 
   return (
@@ -90,7 +102,7 @@ const Navbar = () => {
                   } hover:text-white px-2 py-2 rounded-md text-[15px] font-medium`}
                   onClick={() => handleLinkClick(link.name)}
                 >
-                 {t(link.name)}
+                  {t(link.name)}
                 </Link>
               ))}
           </div>
@@ -102,7 +114,10 @@ const Navbar = () => {
               <span>
                 <img src={logo2} alt="" className="md:w-8 md:h-8 w-6 h-6" />
               </span>
-              <span className="text-xs md:text-sm">{t('USDT/₩')}{priceKRW}</span>
+              <span className="text-xs md:text-sm">
+                {t("USDT/₩")}
+                {priceKRW}
+              </span>
             </div>
 
             {isLoggedIn ? (
@@ -146,7 +161,7 @@ const Navbar = () => {
                     <div className="absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-xl overflow-hidden ring-1 ring-black/10 transition-all duration-300 z-50">
                       <div className="px-4 py-3 border-b border-gray-200">
                         <span className="text-sm font-semibold text-[#CC1747]">
-                           {t('Verify Me')}
+                          {t("Verify Me")}
                         </span>
                       </div>
                       <ul className="text-sm divide-y divide-gray-100">
@@ -196,9 +211,7 @@ const Navbar = () => {
                           <li
                             key={idx}
                             className={`flex items-center gap-2 px-4 py-3 hover:bg-gray-100 transition ${
-                              item.danger
-                                ? "text-red-600 hover:bg-red-100"
-                                : "text-gray-700"
+                              item.danger ? "text-red-600 hover:bg-red-100" : "text-gray-700"
                             }`}
                           >
                             {item.icon}
@@ -220,14 +233,14 @@ const Navbar = () => {
                     className="bg-gray-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition"
                     onClick={() => handleLinkClick("signin")}
                   >
-                      {t('Sign In')}
+                    {t("Sign In")}
                   </Link>
                   <Link
                     to="/signup"
                     className="bg-green-800 text-white px-5 py-2 rounded-md text-base font-medium hover:bg-green-600 transition"
                     onClick={() => handleLinkClick("signup")}
                   >
-                   {t('Sign Up')}
+                    {t("Sign Up")}
                   </Link>
                 </div>
               </>
@@ -241,7 +254,7 @@ const Navbar = () => {
                 className="text-white bg-green-800 hidden lg:block px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
                 onClick={() => handleLinkClick("admin-dashboard")}
               >
-                 {t('Admin')}
+                {t("Admin")}
               </Link>
             </div>
           )}
@@ -260,9 +273,7 @@ const Navbar = () => {
                 <button
                   onClick={() => selectLanguage("EN")}
                   className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
-                    language === "ENG"
-                      ? "font-semibold text-gray-900"
-                      : "text-gray-600"
+                    language === "ENG" ? "font-semibold text-gray-900" : "text-gray-600"
                   }`}
                 >
                   <img
@@ -275,9 +286,7 @@ const Navbar = () => {
                 <button
                   onClick={() => selectLanguage("KO")}
                   className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
-                    language === "KOR"
-                      ? "font-semibold text-gray-900"
-                      : "text-gray-600"
+                    language === "KOR" ? "font-semibold text-gray-900" : "text-gray-600"
                   }`}
                 >
                   <img
@@ -340,9 +349,10 @@ const Navbar = () => {
               ))}
             {isLoggedIn ? (
               <Link
-                to="/logout"
+                onClick={handleLogout}
+                disabled={isLoading}
                 className="logout-button inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white px-5 py-2.5 rounded-full text-base font-semibold shadow-md hover:shadow-lg transition duration-300 ease-in-out"
-                onClick={() => handleLinkClick("logout")}
+                // onClick={() => handleLinkClick("logout")}
               >
                 <svg
                   className="w-5 h-5"
@@ -358,7 +368,7 @@ const Navbar = () => {
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10v1"
                   />
                 </svg>
-                Sign Out
+                {isLoading ? 'Sign Out...' : 'Sign Out'}
               </Link>
             ) : (
               <>
@@ -368,14 +378,14 @@ const Navbar = () => {
                     className="w-full sm:w-auto bg-gray-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
                     onClick={() => handleLinkClick("signin")}
                   >
-                    {t('Sign In')}
+                    {t("Sign In")}
                   </Link>
                   <Link
                     to="/signup"
                     className="w-full sm:w-auto bg-green-800 text-white px-4 py-2 rounded-md text-base font-medium text-center"
                     onClick={() => handleLinkClick("signup")}
                   >
-                    {t('Sign Up')}
+                    {t("Sign Up")}
                   </Link>
                 </div>
               </>

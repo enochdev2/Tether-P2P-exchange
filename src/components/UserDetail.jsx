@@ -23,11 +23,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   if (!user) {
-    return (
-      <div className="p-8 text-center text-gray-600">
-        No user data available.
-      </div>
-    );
+    return <div className="p-8 text-center text-gray-600">No user data available.</div>;
   }
 
   const handleChange = (e) => {
@@ -123,15 +119,13 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   return (
     <div className="bg-gray-50 min-h-screen p-6 sm:p-8 font-sans max-w-5xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-extrabold mb-6 text-gray-900">
-        User Details :{" "}
-        <span className="text-[#26a17b]">{user.nickname || user._id}</span>
+        User Details : <span className="text-[#26a17b]">{user.nickname || user._id}</span>
       </h1>
 
       <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
-        
-<h2 className="text-xl sm:text-2xl font-semibold mb-6 text-green-600 bg-slate-100 px-3 py-2 shadow-sm rounded">
-  Edit User Profile
-</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-green-600 bg-slate-100 px-3 py-2 shadow-sm rounded">
+          Edit User Profile
+        </h2>
 
         <form
           onSubmit={(e) => {
@@ -161,12 +155,12 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             },
           ].map(({ label, name, type, options }) => (
             <div key={name} className="flex flex-col">
-           <label
-  htmlFor={name}
-  className="mb-2 font-medium text-gray-700 select-none text-sm sm:text-base"
->
-  {label}
-</label>
+              <label
+                htmlFor={name}
+                className="mb-2 font-medium text-gray-700 select-none text-sm sm:text-base"
+              >
+                {label}
+              </label>
 
               {type === "select" ? (
                 <select
@@ -232,8 +226,16 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
               )}
             </div>
           ))}
+          {/* Avatar Display Section */}
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-500 shadow-md">
+            <img
+              src={user?.avatar || "https://i.pravatar.cc/150?img=43"} // Replace with user.avatar later
+              alt="User Avatar"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-          <div className="md:col-span-2 flex justify-center md:justify-end mt-6">
+          <div className="md:col-span-2 flex justify-center md:justify-end ">
             <button
               type="submit"
               disabled={isSaving}
