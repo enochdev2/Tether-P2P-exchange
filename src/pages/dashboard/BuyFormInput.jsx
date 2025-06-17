@@ -8,6 +8,7 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { useAuth } from "../../utils/AuthProvider";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -64,15 +65,19 @@ const Modal = ({ isModalOpen, closeModal }) => {
     if (!refreshing) return;
     const fetchPrice = async () => {
       try {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
-        );
+        const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error("Failed to fetch tether price");
         }
         const data = await response.json();
-        setRate(data.tether.krw);
-        setPriceKRW(data.tether.krw);
+        setRate(data.data);
+        setPriceKRW(data.data);
         return response;
       } catch (err) {
         console.log(err.message);
@@ -90,16 +95,15 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // Korean currency button values in won (number format)
   const krwButtons = [10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
 
-  //   const krwButtons = [
-  //   "₩10,000",
-  //   "₩30,000",
-  //   "₩50,000",
-  //   "₩100,000",
-  //   "₩200,000",
-  //   "₩300,000",
-  //   "₩500,000",
-  //   "₩1,000,000",
-  // ];
+
+   // Conditional formatting based on language
+  const formatCurrency = (value) => {
+    if (i18next.language === 'ko') {
+      return `${value / 10000} ${t("sellorder.price")}`; // For Korean, show '만원'
+    }
+    return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
+  };
+
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
@@ -168,6 +172,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       });
 
       const data = await response.json();
+      console.log("🚀 ~ submitOrder ~ data:", data)
       if (!response.ok) {
         const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
@@ -320,7 +325,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
               : "bg-gray-700 text-white hover:bg-green-700 hover:text-white"
           }`}
             >
-              {val / 1000}k
+              {formatCurrency(val)}
             </button>
           ))}
           <button

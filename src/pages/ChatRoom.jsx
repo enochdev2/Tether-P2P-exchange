@@ -4,6 +4,10 @@ import { io } from "socket.io-client";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { FiArrowLeft, FiImage } from "react-icons/fi";
+import { ErrorToast } from "../utils/Error";
+import { useTranslation } from "react-i18next";
+import InfoCard from "../components/InfoCard";
+import { BanknoteIcon, PiggyBank, Wallet2Icon } from "lucide-react";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -11,22 +15,23 @@ import { FiArrowLeft, FiImage } from "react-icons/fi";
 // });
 
 const ChatRoom = () => {
-  const { user, setIsLoggedIn, setUser } = useAuth();
+  const { t } = useTranslation();
+  const { user } = useAuth();
   const { orderType, orderId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [userOrderId, setUserOrderId] = useState(null);
+  const [userInfo, setUserInfo] = useState(true);
+  // const [userOrderId, setUserOrderId] = useState(null);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const whic = orderId.length > 5 ? orderId : orderType;
-  const whi = orderType.length < 5 ? orderType : orderId  ;
+  const whi = orderType.length < 5 ? orderType : orderId;
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-      const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -34,7 +39,6 @@ const ChatRoom = () => {
     setSocket(newSocket);
 
     fetchMessages();
-
 
     newSocket.on("connect", () => {
       setIsConnected(true);
@@ -121,17 +125,14 @@ const ChatRoom = () => {
 
           socket.emit("sendMessage", messageData);
 
-          await fetch(
-            "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(messageData),
-            }
-          );
+          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          });
 
           setImage(null); // Clear image after sending
         });
@@ -143,17 +144,14 @@ const ChatRoom = () => {
 
         socket.emit("sendMessage", messageData);
 
-        await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(messageData),
-          }
-        );
+        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(messageData),
+        });
       }
       // setNewMessage("");
     }
@@ -177,6 +175,17 @@ const ChatRoom = () => {
     }
     // Or navigate away:
   };
+
+  const hanleToggleUserInfo = async () => {
+    setUserInfo(false);
+  };
+
+  const copyToClipboard = (text, label = "Copied") => {
+    navigator.clipboard.writeText(text);
+    SuccessToast(`${label} Copied Successfully`);
+  };
+
+  const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
 
   const readImageAsDataURL = (file, callback) => {
     const reader = new FileReader();
@@ -206,13 +215,54 @@ const ChatRoom = () => {
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
     <div className="min-h-screen mt-10 bg-gray-100 flex items-center justify-center p-4">
+      {userInfo && (
+        <div className="mr-5 bg-slate-300 px-2 rounded-lg">
+          <div className="flex flex-col gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
+            <div className="min-w-[280px]  sm:min-w-0 flex-1">
+              <InfoCard
+                icon={<PiggyBank size={24} />}
+                title={t("profile.bankName")}
+                actionText={user?.bankName}
+                onAction={() => console.log("Navigate to security questions")}
+                copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
+              />
+            </div>
+            <div className="min-w-[280px] sm:min-w-0 flex-1">
+              <InfoCard
+                icon={<BanknoteIcon size={24} />}
+                title={t("profile.bankAccountNumber")}
+                actionText={user?.bankAccount}
+                copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
+                onAction={() => console.log("Navigate to security questions")}
+              />
+            </div>
+
+            <div className="min-w-[280px]  sm:min-w-0 flex-1">
+              <InfoCard
+                className=""
+                icon={<Wallet2Icon size={24} />}
+                title={tether.slice(0, 15)}
+                actionText={tether.slice(15, 60)}
+                copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-end">
+            <button
+              onClick={hanleToggleUserInfo}
+              className="  bg-red-600 px-2 text-lg rounded-lg text-yellow-50 cursor-pointer font-bold"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-5xl bg-white shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden">
         {/* Chat Area */}
         <div className="w-full md:w-2/3 flex flex-col border-r border-gray-200">
           <div className="bg-green-800 text-white text-center py-4 px-6">
-            <h1 className="text-xl md:text-2xl font-semibold">
-              Chatroom for Order: {whic}
-            </h1>
+            <h1 className="text-xl md:text-2xl font-semibold">Chatroom for Order: {whic}</h1>
           </div>
 
           {/* Messages */}
@@ -224,9 +274,7 @@ const ChatRoom = () => {
                 return (
                   <div
                     key={index}
-                    className={`flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    } w-full`}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"} w-full`}
                   >
                     <div
                       className={`max-w-[80%] md:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-md ${
@@ -240,9 +288,7 @@ const ChatRoom = () => {
                       </div>
 
                       {/* TEXT MESSAGE */}
-                      <div className="break-words whitespace-pre-wrap mb-2">
-                        {message.content}
-                      </div>
+                      <div className="break-words whitespace-pre-wrap mb-2">{message.content}</div>
 
                       {/* IMAGE MESSAGE */}
                       {message.image && (
@@ -295,11 +341,7 @@ const ChatRoom = () => {
 
           {image && (
             <div className="bg-black px-1 py-1 mb-20">
-              <img
-                src={URL.createObjectURL(image)}
-                alt="Preview"
-                className="max-h-60 rounded-md"
-              />
+              <img src={URL.createObjectURL(image)} alt="Preview" className="max-h-60 rounded-md" />
             </div>
           )}
 
@@ -308,9 +350,7 @@ const ChatRoom = () => {
               onClick={handleSendMessage}
               disabled={!isConnected}
               className={`w-full py-3 cursor-pointer text-white font-semibold rounded-lg transition ${
-                isConnected
-                  ? "bg-green-800 hover:bg-green-700"
-                  : "bg-green-300 cursor-not-allowed"
+                isConnected ? "bg-green-800 hover:bg-green-700" : "bg-green-300 cursor-not-allowed"
               }`}
             >
               Send
@@ -332,5 +372,3 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
-
-

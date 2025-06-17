@@ -3,13 +3,7 @@ import ProfileCard from "../../components/ProfileCard";
 import InfoCard from "../../components/InfoCard";
 import AccountSetting from "../../components/AccountSetting";
 import ProfileSetting from "../../components/ProfileSetting";
-import {
-  Banknote,
-  BanknoteIcon,
-  PiggyBank,
-  ShieldAlertIcon,
-  Wallet2Icon,
-} from "lucide-react";
+import { Banknote, BanknoteIcon, PiggyBank, ShieldAlertIcon, Wallet2Icon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
@@ -18,7 +12,6 @@ import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-
 
 function ProfileOverview() {
   const { t } = useTranslation();
@@ -141,9 +134,7 @@ function ProfileOverview() {
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
       // Remove the marked notification from state so the card disappears
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -151,18 +142,15 @@ function ProfileOverview() {
 
   const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
 
-
   // const copyToClipboard = (text) => {
   //   navigator.clipboard.writeText(text);
   //   toast.success("Referral link copied to clipboard");
   // };
 
   const copyToClipboard = (text, label = "Copied") => {
-  navigator.clipboard.writeText(text);
-  toast.success(`${label} Copied Successfully`);
-};
-
-
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} Copied Successfully`);
+  };
 
   return (
     <div className=" relative w-full space-y-6">

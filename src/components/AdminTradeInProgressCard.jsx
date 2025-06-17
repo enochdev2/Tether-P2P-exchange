@@ -1,19 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
-import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaTrash, FaCopy } from "react-icons/fa";
 import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./ConfirmModal";
 import { useTranslation } from "react-i18next";
-
+import ConfirmModal3 from "./ConfirmModal3";
 
 // import your logo and statusColors accordingly
 
 const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fetchOrders }) => {
-   const { t } = useTranslation();
-  console.log("🚀 ~ AdminTradeInProgressCard ~ offer:", offer);
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -23,11 +22,18 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
   const isPending = offer.status === "In Progress";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpens, setIsModalOpens] = useState(false);
+  const [isCancel, setIsCancel] = useState(false);
   const [pendingOrderId, setPendingOrderId] = useState(offer?.sellerNickname || null);
 
   const openCancelModal = (orderId) => {
     setPendingOrderId(orderId);
     setIsModalOpen(true);
+  };
+  const openCancelModals = (orderId, isCancels) => {
+     setIsCancel(isCancels)
+    setPendingOrderId(orderId);
+    setIsModalOpens(true);
   };
 
   const timestamp = offer.createdAt;
@@ -37,6 +43,18 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
 
   const handleMatchClick = () => {
     setIsMatchModalOpen(true);
+  };
+
+  const handleCopy = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        // Optionally, you can show a success message or change the icon state
+        SuccessToast("ID copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
   };
 
   const handleCancleMatch = async (orderId) => {
@@ -80,22 +98,29 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setIsMatchModalOpen(false);
   };
 
+  // const handleMatchSubmit = () => {
+  //   onMatchs(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
+  //   setIsMatchModalOpen(false); // Close the modal
+  //   setBuyerOrderId(""); // Reset the input field
+  // };
+
   const handleMatchSubmit = () => {
-    onMatchs(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
+    onMatchs(buyerOrderId, offer._id); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
 
   const handleMatchComplete = () => {
-    onMatch(offer.currentBuyOrderInProgress, offer._id); // Trigger matching in the parent component
+    onMatch(offer.currentBuyOrderInProgress, pendingOrderId); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
+
   const handleMatchCancel = () => {
     const currentOrderInProgress = sell
       ? offer.currentBuyOrderInProgress
       : offer.currentSellOrderInProgress;
-    onCancel(currentOrderInProgress, offer._id); // Trigger matching in the parent component
+    onCancel(currentOrderInProgress, pendingOrderId); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
@@ -129,12 +154,6 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     return rows;
   };
 
-  const statusColors = {
-    "On sell": "#26a17b", // Green
-    "Pending Approval": "#a0a0a0", // Grey
-    "Sell completed": "#f59e0b", // Amber
-  };
-
   const matchedOrders = sell ? offer?.matchedBuyOrders : offer?.matchedSellOrders;
 
   return (
@@ -144,7 +163,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         {/* Status & Nickname */}
         <div className="flex flex-wrap gap-2 items-center">
           <span className="bg-green-600 text-white text-sm font-semibold px-3 py-2 rounded-md shadow-sm">
-          {t("tradecard.matchInProgress")}
+            {t("tradecard.matchInProgress")}
           </span>
           <button
             className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-md font-medium px-3 py-1 rounded-md transition"
@@ -158,7 +177,9 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         <div className="flex items-center gap-2 text-md text-gray-700">
           <img src={logo2} alt="Tether" className="w-5 h-5" />
           <div className="leading-tight">
-            <p className="text-gray-400 text-sm">{t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}</p>
+            <p className="text-gray-400 text-sm">
+              {t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}
+            </p>
             <p className="font-semibold text-md">
               {t("tradecard.balance", { amount: parseFloat(offer.amountRemaining).toFixed(4) })}
             </p>
@@ -180,45 +201,72 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           >
             {t("tradecard.chat")}
           </button>
-          
 
           {sell &&
             (offer.status === "In Progress" ? (
               <div className="space-x-3">
                 <button
-                  onClick={handleMatchCancel}
+                  onClick={() => openCancelModals(offer._id, true)}
                   className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
                 >
                   {t("tradecard.cancel")}
                 </button>
                 <button
-                  onClick={handleMatchComplete}
+                  // onClick={handleMatchComplete}
+                   onClick={() => openCancelModals(offer._id, false)}
                   className="bg-cyan-600  hover:bg-cyan-700 text-white  text-xs px-2 py-3 rounded-md font-medium cursor-pointer shadow-sm"
                 >
-                   {t("tradecard.completematch")}
+                  {t("tradecard.completematch")}
                 </button>
               </div>
             ) : (
               <div className="space-x-2">
                 <button
-            onClick={() => openCancelModal(offer._id)}
-            className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
-          >
-            <FaTrash size={14} />
-          </button>
-              <button
-                onClick={handleMatchClick}
-                className="bg-cyan-600  hover:bg-cyan-600 text-white text-xs px-3 py-3 rounded-md font-semibold shadow-sm cursor-pointer"
+                  onClick={handleMatchClick}
+                  className="bg-cyan-600  hover:bg-cyan-600 text-white text-xs px-3 py-3 rounded-md font-semibold shadow-sm cursor-pointer"
                 >
-                {t("tradecard.match")}
+                  {t("tradecard.match")}
+                </button>
+                <button
+                  onClick={() => openCancelModal(offer._id)}
+                  className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            ))}
+          {!sell &&
+            (offer.status === "In Progress" ? (
+              <button
+                onClick={() => openCancelModals(offer._id, true)}
+                // onClick={handleMatchCancel}
+                className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+              >
+                {t("tradecard.cancel")}
               </button>
-                </div>
+            ) : (
+              <button
+                onClick={() => openCancelModal(offer._id)}
+                className="px-4 py-2 text-red-600 hover:bg-gray-400 rounded-md bg-gray-200 border border-red-300 shadow-sm cursor-pointer"
+              >
+                <FaTrash size={14} />
+              </button>
             ))}
         </div>
 
         {/* ID, Status, Date */}
         <div className="text-xs text-gray-600 text-right space-y-0.5 leading-snug">
-          <p className="break-all  max-w-[120px] font-mono text-gray-500">{offer._id}</p>
+          <div className="flex items-center space-x-2">
+            <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+              {offer._id}
+            </div>
+            <button
+              className="text-gray-500 hover:text-gray-700 cursor-pointer"
+              onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+            >
+              <FaCopy size={16} /> {/* Copy icon */}
+            </button>
+          </div>
           <p className="font-bold text-green-700">{offer.status}</p>
           <p className="text-gray-500">{dateOnly}</p>
         </div>
@@ -228,6 +276,12 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => handleCancleMatch(pendingOrderId)}
+        message="Are you sure you want to delete the buy Order?"
+      />
+      <ConfirmModal3
+        open={isModalOpens}
+        onClose={() => setIsModalOpens(false)}
+        onConfirm={isCancel ? handleMatchCancel : handleMatchComplete }
         message="Are you sure you want to delete the buy Order?"
       />
 
@@ -260,28 +314,28 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         </div>
       )}
 
-      {/* Match Modal */}
+      {/* Modal */}
       {isMatchModalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-[95%] max-w-md border border-green-600 shadow-xl">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl border-green-700 border-2 shadow-lg w-96">
             <h3 className="text-xl font-semibold mb-4 text-gray-800">Match Seller with Buyer</h3>
             <input
               type="text"
+              className="border border-gray-300 rounded-md p-2 mb-4 w-full focus:ring-2 focus:ring-green-500 outline-none"
               placeholder="Enter Buyer Order ID"
-              className="w-full mb-4 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
               value={buyerOrderId}
               onChange={(e) => setBuyerOrderId(e.target.value)}
             />
-            <div className="flex justify-end gap-2">
+            <div className=" w-full flex justify-between space-x-3">
               <button
-                onClick={() => setIsMatchModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-sm text-gray-700"
+                onClick={handleCloseModal}
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-gray-800"
               >
                 Cancel
               </button>
               <button
                 onClick={handleMatchSubmit}
-                className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm"
+                className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md"
               >
                 Match
               </button>

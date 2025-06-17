@@ -5,6 +5,7 @@ import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
+import { FaCopy } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const statusColors = {
@@ -65,6 +66,18 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
     } catch (error) {
       console.error("Error matching orders:", error);
     }
+  };
+
+  const handleCopy = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        // Optionally, you can show a success message or change the icon state
+        SuccessToast("ID copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
   };
 
   const timestamp = offer.createdAt;
@@ -148,11 +161,16 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
 
         {/* Right Section */}
         <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">
-          <div
-            className="break-words break-all
- text-center text-xs md:text-sm sm:text-right w-full font-bold sm:w-auto "
-          >
-            {offer._id}
+          <div className="flex items-center space-x-2">
+            <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+              {offer._id}
+            </div>
+            <button
+              className="text-gray-500 hover:text-gray-700 cursor-pointer"
+              onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+            >
+              <FaCopy size={16} /> {/* Copy icon */}
+            </button>
           </div>
           <div className="flex items-center space-x-2">
             <div

@@ -112,6 +112,7 @@
     "amountToSell": "Amount to Sell",
     "amountToBuy": "Amount to Buy",
     "enterAmount": "Enter Amount",
+    "price": "K",
     "clear": "Clear",
     "depositWalletAddress": "Deposit Wallet Address",
     "depositNetwork": "Deposit Network",
@@ -186,6 +187,10 @@
   },
   "editinfo": {
     "inquiryInstruction": "→ Please leave the details you wish to edit in the 1:1 Inquiry info."
+  },
+  "tetherprice": {
+    "setprice": "Set Price",
+    "settetherprice": "Set Tether Price"
   },
   "inquirys": {
     "title": "1:1 Inquiry",

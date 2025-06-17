@@ -1,5 +1,5 @@
 // components/ConfirmModal.jsx
-const ConfirmModal = ({ open, onClose, onConfirm, message }) => {
+const ConfirmModal3 = ({ open, onClose, onConfirm, message }) => {
   if (!open) return null;
 
   return (
@@ -32,4 +32,4 @@ const ConfirmModal = ({ open, onClose, onConfirm, message }) => {
   );
 };
 
-export default ConfirmModal;
+export default ConfirmModal3;

@@ -5,7 +5,7 @@ import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
 import { useTranslation } from "react-i18next";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import ConfirmModal from "../../components/confirmModal";
+import ConfirmModal from "../../components/ConfirmModal";
 
 // const inquiries = [
 //   {
@@ -36,7 +36,7 @@ import ConfirmModal from "../../components/confirmModal";
 export default function InquiryHistory() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -298,15 +298,14 @@ const AllInquiries = ({ open, onClose, onConfirm, message }) => {
             </div>
           </div>
         ))}
-
       </div>
 
-        <ConfirmModal
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          // onConfirm={() => handleCancleMatch(pendingOrderId)}
-          message='Are you sure to the delete'
-        />
+      <ConfirmModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        // onConfirm={() => handleCancleMatch(pendingOrderId)}
+        message="Are you sure to the delete"
+      />
       <NotificationPopup
         loading={loadingNotifications}
         notifications={notifications}

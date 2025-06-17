@@ -2,12 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../../assets/Tether2.png";
 import { useState } from "react";
-
-const statusColors = {
-  "On sell": "#26a17b", // Green
-  "Pending Approval": "#a0a0a0", // Grey
-  "Sell completed": "#f59e0b", // Amber
-};
+import { FaCopy } from "react-icons/fa";
+import { SuccessToast } from "../../utils/Success";
 
 // import your logo and statusColors accordingly
 
@@ -32,13 +28,25 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
     setIsMatchModalOpen(false);
   };
 
+  const handleCopy = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        // Optionally, you can show a success message or change the icon state
+        SuccessToast("ID copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
+
   const statusColors = {
     "On sell": "#26a17b", // Green
     "Pending Approval": "#a0a0a0", // Grey
     "Sell completed": "#f59e0b", // Amber
   };
 
-    const orderType = sell ? "sell" : "buy";
+  const orderType = sell ? "sell" : "buy";
 
   return (
     <div
@@ -59,11 +67,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
 
       {/* Center Left Section */}
       <div className="flex-col md:flex-row md:flex-2 w-full sm:w-auto flex items-center mb-4 sm:mb-0">
-        <img
-          src={logo2}
-          alt="Tether logo"
-          className="w-5 h-5 md:w-7 md:h-7 mr-3"
-        />
+        <img src={logo2} alt="Tether logo" className="w-5 h-5 md:w-7 md:h-7 mr-3" />
         <div className="flex flex-col space-y-2">
           <span className="font-medium text-xs sm:text-[16px] text-gray-400 truncate">
             Total: {offer.amount} USDT
@@ -81,7 +85,6 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
           : `₩${offer.price.toLocaleString()} KRW`}
       </div>
 
-
       <div className="flex flex-wrap space-x-5 space-y-3 items-center">
         <div className="space-x-3">
           {/* Chat button for buy orders waiting for buy */}
@@ -96,8 +99,16 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
 
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap md:flex-2 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
-        <div className="break-words text-center sm:text-right w-full sm:w-auto truncate">
-          {offer._id}
+        <div className="flex items-center space-x-2">
+          <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+            {offer._id}
+          </div>
+          <button
+            className="text-gray-500 hover:text-gray-700 cursor-pointer"
+            onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+          >
+            <FaCopy size={16} /> {/* Copy icon */}
+          </button>
         </div>
         <div className="flex items-center  md:text-[16px] space-x-2">
           <div
@@ -108,8 +119,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
             className={`font-semibold select-none truncate max-w-[8rem] ${
               offer.status === "Pending Approval"
                 ? "text-gray-400"
-                : offer.status === "Sell completed" ||
-                  offer.status === "Buy Completed"
+                : offer.status === "Sell completed" || offer.status === "Buy Completed"
                 ? "text-orange-500"
                 : "text-lime-600"
             }`}
@@ -123,9 +133,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
       {isMatchModalOpen && (
         <div className="fixed inset-0 bg-black/30 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg border-green-700 border-2 shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">
-              Match Seller with Buyer
-            </h3>
+            <h3 className="text-xl font-semibold mb-4">Match Seller with Buyer</h3>
             <input
               type="text"
               className="border border-gray-300 rounded-md p-2 mb-4 w-full"

@@ -1,8 +1,10 @@
 import { CheckCircle, Clock, Star } from "lucide-react";
 import logo2 from "../assets/Tether2.png";
 import ConfirmModal from "./ConfirmModal";
+import { FaCopy } from "react-icons/fa";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { SuccessToast } from "../utils/Success";
 
 // import your logo and statusColors accordingly
 
@@ -15,7 +17,7 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
   const openCancelModal = (orderId, isAprove) => {
     if(isAprove){
       setIsApprove(true)
-    }else{
+    }else{ 
       setIsApprove(false)
 
     }
@@ -30,6 +32,18 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
   // const handleCloseModal = () => {
   //   setIsMatchModalOpen(false);
   // };
+
+   const handleCopy = (id) => {
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        // Optionally, you can show a success message or change the icon state
+        SuccessToast("ID copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
 
  
 
@@ -102,9 +116,17 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
 
       {/* Order Info */}
       <div className="flex flex-col items-center sm:items-end text-xs sm:text-sm md:text-base text-gray-800 w-full sm:w-40 space-y-1 truncate">
-        <div className="text-center sm:text-right w-full truncate font-mono text-gray-500">
-          {offer._id.slice(0, 10)}
-        </div>
+        <div className="flex items-center space-x-2">
+            <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+              {offer._id.slice(0, 10)}
+            </div>
+            <button
+              className="text-gray-500 hover:text-gray-700 cursor-pointer"
+              onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+            >
+              <FaCopy size={16} /> {/* Copy icon */}
+            </button>
+          </div>
 
         <div className="flex items-center justify-center sm:justify-end gap-2">
           <span
