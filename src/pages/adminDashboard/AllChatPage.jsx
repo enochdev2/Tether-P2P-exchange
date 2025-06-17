@@ -143,7 +143,7 @@ const handleMarkAllAsRead = async () => {
   });
 
   if (success) {
-    SuccessToast("All notifications marked as read");
+    // SuccessToast("All notifications marked as read");
     setNotifications([]); // or any state update
   } else {
     console.error(error);

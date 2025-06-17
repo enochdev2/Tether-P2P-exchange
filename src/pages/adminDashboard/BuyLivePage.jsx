@@ -354,7 +354,7 @@ const BuyLivePage = () => {
       const result = await response.json();
       if (response.ok) {
         // Handle success (for example, reset notifications)
-        SuccessToast("All notifications marked as read");
+        // SuccessToast("All notifications marked as read");
         setNotifications([]); // Clear the notifications or update the state accordingly
       } else {
         console.error(result.error);
