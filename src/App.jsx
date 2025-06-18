@@ -17,6 +17,7 @@ import TransactionDetails from "./pages/adminDashboard/TransactionDetails";
 import UserDetails from "./pages/adminDashboard/UserDetails";
 import UserManagement from "./pages/adminDashboard/UserManagement";
 import ChatRoom from "./pages/ChatRoom";
+import ChatRoom2 from "./pages/ChatRoom2";
 import AccountSettings from "./pages/dashboard/AccountSetting";
 import BuyFormInput from "./pages/dashboard/BuyFormInput";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -66,6 +67,7 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/chats/:orderId/:orderType" element={<ChatRoom />} />
+        <Route path="/chat/:orderId/:buyOrderId/:orderType" element={<ChatRoom2 />} />
         {/* <Route path="/chat/:offerId" element={<ChatRoom2 />} /> */}
         <Route path="/adnin/users/:userId" element={<UserDetails />} />
 

@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
+import { FiArrowLeft, FiImage } from "react-icons/fi";
+import { ErrorToast } from "../utils/Error";
+import { useTranslation } from "react-i18next";
+import InfoCard from "../components/InfoCard";
+import { BanknoteIcon, PiggyBank, Wallet2Icon } from "lucide-react";
+import ChatRoomPanel from "../components/chat/ChatRoomPanel";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -10,32 +16,26 @@ import { SuccessToast } from "../utils/Success";
 // });
 
 const ChatRoom2 = () => {
-  const { user, setIsLoggedIn, setUser } = useAuth();
-  const { orderId } = useParams();
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const { orderType, orderId, buyOrderId } = useParams();
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [messages2, setMessages2] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [newMessage2, setNewMessage2] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [userOrderId, setUserOrderId] = useState(null);
+  const [userInfo, setUserInfo] = useState(true);
+  // const [userOrderId, setUserOrderId] = useState(null);
+  const [image, setImage] = useState(null);
+  const [image2, setImage2] = useState(null);
   const navigate = useNavigate();
-
-  const fetchMessages = async () => {
-    const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${orderId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-    setMessages(data);
-  };
-
+  const whic = orderId.length > 5 ? orderId : orderType;
+  const whi = orderType.length < 5 ? orderType : orderId;
+  const buywhic = buyOrderId;
+  // const orderId = offerId;
   useEffect(() => {
-    // const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    // const newSocket = io("http://localhost:3000", {
     const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
       path: "/socket.io",
       withCredentials: true,
@@ -47,7 +47,7 @@ const ChatRoom2 = () => {
 
     newSocket.on("connect", () => {
       setIsConnected(true);
-      newSocket.emit("joinRoom", orderId); // emit only after connect
+      newSocket.emit("joinRoom", whic); // emit only after connect
     });
 
     newSocket.on("connect_error", (err) => {
@@ -65,45 +65,107 @@ const ChatRoom2 = () => {
   }, [orderId]);
 
   const handleSendMessage = async () => {
-    if (newMessage.trim()) {
+    if (newMessage.trim() || image) {
       const message = { sender: user.nickname, content: newMessage, orderId };
-      
-      socket.emit("sendMessage", message); // Emit message to the server
-      // const messageData = {
-      //   content: newMessage,
-      //   sender: user.nickname,
-      //   orderId,
-      //   timestamp: new Date().toISOString(),
-      // };
-      const messageData = {
-      content: newMessage,
-      sender: user.nickname,
-      orderId,
-      orderType : message[0].orderType, // Pass orderType as well
-      timestamp: new Date().toISOString(),
-    };
 
       const token = localStorage.getItem("token");
 
-      const res = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
-        {
+      // socket.emit("sendMessage", message);
+
+      const messageData = {
+        content: newMessage ? newMessage : "Image",
+        sender: user.nickname,
+        orderId: orderId,
+        orderType: orderType, // Pass orderType as well
+        timestamp: new Date().toISOString(),
+      };
+      let base64Image = null;
+
+      const commonMessageData = {
+        content: newMessage ? newMessage : "Image",
+        sender: user.nickname,
+        orderId: whic,
+        orderType: whi,
+        timestamp: new Date().toISOString(),
+      };
+
+      // Reset UI state early to avoid residual image
+      setNewMessage("");
+
+      if (image) {
+        readImageAsDataURL(image, async (imageDataUrl) => {
+          const blobImage = dataURLtoBlob(imageDataUrl);
+
+          // Validate file type
+          if (!blobImage.type.includes("image/")) {
+            ErrorToast("Please upload a valid image file.");
+            return;
+          }
+
+          // Validate size (max 5MB)
+          if (blobImage.size > 5 * 1024 * 1024) {
+            ErrorToast("Image size must be less than 5MB.");
+            return;
+          }
+
+          // Send base64 (still not ideal, but validated)
+          const messageData = {
+            ...commonMessageData,
+            image: imageDataUrl, // This is safe and smaller now
+          };
+
+          socket.emit("sendMessage", messageData);
+
+          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          });
+
+          setImage(null); // Clear image after sending
+        });
+      } else {
+        const messageData = {
+          ...commonMessageData,
+          image: null,
+        };
+
+        socket.emit("sendMessage", messageData);
+
+        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(messageData),
-        }
-      );
-      setNewMessage("");
+        });
+      }
+      // setNewMessage("");
     }
+  };
+
+  const fetchMessages = async () => {
+    const res = await fetch(
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${whic}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    setMessages(data);
   };
 
   const handleCloseChat = async () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${orderId}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
         headers: {
@@ -119,91 +181,296 @@ const ChatRoom2 = () => {
     // Or navigate away:
   };
 
+
+
+
+
+  //? .......BUYER................
+  useEffect(() => {
+    // const newSocket = io("http://localhost:3000", {
+    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+      path: "/socket.io",
+      withCredentials: true,
+    });
+
+    setSocket(newSocket);
+
+    fetchMessages2();
+
+    newSocket.on("connect", () => {
+      setIsConnected(true);
+      newSocket.emit("joinRoom", buywhic); // emit only after connect
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("❌ Socket connect error:", err.message);
+    });
+
+    newSocket.on("message", (message2) => {
+      setMessages2((prev) => [...prev, message2]);
+    });
+
+    return () => {
+      newSocket.emit("leaveRoom", orderId);
+      newSocket.disconnect();
+    };
+  }, [orderId]);
+
+  const fetchMessages2 = async () => {
+    const res = await fetch(
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${buywhic}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    setMessages2(data);
+  };
+  
+
+  const handleSendMessage2 = async () => {
+    if (newMessage.trim() || image) {
+      const message = { sender: user.nickname, content: newMessage, orderId };
+
+      const token = localStorage.getItem("token");
+
+      // socket.emit("sendMessage", message);
+
+      const messageData = {
+        content: newMessage ? newMessage : "Image",
+        sender: user.nickname,
+        orderId: orderId,
+        orderType: orderType, // Pass orderType as well
+        timestamp: new Date().toISOString(),
+      };
+      let base64Image = null;
+
+      const commonMessageData = {
+        content: newMessage ? newMessage : "Image",
+        sender: user.nickname,
+        orderId: whic,
+        orderType: whi,
+        timestamp: new Date().toISOString(),
+      };
+
+      // Reset UI state early to avoid residual image
+      setNewMessage("");
+
+      if (image) {
+        readImageAsDataURL(image, async (imageDataUrl) => {
+          const blobImage = dataURLtoBlob(imageDataUrl);
+
+          // Validate file type
+          if (!blobImage.type.includes("image/")) {
+            ErrorToast("Please upload a valid image file.");
+            return;
+          }
+
+          // Validate size (max 5MB)
+          if (blobImage.size > 5 * 1024 * 1024) {
+            ErrorToast("Image size must be less than 5MB.");
+            return;
+          }
+
+          // Send base64 (still not ideal, but validated)
+          const messageData = {
+            ...commonMessageData,
+            image: imageDataUrl, // This is safe and smaller now
+          };
+
+          socket.emit("sendMessage", messageData);
+
+          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          });
+
+          setImage(null); // Clear image after sending
+        });
+      } else {
+        const messageData = {
+          ...commonMessageData,
+          image: null,
+        };
+
+        socket.emit("sendMessage", messageData);
+
+        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(messageData),
+        });
+      }
+      // setNewMessage("");
+    }
+  };
+
+  const handleCloseChat2 = async () => {
+    socket.emit("closeChat", { orderId });
+    const res = await fetch(
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${buywhic}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (res.ok) {
+      SuccessToast("Chat closed successfully.");
+      navigate("/admin/dashboard");
+    }
+    // Or navigate away:
+  };
+  
+
+  const hanleToggleUserInfo = async () => {
+    setUserInfo(false);
+  };
+
+  const copyToClipboard = (text, label = "Copied") => {
+    navigator.clipboard.writeText(text);
+    SuccessToast(`${label} Copied Successfully`);
+  };
+
+  const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
+
+  const readImageAsDataURL = (file, callback) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      callback(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const dataURLtoBlob = (dataURL) => {
+    const splitDataUrl = dataURL.split(",");
+    const byteString = atob(splitDataUrl[1]);
+    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
+
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
+  };
+
+  const sellerInfo = {
+    username: "seller01",
+    nickname: "seller01",
+    phone: "08123456789",
+    bank: "UBA",
+    bankAccount: "1234567890",
+    tetherAddress: "TETHER_SELLER_ADDRESS",
+    referralCode: "SELLERREF123",
+  };
+
+  const buyerInfo = {
+    username: "buyer01",
+    nickname: "buyer01",
+    phone: "08098765432",
+    bank: "GTB",
+    bankAccount: "9876543210",
+    tetherAddress: "TETHER_BUYER_ADDRESS",
+    referralCode: "BUYERREF321",
+  };
+
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
-    <div className="min-h-screen mt-10 bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl bg-white shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden">
-        {/* Chat Area */}
-        <div className="w-full md:w-2/3 flex flex-col border-r border-gray-200">
-          <div className="bg-green-800 text-white text-center py-4 px-6">
-            <h1 className="text-xl md:text-2xl font-semibold">
-              Chatroom for Order: {orderId}
-            </h1>
-          </div>
+    <div className="min-h-screen mt-10 bg-gray-100 flex gap-6 items-center justify-center p-4">
+      <ChatRoomPanel
+        whic={whic}
+        messages={messages}
+        user={user}
+        navigate={navigate}
+        newMessage={newMessage}
+        setNewMessage={setNewMessage}
+        setImage={setImage}
+        image={image}
+        isConnected={isConnected}
+        handleSendMessage={handleSendMessage}
+        handleCloseChat={handleCloseChat}
+        users={sellerInfo}
+        customer="Seller"
+      />
 
-          {/* Messages */}
-          <div className="flex-1 bg-white rounded-lg shadow-lg p-4 mb-6">
-            <div className="h-[60vh] overflow-y-auto space-y-3 pr-2">
-              {messages.map((message, index) => {
-                const isUser = message.sender === user.nickname;
-
-                return (
-                  <div
-                    key={index}
-                    className={`flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    } w-full`}
-                  >
-                    <div
-                      className={`max-w-[80%] md:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-md ${
-                        isUser
-                          ? "bg-green-500 text-white rounded-br-none"
-                          : "bg-gray-200 text-gray-800 rounded-bl-none"
-                      }`}
-                    >
-                      <div className="font-semibold mb-1 text-xs opacity-80">
-                        {message.sender}
-                      </div>
-                      <div className="break-words whitespace-pre-wrap">
-                        {message.content}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Input & Controls */}
-        <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col justify-between">
-          <div className="flex-1">
-            <textarea
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message..."
-              rows={5}
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
-            />
-          </div>
-
-          <div className="mt-4 flex flex-col gap-3">
-            <button
-              onClick={handleSendMessage}
-              disabled={!isConnected}
-              className={`w-full py-3 text-white font-semibold rounded-lg transition ${
-                isConnected
-                  ? "bg-green-800 hover:bg-green-700"
-                  : "bg-green-300 cursor-not-allowed"
-              }`}
-            >
-              Send
-            </button>
-
-            {user?.admin && (
-              <button
-                onClick={handleCloseChat}
-                className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition"
-              >
-                Close Chat
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* second section */}
+      <ChatRoomPanel
+        whic={buywhic}
+        messages={messages2}
+        user={user}
+        navigate={navigate}
+        newMessage={newMessage2}
+        setNewMessage={setNewMessage2}
+        setImage={setImage2}
+        image={image2}
+        isConnected={isConnected}
+        handleSendMessage={handleSendMessage2}
+        handleCloseChat={handleCloseChat2}
+        users={buyerInfo}
+        customer="Buyer"
+      />
     </div>
   );
 };
 
 export default ChatRoom2;
+
+// {userInfo && (
+//       <div className="mr-5 bg-slate-300 px-2 rounded-lg">
+//         <div className="flex flex-col gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
+//           <div className="min-w-[280px]  sm:min-w-0 flex-1">
+//             <InfoCard
+//               icon={<PiggyBank size={24} />}
+//               title={t("profile.bankName")}
+//               actionText={user?.bankName}
+//               onAction={() => console.log("Navigate to security questions")}
+//               copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
+//             />
+//           </div>
+//           <div className="min-w-[280px] sm:min-w-0 flex-1">
+//             <InfoCard
+//               icon={<BanknoteIcon size={24} />}
+//               title={t("profile.bankAccountNumber")}
+//               actionText={user?.bankAccount}
+//               copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
+//               onAction={() => console.log("Navigate to security questions")}
+//             />
+//           </div>
+
+//           <div className="min-w-[280px]  sm:min-w-0 flex-1">
+//             <InfoCard
+//               className=""
+//               icon={<Wallet2Icon size={24} />}
+//               title={tether.slice(0, 15)}
+//               actionText={tether.slice(15, 60)}
+//               copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
+//             />
+//           </div>
+//         </div>
+//         <div className="flex w-full justify-end">
+//           <button
+//             onClick={hanleToggleUserInfo}
+//             className="  bg-red-600 px-2 text-lg rounded-lg text-yellow-50 cursor-pointer font-bold"
+//           >
+//             X
+//           </button>
+//         </div>
+//       </div>
+//     )}

@@ -124,8 +124,10 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
+      console.log("🚀 ~ handleMatchCancel ~ offer.currentBuyOrderInProgress:", offer.currentBuyOrderInProgress)
 
   const orderType = sell ? "sell" : "buy";
+  const buyOrderId =offer.currentBuyOrderInProgress
 
   const buildMatchedTableRows = (offer, sell) => {
     const matchedOrders = sell ? offer.matchedBuyOrders : offer.matchedSellOrders;
@@ -196,7 +198,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           </button>
 
           <button
-            onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
+            onClick={() => navigate(`/chat/${offer._id}/${buyOrderId}/${orderType}`)}
             className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
           >
             {t("tradecard.chat")}
