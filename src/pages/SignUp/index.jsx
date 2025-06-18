@@ -16,6 +16,7 @@ const SignUp = () => {
   const [showGuide, setShowGuide] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [showUploadGuide, setShowUploadGuide] = useState(false);
+  const [rawFile, setRawFile] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     nickname: "",
@@ -31,7 +32,10 @@ const SignUp = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) setUploadedFile(URL.createObjectURL(file));
+    if (file) {
+      setUploadedFile(URL.createObjectURL(file));
+      setRawFile(file); // store the actual file
+    }
   };
 
   const validateForm = () => {
@@ -63,7 +67,6 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setIsLoading(true);
 
     const errors = validateForm();
@@ -73,14 +76,33 @@ const SignUp = () => {
       return;
     }
 
-    // Create the new user data
-    const newUser = {
-      ...formData,
-      bankAccount: Number(formData.bankAccount),
-      status: "inactive", // Set initial status as inactive
-    };
-
     try {
+      let imageUrl = "";
+      
+      if (rawFile) {
+        // Create FormData for image
+        const formDataImage = new FormData();
+        formDataImage.append("file", rawFile);
+        
+        // Upload to backend (you’ll create this endpoint below)
+        const imageRes = await fetch("http://localhost:3000/api/v1/upload", {
+          method: "POST",
+          body: formDataImage,
+        });
+        
+        const imageData = await imageRes.json();
+        imageUrl = imageData.url; // Get the Cloudinary URL
+      }
+      
+      console.log("🚀 ~ handleSubmit ~ imageUrl:", imageUrl)
+      // Create the new user data
+      const newUser = {
+        ...formData,
+        bankAccount: Number(formData.bankAccount),
+        tetherIdImage: imageUrl,
+        status: "inactive", // Set initial status as inactive
+      };
+
       // Call signUp from AuthContext (which will handle the state and potentially an API call)
       const response = await signUp(newUser);
 
@@ -264,7 +286,7 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowGuide(true)}
-                   className="text-xs bg-green-200 cursor-pointer px-2 py-0.5 rounded text-black"
+                  className="text-xs bg-green-200 cursor-pointer px-2 py-0.5 rounded text-black"
                 >
                   Guide
                 </button>
@@ -342,7 +364,7 @@ const SignUp = () => {
             </div>
 
             {/* Upload Image Guide Modal */}
-            <div >
+            <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-semibold text-gray-100">
                   Upload Tether ID Image
@@ -373,7 +395,6 @@ const SignUp = () => {
                   <img
                     src={uploadedFile}
                     alt="Uploaded"
-                    
                     className="w-40 h-auto rounded border border-gray-600"
                   />
                 </div>

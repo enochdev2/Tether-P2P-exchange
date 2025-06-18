@@ -21,6 +21,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const [tetherAddress, setTetherAddress] = useState(user?.tetherAddress);
   const [status, setStatus] = useState(user?.status || "inactive");
   const [isSaving, setIsSaving] = useState(false);
+  const [rawFile, setRawFile] = useState(null);
 
   if (!user) {
     return <div className="p-8 text-center text-gray-600">No user data available.</div>;
@@ -115,6 +116,32 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       setIsViewing(false);
     }
   };
+
+  const updateImage = async (userId) => {
+    if (!rawFile) return ErrorToast("Please select an image to upload.");
+
+    const formData = new FormData();
+    formData.append("file", rawFile);
+
+    const res = await fetch(`http://localhost:3000/api/v1/user/${userId}/image`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    const data = await res.json();
+                if (res.ok) {
+                  setUsers((prev) => ({
+                    ...prev,
+                    tetherIdImage: data.imageUrl,
+                  }));
+                  SuccessToast("Image updated successfully!");
+    } else {
+      console.error("Image update failed:", data.message);
+    }
+  };
+
+               
+
 
   return (
     <div className="bg-gray-50 min-h-screen p-6 sm:p-8 font-sans max-w-5xl mx-auto">
@@ -227,12 +254,45 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             </div>
           ))}
           {/* Avatar Display Section */}
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-green-500 shadow-md">
+          <div className="w- h-40 rounded- overflow-hidden border-4 border-green-500 shadow-md">
             <img
-              src={user?.avatar || "https://i.pravatar.cc/150?img=43"} // Replace with user.avatar later
+              src={user?.tetherIdImage || "https://i.pravatar.cc/150?img=43"} // Replace with user.avatar later
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
+          </div>
+          <div className="flex flex-col mt-4">
+            <label className="mb-2 font-medium text-gray-700 text-sm sm:text-base">
+              Update the  ID Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setRawFile(file);
+                  setUsers((prev) => ({
+                    ...prev,
+                    tetherIdImage: URL.createObjectURL(file),
+                  }));
+                }
+              }}
+              className="block w-full text-sm text-gray-500
+    file:mr-4 file:py-2 file:px-4
+    file:rounded-full file:border-0
+    file:text-sm file:font-semibold
+    file:bg-green-50 file:text-green-700
+    hover:file:bg-green-100
+    "
+            />
+            <button
+              type="button"
+              onClick={()=> updateImage(user._id)}
+              className="mt-3 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition duration-200"
+            >
+              Upload Image
+            </button>
           </div>
 
           <div className="md:col-span-2 flex justify-center md:justify-end ">
