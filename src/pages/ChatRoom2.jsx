@@ -190,8 +190,8 @@ const ChatRoom2 = () => {
         },
       }
     );
-    await handleCloseChat2();
-    if (res.ok) {
+    const ress = await handleCloseChat2();
+    if (ress.ok && res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
@@ -279,8 +279,8 @@ const ChatRoom2 = () => {
       setNewMessage2("");
 
       if (image2) {
-        readImageAsDataURL(image, async (imageDataUrl) => {
-          const blobImage = dataURLtoBlob(imageDataUrl);
+        readImageAsDataURL2(image, async (imageDataUrl) => {
+          const blobImage = dataURLtoBlob2(imageDataUrl);
 
           // Validate file type
           if (!blobImage.type.includes("image/")) {
@@ -346,8 +346,8 @@ const ChatRoom2 = () => {
         },
       }
     );
-    await handleCloseChat();
-    if (res.ok) {
+     const ress = await handleCloseChat();
+    if (ress.ok && res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
@@ -356,6 +356,14 @@ const ChatRoom2 = () => {
   };
 
   const readImageAsDataURL = (file, callback) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      callback(imageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  };
+  const readImageAsDataURL2 = (file, callback) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const imageDataUrl = reader.result;
@@ -378,26 +386,22 @@ const ChatRoom2 = () => {
 
     return new Blob([arrayBuffer], { type: mimeString });
   };
+  const dataURLtoBlob2 = (dataURL) => {
+    const splitDataUrl = dataURL.split(",");
+    const byteString = atob(splitDataUrl[1]);
+    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
 
-  const sellerInfo = {
-    username: "seller01",
-    nickname: "seller01",
-    phone: "08123456789",
-    bank: "UBA",
-    bankAccount: "1234567890",
-    tetherAddress: "TETHER_SELLER_ADDRESS",
-    referralCode: "SELLERREF123",
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
   };
 
-  const buyerInfo = {
-    username: "buyer01",
-    nickname: "buyer01",
-    phone: "08098765432",
-    bank: "GTB",
-    bankAccount: "9876543210",
-    tetherAddress: "TETHER_BUYER_ADDRESS",
-    referralCode: "BUYERREF321",
-  };
+
 
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {

@@ -1,8 +1,10 @@
 // ChatRoomPanel.js
 import React from "react";
 import { FiArrowLeft, FiImage, FiCopy } from "react-icons/fi";
+import { FiUser, FiShoppingBag, FiShield } from "react-icons/fi";
 
 import { toast } from "react-hot-toast"; // Optional: for feedback
+import { formatKST } from "../../utils/formatKST";
 
 // Keys allowed for copying
 const copyableKeys = ["phone", "bank", "bankAccount", "tetherAddress"];
@@ -22,7 +24,7 @@ const ChatRoomPanel = ({
   handleSendMessage,
   handleCloseChat,
   users,
-  customer
+  customer,
 }) => {
   return (
     <div className="w-full max-w- bg-white shadow-lg rounded-lg flex flex-col overflow-hidden">
@@ -41,7 +43,7 @@ const ChatRoomPanel = ({
                 return (
                   <div
                     key={index}
-                    className={`flex ${isUser ? "justify-end" : "justify-start"} w-full`}
+                    className={`flex flex-col ${isUser ? "justify-end" : "justify-start"} w-full`}
                   >
                     <div
                       className={`max-w-[80%] md:max-w-sm px-4 py-3 rounded-2xl text-sm shadow-md ${
@@ -62,6 +64,11 @@ const ChatRoomPanel = ({
                         />
                       )}
                     </div>
+                    {message.timestamp && (
+                      <div className="text-[13px] font-semibold text-right mt-1 text-gray-600">
+                        {formatKST(message.timestamp)}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -132,34 +139,46 @@ const ChatRoomPanel = ({
       </div>
 
       {/* User Data Summary */}
-<div className="px-2 py-2 rounded-2xl border-slate-400 text-sm border space-y-1 mt-4">
-  <div className="w-full text-center flex justify-center -m-4 font-bold text-xl">
-    <h2 className="bg-green-500 px-7 text-gray-100 py-1 rounded-2xl">{customer}</h2>
-  </div>
-  {Object.entries(users).map(([key, value]) => {
-    const isCopyable = copyableKeys.includes(key);
-    return (
-      <div key={key} className="flex items-center justify-between gap-2">
-        <p className="w-full">
-          <strong>{formatKey(key)}:</strong>{" "}
-          <span className="break-all">{value}</span>
-        </p>
-        {isCopyable && (
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(value);
-              toast.success(`${formatKey(key)} copied!`);
-            }}
-            title="Copy"
-            className="text-green-700 hover:text-green-900"
-          >
-            <FiCopy size={18} />
-          </button>
-        )}
+      <div className="px-2 py-2 rounded-2xl border-slate-400 text-sm border space-y-1 mt-4">
+        <div className="w-full text-center flex justify-center -m-4 font-bold text-xl">
+          <h2 className="bg-green-500 px-7 z-50 text-white py-1 rounded-2xl flex items-center gap-2">
+            {customer === "Seller" ? (
+              <>
+                <FiUser size={26} className="text-white" />{" "}
+                <span className="font-semibold">Seller</span>
+              </>
+            ) : (
+              <>
+                <FiShoppingBag size={26} className="text-white" />{" "}
+                <span className="font-semibold">Buyer</span>
+              </>
+            )}
+          </h2>
+        </div>
+        {Object.entries(users).map(([key, value]) => {
+          const isCopyable = copyableKeys.includes(key);
+          return (
+            <div key={key} className="flex items-center justify-between gap-2">
+              <p className="w-full">
+                <strong>{formatKey(key)}:</strong> <span className="break-all">{value}</span>
+              </p>
+              {isCopyable && (
+                <button
+                  onClick={() => {
+                    const formatted = `${users.bankAccount} ${users.bankName} ${users.fullName}`;
+                    navigator.clipboard.writeText(formatted);
+                    toast.success(`Copied as: ${formatted}`);
+                  }}
+                  title="Copy"
+                  className="text-green-700 hover:text-green-900 cursor-pointer"
+                >
+                  <FiCopy size={18} />
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
-    );
-  })}
-</div>
     </div>
   );
 };
