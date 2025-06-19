@@ -31,10 +31,11 @@ const ChatRoom2 = () => {
   const [image, setImage] = useState(null);
   const [image2, setImage2] = useState(null);
   const navigate = useNavigate();
-  const whic = orderId.length > 5 ? orderId : orderType;
+  let whic = orderId.length > 5 ? orderId : orderType;
   const whi = orderType.length < 5 ? orderType : orderId;
   console.log("🚀 ~ whi:", whi)
   const buywhic = buyOrderId;
+  whic = whi === "buy" && orderId
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
