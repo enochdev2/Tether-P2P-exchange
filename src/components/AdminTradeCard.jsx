@@ -158,12 +158,12 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
 
       {/* Buttons */}
       <div className="flex items-center justify-center space-x-3 my-2 sm:my-0">
-        <button
+        {/* <button
           onClick={() => navigate(`/chats/${orderType}/${offerId}`)}
           className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
         >
          {t("tradecard.chat")}
-        </button>
+        </button> */}
 
         <button
           onClick={() => openCancelModal(offer._id)}
@@ -175,7 +175,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         {sell && (
           <button
             onClick={handleMatchClick}
-            className="px-4 py-2 bg-[#26a17b] hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
+            className="px-4 py-2 bg-[#26a17b] cursor-pointer hover:bg-green-700 text-white rounded-md text-sm font-semibold shadow"
           >
             {t("tradecard.match")}
           </button>

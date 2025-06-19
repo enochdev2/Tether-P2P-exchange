@@ -31,7 +31,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setIsModalOpen(true);
   };
   const openCancelModals = (orderId, isCancels) => {
-     setIsCancel(isCancels)
+    setIsCancel(isCancels);
     setPendingOrderId(orderId);
     setIsModalOpens(true);
   };
@@ -124,10 +124,13 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
-      console.log("🚀 ~ handleMatchCancel ~ offer.currentBuyOrderInProgress:", offer.currentBuyOrderInProgress)
+  console.log(
+    "🚀 ~ handleMatchCancel ~ offer.currentBuyOrderInProgress:",
+    offer.currentBuyOrderInProgress
+  );
 
   const orderType = sell ? "sell" : "buy";
-  const buyOrderId =offer.currentBuyOrderInProgress
+  const buyOrderId = offer.currentBuyOrderInProgress;
 
   const buildMatchedTableRows = (offer, sell) => {
     const matchedOrders = sell ? offer.matchedBuyOrders : offer.matchedSellOrders;
@@ -197,16 +200,15 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
             {isDropdownOpen ? <FaChevronUp size={14} /> : <FaChevronDown size={14} />}
           </button>
 
-          <button
-            onClick={() => navigate(`/chat/${offer._id}/${buyOrderId}/${orderType}`)}
-            className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
-          >
-            {t("tradecard.chat")}
-          </button>
-
           {sell &&
             (offer.status === "In Progress" ? (
               <div className="space-x-3">
+                <button
+                  onClick={() => navigate(`/chat/${offer._id}/${buyOrderId}/${orderType}`)}
+                  className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
+                >
+                  {t("tradecard.chat")}
+                </button>
                 <button
                   onClick={() => openCancelModals(offer._id, true)}
                   className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
@@ -215,7 +217,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
                 </button>
                 <button
                   // onClick={handleMatchComplete}
-                   onClick={() => openCancelModals(offer._id, false)}
+                  onClick={() => openCancelModals(offer._id, false)}
                   className="bg-cyan-600  hover:bg-cyan-700 text-white  text-xs px-2 py-3 rounded-md font-medium cursor-pointer shadow-sm"
                 >
                   {t("tradecard.completematch")}
@@ -283,7 +285,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
       <ConfirmModal3
         open={isModalOpens}
         onClose={() => setIsModalOpens(false)}
-        onConfirm={isCancel ? handleMatchCancel : handleMatchComplete }
+        onConfirm={isCancel ? handleMatchCancel : handleMatchComplete}
         message="Are you sure you want to delete the buy Order?"
       />
 

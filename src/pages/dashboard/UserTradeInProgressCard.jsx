@@ -85,17 +85,19 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
           : `₩${offer.price.toLocaleString()} KRW`}
       </div>
 
-      <div className="flex flex-wrap space-x-5 space-y-3 items-center">
-        <div className="space-x-3">
-          {/* Chat button for buy orders waiting for buy */}
-          <button
-            onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
-            className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
-          >
-            1:1 Chat
-          </button>
+      {offer.status === "In Progress" && (
+        <div className="flex flex-wrap space-x-5 space-y-3 items-center">
+          <div className="space-x-3">
+            {/* Chat button for buy orders waiting for buy */}
+            <button
+              onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
+              className="mt-2 px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
+            >
+              1:1 Chat
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap md:flex-2 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">

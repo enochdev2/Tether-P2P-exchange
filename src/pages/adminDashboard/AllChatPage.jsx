@@ -204,7 +204,7 @@ const handleMarkAllAsRead = async () => {
             {filteredMessages.map((chat) => (
               <li
                 key={chat._id}
-                onClick={() => navigate(`/chats/${chat.orderType}/${chat.orderId}`)}
+                onClick={() => navigate(`/chat/${chat.orderType}/${chat?.buyOrderId}/${chat.orderId}`)}
                 className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
                 <div>

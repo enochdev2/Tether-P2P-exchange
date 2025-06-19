@@ -25,6 +25,7 @@ const ChatRoom2 = () => {
   const [newMessage, setNewMessage] = useState("");
   const [newMessage2, setNewMessage2] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [isConnected2, setIsConnected2] = useState(false);
   const [userInfo, setUserInfo] = useState(true);
   // const [userOrderId, setUserOrderId] = useState(null);
   const [image, setImage] = useState(null);
@@ -198,7 +199,7 @@ const ChatRoom2 = () => {
     fetchMessages2();
 
     newSocket.on("connect", () => {
-      setIsConnected(true);
+      setIsConnected2(true);
       newSocket.emit("joinRoom", buywhic); // emit only after connect
     });
 
@@ -211,10 +212,10 @@ const ChatRoom2 = () => {
     });
 
     return () => {
-      newSocket.emit("leaveRoom", orderId);
+      newSocket.emit("leaveRoom", buywhic);
       newSocket.disconnect();
     };
-  }, [orderId]);
+  }, [buywhic]);
 
   const fetchMessages2 = async () => {
     const res = await fetch(
@@ -232,8 +233,8 @@ const ChatRoom2 = () => {
   
 
   const handleSendMessage2 = async () => {
-    if (newMessage.trim() || image) {
-      const message = { sender: user.nickname, content: newMessage, orderId };
+    if (newMessage2.trim() || image2) {
+      const message = { sender: user.nickname, content: newMessage, buywhic };
 
       const token = localStorage.getItem("token");
 
@@ -249,17 +250,17 @@ const ChatRoom2 = () => {
       let base64Image = null;
 
       const commonMessageData = {
-        content: newMessage ? newMessage : "Image",
+        content: newMessage2 ? newMessage2 : "Image",
         sender: user.nickname,
-        orderId: whic,
-        orderType: whi,
+        orderId: buywhic,
+        orderType: whi === "sell" ? "buy" : "sell",
         timestamp: new Date().toISOString(),
       };
 
       // Reset UI state early to avoid residual image
-      setNewMessage("");
+      setNewMessage2("");
 
-      if (image) {
+      if (image2) {
         readImageAsDataURL(image, async (imageDataUrl) => {
           const blobImage = dataURLtoBlob(imageDataUrl);
 
@@ -420,7 +421,7 @@ const ChatRoom2 = () => {
         setNewMessage={setNewMessage2}
         setImage={setImage2}
         image={image2}
-        isConnected={isConnected}
+        isConnected={isConnected2}
         handleSendMessage={handleSendMessage2}
         handleCloseChat={handleCloseChat2}
         users={buyerInfo}

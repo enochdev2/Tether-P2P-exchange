@@ -140,15 +140,14 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
           {/* Cancel the order */}
 
           {/* Chat button for buy orders waiting for buy */}
-          {offer.status !== "Pending Approval" && (
+          {/* {offer.status !== "Pending Approval" && (
             <button
-              // to={`chat/${offer._id}`}
               onClick={() => navigate(`/chats/${offer._id}/${orderType}`)}
               className="mt-2 px-1 md:px-3 py-2 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs md:text-sm font-bold"
             >
               {t("tradecard.chat")}
             </button>
-          )}
+          )} */}
           {offer.status === "Pending Approval" && (
             <button
               onClick={() => openCancelModal(offer._id)}
