@@ -33,6 +33,7 @@ const ChatRoom2 = () => {
   const navigate = useNavigate();
   const whic = orderId.length > 5 ? orderId : orderType;
   const whi = orderType.length < 5 ? orderType : orderId;
+  console.log("🚀 ~ whi:", whi)
   const buywhic = buyOrderId;
   // const orderId = offerId;
   useEffect(() => {
@@ -63,11 +64,11 @@ const ChatRoom2 = () => {
       newSocket.emit("leaveRoom", orderId);
       newSocket.disconnect();
     };
-  }, [orderId]);
+  }, [whic]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim() || image) {
-      const message = { sender: user.nickname, content: newMessage, orderId };
+      const message = { sender: user.nickname, content: newMessage, whic };
 
       const token = localStorage.getItem("token");
 
@@ -80,13 +81,14 @@ const ChatRoom2 = () => {
         orderType: orderType, // Pass orderType as well
         timestamp: new Date().toISOString(),
       };
+
       let base64Image = null;
 
       const commonMessageData = {
         content: newMessage ? newMessage : "Image",
         sender: user.nickname,
         orderId: whic,
-        orderType: whi,
+        orderType: whi === "sell" ? "sell" : "buy",
         timestamp: new Date().toISOString(),
       };
 
@@ -150,6 +152,7 @@ const ChatRoom2 = () => {
   };
 
   const fetchMessages = async () => {
+    console.log("🚀 ~ fetchMessages ~ whic:", whic);
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${whic}`,
       {
@@ -160,11 +163,12 @@ const ChatRoom2 = () => {
       }
     );
     const data = await res.json();
+    console.log("🚀 ~ fetchMessages ~ data:", data);
     setMessages(data);
   };
 
   const handleCloseChat = async () => {
-    socket.emit("closeChat", { orderId });
+    socket.emit("closeChat", { whic });
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
       {
@@ -181,10 +185,6 @@ const ChatRoom2 = () => {
     }
     // Or navigate away:
   };
-
-
-
-
 
   //? .......BUYER................
   useEffect(() => {
@@ -230,7 +230,6 @@ const ChatRoom2 = () => {
     const data = await res.json();
     setMessages2(data);
   };
-  
 
   const handleSendMessage2 = async () => {
     if (newMessage2.trim() || image2) {
@@ -334,7 +333,6 @@ const ChatRoom2 = () => {
     }
     // Or navigate away:
   };
-  
 
   const hanleToggleUserInfo = async () => {
     setUserInfo(false);

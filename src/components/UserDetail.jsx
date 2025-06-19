@@ -123,7 +123,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
     const formData = new FormData();
     formData.append("file", rawFile);
 
-    const res = await fetch(`http://localhost:3000/api/v1/user/${userId}/image`, {
+    const res = await fetch(`https://tether-p2p-exchang-backend.onrender.com/api/v1/user/${userId}/image`, {
       method: "PUT",
       body: formData,
     });

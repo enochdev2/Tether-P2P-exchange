@@ -85,7 +85,7 @@ const SignUp = () => {
         formDataImage.append("file", rawFile);
         
         // Upload to backend (you’ll create this endpoint below)
-        const imageRes = await fetch("http://localhost:3000/api/v1/upload", {
+        const imageRes = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/upload", {
           method: "POST",
           body: formDataImage,
         });
