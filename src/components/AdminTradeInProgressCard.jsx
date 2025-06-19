@@ -123,15 +123,12 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setBuyerOrderId(""); // Reset the input field
   };
 
-
   const orderType = sell ? "sell" : "buy";
-  const buyOrderIds = sell? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress;
-  const orderId = sell ? offer._id : buyOrderIds
-  const buyOrderId = sell ? buyOrderIds : offer._id
-  console.log("🚀 ~ AdminTradeInProgressCard ~ orderId:", orderId)
-  console.log("🚀 ~ AdminTradeInProgressCard ~ buyOrderId:", buyOrderId)
+  const buyOrderId = sell ? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress;
 
-  const Links = sell ? `/chat/${orderId}/${buyOrderId}/${orderType}`: `/chat/${orderId}/${buyOrderId}/${orderType}`
+  const Links = sell
+    ? `/chat/${offer._id}/${buyOrderId}/${orderType}`
+    : `/chat/${offer._id}/${buyOrderId}/${orderType}`;
 
   const buildMatchedTableRows = (offer, sell) => {
     const matchedOrders = sell ? offer.matchedBuyOrders : offer.matchedSellOrders;

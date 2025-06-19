@@ -31,8 +31,7 @@ const AllChatPage = () => {
 
       const data = await res.json();
       if (!res.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to fetch messages";
+        const errorMsg = data.error || data.message || "Failed to fetch messages";
         ErrorToast(errorMsg);
         return;
       }
@@ -65,8 +64,7 @@ const AllChatPage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to fetch notifications";
+        const errorMsg = data.error || data.message || "Failed to fetch notifications";
         ErrorToast(errorMsg);
         return;
       }
@@ -95,9 +93,7 @@ const AllChatPage = () => {
 
   const handleSearch = () => {
     if (searchQuery) {
-      const filtered = messages.filter((msg) =>
-        msg.orderId.includes(searchQuery)
-      );
+      const filtered = messages.filter((msg) => msg.orderId.includes(searchQuery));
       setFilteredMessages(filtered); // Show messages that match the order number
     } else {
       setFilteredMessages(messages); // Show all messages if search query is empty
@@ -120,36 +116,30 @@ const AllChatPage = () => {
 
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   };
 
-  
+  const handleMarkAllAsRead = async () => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
+    const { success, error } = await markAllNotificationsAsRead({
+      userId: user._id,
+      type: "chat", // or another type
+      isForAdmin: true, // or false depending on the context
+      token,
+    });
 
-const handleMarkAllAsRead = async () => {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const { success, error } = await markAllNotificationsAsRead({
-    userId: user._id,
-    type: "chat", // or another type
-    isForAdmin: true,     // or false depending on the context
-    token,
-  });
-
-  if (success) {
-    // SuccessToast("All notifications marked as read");
-    setNotifications([]); // or any state update
-  } else {
-    console.error(error);
-  }
-};
-
+    if (success) {
+      // SuccessToast("All notifications marked as read");
+      setNotifications([]); // or any state update
+    } else {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 py-10 px-6">
@@ -203,10 +193,13 @@ const handleMarkAllAsRead = async () => {
           <ul className="grid grid-cols-1 sm:grid-cols-1 gap-4">
             {filteredMessages.map((chat) => (
               <li
-                key={chat._id}
-                onClick={() => navigate(`/chat/${chat.orderType}/${chat?.buyOrderId}/${chat.orderId}`)}
-                className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
+              key={chat._id}
+              onClick={() =>
+                navigate(`/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`)
+              }
+              className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
+                {console.log(chat)}
                 <div>
                   <p className="text-sm text-gray-500">{t("chat.orderIdLabel")}</p>
                   <p className="text-lg font-semibold text-green-800">{chat.orderId}</p>
