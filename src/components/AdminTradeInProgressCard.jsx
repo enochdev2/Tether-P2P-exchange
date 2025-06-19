@@ -62,8 +62,6 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
       if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
-      console.log("🚀 ~ handleCancleMatch ~ user:", user);
-      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
 
       const url = sell
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
@@ -124,13 +122,13 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
-  console.log(
-    "🚀 ~ handleMatchCancel ~ offer.currentBuyOrderInProgress:",
-    offer.currentBuyOrderInProgress
-  );
 
   const orderType = sell ? "sell" : "buy";
-  const buyOrderId = offer.currentBuyOrderInProgress;
+  const buyOrderId = sell ? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress;
+
+  const Links = sell
+    ? `/chat/${offer._id}/${buyOrderId}/${orderType}`
+    : `/chat/${offer._id}/${buyOrderId}/${orderType}`;
 
   const buildMatchedTableRows = (offer, sell) => {
     const matchedOrders = sell ? offer.matchedBuyOrders : offer.matchedSellOrders;
@@ -204,7 +202,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
             (offer.status === "In Progress" ? (
               <div className="space-x-3">
                 <button
-                  onClick={() => navigate(`/chat/${offer._id}/${buyOrderId}/${orderType}`)}
+                  onClick={() => navigate(Links)}
                   className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
                 >
                   {t("tradecard.chat")}
@@ -241,13 +239,22 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
             ))}
           {!sell &&
             (offer.status === "In Progress" ? (
-              <button
-                onClick={() => openCancelModals(offer._id, true)}
-                // onClick={handleMatchCancel}
-                className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
-              >
-                {t("tradecard.cancel")}
-              </button>
+              <div className="space-x-3">
+                <button
+                  onClick={() => navigate(`/chat/${offer._id}/${buyOrderId}/${orderType}`)}
+                  className="bg-[#26a17b] hover:bg-green-700 cursor-pointer text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm "
+                >
+                  {t("tradecard.chat")}
+                </button>
+
+                <button
+                  onClick={() => openCancelModals(offer._id, true)}
+                  // onClick={handleMatchCancel}
+                  className="bg-red-600  cursor-pointer hover:bg-red-700 text-white text-sm px-3 py-2 rounded-md font-medium shadow-sm"
+                >
+                  {t("tradecard.cancel")}
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => openCancelModal(offer._id)}

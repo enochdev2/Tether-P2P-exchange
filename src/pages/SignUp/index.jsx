@@ -301,13 +301,65 @@ const SignUp = () => {
             {/* Nickname */}
             <div>
               <label htmlFor="nickname" className="block text-sm font-semibold text-gray-100 mb-1">
-                {t("signUp.nickname")} (Platform Name) <span className="text-red-500">*</span>
+                {t("signUp.nickname")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 id="nickname"
                 name="nickname"
                 value={formData.nickname}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                required
+              />
+            </div>
+
+            {/* Phone Number (Initial input and Send SMS button) */}
+            <div>
+              <label htmlFor="phone" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.phone")} <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t("signUp.phonePlaceholder")}
+                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic ${
+                    phoneVerificationStatus === "completed" ? "border-green-500" : ""
+                  }`}
+                  required
+                  disabled={phoneVerificationStatus === "completed"} // Disable if already completed [cite: 9]
+                />
+                {phoneVerificationStatus === "completed" ? (
+                  <span className="px-4 py-2 bg-green-500 text-white rounded-md text-sm">
+                    Completed
+                  </span> //
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSendSmsCode} // [cite: 2]
+                    disabled={isLoading || !formData.phone || !/^\d{10,15}$/.test(formData.phone)}
+                    className="px-4 py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send SMS code
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Full Name */}
+            <div>
+              <label htmlFor="fullName" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.fullName")} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
                 required
@@ -366,22 +418,6 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Full Name */}
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-semibold text-gray-100 mb-1">
-                {t("signUp.fullName")} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                required
-              />
-            </div>
-
             {/* Date of Birth */}
             <div>
               <label htmlFor="dob" className="block text-sm font-semibold text-gray-100 mb-1">
@@ -396,42 +432,6 @@ const SignUp = () => {
                 className="w-full px-4 py-3 border border-gray-600 bg-white text-gray-900 rounded-md focus:outline-none focus:border-none"
                 required
               />
-            </div>
-
-            {/* Phone Number (Initial input and Send SMS button) */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-100 mb-1">
-                {t("signUp.phone")} <span className="text-red-500">*</span>
-              </label>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t("signUp.phonePlaceholder")}
-                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic ${
-                    phoneVerificationStatus === "completed" ? "border-green-500" : ""
-                  }`}
-                  required
-                  disabled={phoneVerificationStatus === "completed"} // Disable if already completed [cite: 9]
-                />
-                {phoneVerificationStatus === "completed" ? (
-                  <span className="px-4 py-2 bg-green-500 text-white rounded-md text-sm">
-                    Completed
-                  </span> //
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSendSmsCode} // [cite: 2]
-                    disabled={isLoading || !formData.phone || !/^\d{10,15}$/.test(formData.phone)}
-                    className="px-4 py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Send SMS code
-                  </button>
-                )}
-              </div>
             </div>
 
             {/* Bank Name */}

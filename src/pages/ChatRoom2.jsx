@@ -23,6 +23,8 @@ const ChatRoom2 = () => {
   const [messages, setMessages] = useState([]);
   const [messages2, setMessages2] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [chatUserInfo, setChatUserInfo] = useState([]);
+  const [chatUserInfo2, setChatUserInfo2] = useState([]);
   const [newMessage2, setNewMessage2] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [isConnected2, setIsConnected2] = useState(false);
@@ -31,10 +33,13 @@ const ChatRoom2 = () => {
   const [image, setImage] = useState(null);
   const [image2, setImage2] = useState(null);
   const navigate = useNavigate();
-  const whic = orderId.length > 5 ? orderId : orderType;
+  let whic = orderId.length > 5 ? orderId : orderType;
   const whi = orderType.length < 5 ? orderType : orderId;
-  console.log("🚀 ~ whi:", whi)
+  console.log("🚀 ~ whi:", whi);
   const buywhic = buyOrderId;
+  const [userChatId, setUserChatId] = useState(whic);
+  const [userChatId2, setUserChatId2] = useState(buywhic);
+  // whic = whi === "buy" && orderId
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
@@ -154,7 +159,7 @@ const ChatRoom2 = () => {
   const fetchMessages = async () => {
     console.log("🚀 ~ fetchMessages ~ whic:", whic);
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${whic}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -163,8 +168,14 @@ const ChatRoom2 = () => {
       }
     );
     const data = await res.json();
-    console.log("🚀 ~ fetchMessages ~ data:", data);
-    setMessages(data);
+    if (!res.ok) {
+      const data = await res.json();
+      const errorMsg = data.error || data.message || "Failed to register user";
+      ErrorToast(errorMsg);
+    }
+    setMessages(data.messages);
+    setChatUserInfo(data.chatDetails);
+    setUserChatId(data.chatDetails.nickname);
   };
 
   const handleCloseChat = async () => {
@@ -179,7 +190,8 @@ const ChatRoom2 = () => {
         },
       }
     );
-    if (res.ok) {
+    const ress = await handleCloseChat2();
+    if (ress.ok && res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
@@ -219,7 +231,7 @@ const ChatRoom2 = () => {
 
   const fetchMessages2 = async () => {
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${buywhic}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/${buywhic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -228,7 +240,14 @@ const ChatRoom2 = () => {
       }
     );
     const data = await res.json();
-    setMessages2(data);
+    if (!res.ok) {
+      const data = await res.json();
+      const errorMsg = data.error || data.message || "Failed to register user";
+      ErrorToast(errorMsg);
+    }
+    setMessages2(data.messages);
+    setChatUserInfo2(data.chatDetails);
+    setUserChatId2(data.chatDetails.nickname);
   };
 
   const handleSendMessage2 = async () => {
@@ -239,13 +258,6 @@ const ChatRoom2 = () => {
 
       // socket.emit("sendMessage", message);
 
-      const messageData = {
-        content: newMessage ? newMessage : "Image",
-        sender: user.nickname,
-        orderId: orderId,
-        orderType: orderType, // Pass orderType as well
-        timestamp: new Date().toISOString(),
-      };
       let base64Image = null;
 
       const commonMessageData = {
@@ -260,8 +272,8 @@ const ChatRoom2 = () => {
       setNewMessage2("");
 
       if (image2) {
-        readImageAsDataURL(image, async (imageDataUrl) => {
-          const blobImage = dataURLtoBlob(imageDataUrl);
+        readImageAsDataURL2(image2, async (imageDataUrl) => {
+          const blobImage = dataURLtoBlob2(imageDataUrl);
 
           // Validate file type
           if (!blobImage.type.includes("image/")) {
@@ -327,23 +339,14 @@ const ChatRoom2 = () => {
         },
       }
     );
-    if (res.ok) {
+     const ress = await handleCloseChat();
+    if (ress.ok && res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
+
     // Or navigate away:
   };
-
-  const hanleToggleUserInfo = async () => {
-    setUserInfo(false);
-  };
-
-  const copyToClipboard = (text, label = "Copied") => {
-    navigator.clipboard.writeText(text);
-    SuccessToast(`${label} Copied Successfully`);
-  };
-
-  const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
 
   const readImageAsDataURL = (file, callback) => {
     const reader = new FileReader();
@@ -352,6 +355,14 @@ const ChatRoom2 = () => {
       callback(imageDataUrl);
     };
     reader.readAsDataURL(file);
+  };
+  const readImageAsDataURL2 = (files, callback) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      callback(imageDataUrl);
+    };
+    reader.readAsDataURL(files);
   };
 
   const dataURLtoBlob = (dataURL) => {
@@ -368,33 +379,29 @@ const ChatRoom2 = () => {
 
     return new Blob([arrayBuffer], { type: mimeString });
   };
+  const dataURLtoBlob2 = (dataURL) => {
+    const splitDataUrl = dataURL.split(",");
+    const byteString = atob(splitDataUrl[1]);
+    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
 
-  const sellerInfo = {
-    username: "seller01",
-    nickname: "seller01",
-    phone: "08123456789",
-    bank: "UBA",
-    bankAccount: "1234567890",
-    tetherAddress: "TETHER_SELLER_ADDRESS",
-    referralCode: "SELLERREF123",
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
   };
 
-  const buyerInfo = {
-    username: "buyer01",
-    nickname: "buyer01",
-    phone: "08098765432",
-    bank: "GTB",
-    bankAccount: "9876543210",
-    tetherAddress: "TETHER_BUYER_ADDRESS",
-    referralCode: "BUYERREF321",
-  };
+
 
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
     <div className="min-h-screen mt-10 bg-gray-100 flex gap-6 items-center justify-center p-4">
       <ChatRoomPanel
-        whic={whic}
+        whic={userChatId}
         messages={messages}
         user={user}
         navigate={navigate}
@@ -405,13 +412,13 @@ const ChatRoom2 = () => {
         isConnected={isConnected}
         handleSendMessage={handleSendMessage}
         handleCloseChat={handleCloseChat}
-        users={sellerInfo}
-        customer="Seller"
+        users={chatUserInfo}
+        customer={orderType === "sell" ? "Seller" : "Buyer"}
       />
 
       {/* second section */}
       <ChatRoomPanel
-        whic={buywhic}
+        whic={userChatId2}
         messages={messages2}
         user={user}
         navigate={navigate}
@@ -422,8 +429,8 @@ const ChatRoom2 = () => {
         isConnected={isConnected2}
         handleSendMessage={handleSendMessage2}
         handleCloseChat={handleCloseChat2}
-        users={buyerInfo}
-        customer="Buyer"
+        users={chatUserInfo2}
+        customer={orderType === "sell" ? "Buyer" : "Seller"}
       />
     </div>
   );

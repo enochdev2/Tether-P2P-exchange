@@ -22,7 +22,6 @@ const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [userInfo, setUserInfo] = useState(true);
   // const [userOrderId, setUserOrderId] = useState(null);
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
@@ -125,14 +124,18 @@ const ChatRoom = () => {
 
           socket.emit("sendMessage", messageData);
 
-          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(messageData),
-          });
+          await fetch(
+            // "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+            "http://localhost:3000/api/v1/chat",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(messageData),
+            }
+          );
 
           setImage(null); // Clear image after sending
         });
@@ -144,7 +147,10 @@ const ChatRoom = () => {
 
         socket.emit("sendMessage", messageData);
 
-        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+        await fetch(
+          // "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+          "http://localhost:3000/api/v1/chat",
+           {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -176,17 +182,6 @@ const ChatRoom = () => {
     // Or navigate away:
   };
 
-  const hanleToggleUserInfo = async () => {
-    setUserInfo(false);
-  };
-
-  const copyToClipboard = (text, label = "Copied") => {
-    navigator.clipboard.writeText(text);
-    SuccessToast(`${label} Copied Successfully`);
-  };
-
-  const tether = `${t("profile.walletAddress")}:  ${user?.tetherAddress}`;
-
   const readImageAsDataURL = (file, callback) => {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -215,49 +210,6 @@ const ChatRoom = () => {
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
     <div className="min-h-screen mt-10 bg-gray-100 flex items-center justify-center p-4">
-      {userInfo && (
-        <div className="mr-5 bg-slate-300 px-2 rounded-lg">
-          <div className="flex flex-col gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
-            <div className="min-w-[280px]  sm:min-w-0 flex-1">
-              <InfoCard
-                icon={<PiggyBank size={24} />}
-                title={t("profile.bankName")}
-                actionText={user?.bankName}
-                onAction={() => console.log("Navigate to security questions")}
-                copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
-              />
-            </div>
-            <div className="min-w-[280px] sm:min-w-0 flex-1">
-              <InfoCard
-                icon={<BanknoteIcon size={24} />}
-                title={t("profile.bankAccountNumber")}
-                actionText={user?.bankAccount}
-                copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
-                onAction={() => console.log("Navigate to security questions")}
-              />
-            </div>
-
-            <div className="min-w-[280px]  sm:min-w-0 flex-1">
-              <InfoCard
-                className=""
-                icon={<Wallet2Icon size={24} />}
-                title={tether.slice(0, 15)}
-                actionText={tether.slice(15, 60)}
-                copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
-              />
-            </div>
-          </div>
-          <div className="flex w-full justify-end">
-            <button
-              onClick={hanleToggleUserInfo}
-              className="  bg-red-600 px-2 text-lg rounded-lg text-yellow-50 cursor-pointer font-bold"
-            >
-              X
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="w-full max-w-5xl bg-white shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden">
         {/* Chat Area */}
         <div className="w-full md:w-2/3 flex flex-col border-r border-gray-200">
