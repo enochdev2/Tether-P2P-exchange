@@ -258,13 +258,6 @@ const ChatRoom2 = () => {
 
       // socket.emit("sendMessage", message);
 
-      const messageData = {
-        content: newMessage ? newMessage : "Image",
-        sender: user.nickname,
-        orderId: orderId,
-        orderType: orderType, // Pass orderType as well
-        timestamp: new Date().toISOString(),
-      };
       let base64Image = null;
 
       const commonMessageData = {
@@ -279,7 +272,7 @@ const ChatRoom2 = () => {
       setNewMessage2("");
 
       if (image2) {
-        readImageAsDataURL2(image, async (imageDataUrl) => {
+        readImageAsDataURL2(image2, async (imageDataUrl) => {
           const blobImage = dataURLtoBlob2(imageDataUrl);
 
           // Validate file type
@@ -363,13 +356,13 @@ const ChatRoom2 = () => {
     };
     reader.readAsDataURL(file);
   };
-  const readImageAsDataURL2 = (file, callback) => {
+  const readImageAsDataURL2 = (files, callback) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const imageDataUrl = reader.result;
       callback(imageDataUrl);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(files);
   };
 
   const dataURLtoBlob = (dataURL) => {
