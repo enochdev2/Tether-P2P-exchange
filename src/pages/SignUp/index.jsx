@@ -7,10 +7,18 @@ import { ErrorToast } from "../../utils/Error";
 import { useTranslation } from "react-i18next";
 import { X, UploadCloud } from "lucide-react";
 import avatarImage from "../../assets/avatarImage.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import solanaImage from "../../assets/solanaImage.png";
+
+// Assume these imports exist for your toasts and AuthProvider
+// import LoadingSpinner from "../../components/LoadingSpinner";
+// import { useAuth } from "../../utils/AuthProvider";
+// import { SuccessToast } from "../../utils/Success";
+// import { ErrorToast } from "../../utils/Error";
 
 const SignUp = () => {
   const { t } = useTranslation();
-  const { signUp } = useAuth();
+  const { signUp } = useAuth(); // Assuming useAuth provides a signUp function
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
@@ -23,12 +31,29 @@ const SignUp = () => {
     password: "",
     fullName: "",
     dob: "",
-    phone: "",
+    phone: "", // Keep phone in formData
     bankName: "",
     bankAccount: "",
     tetherAddress: "",
     referralCode: "",
   });
+
+  // New state for phone verification
+  const [showPhoneVerificationModal, setShowPhoneVerificationModal] = useState(false);
+  const [smsCode, setSmsCode] = useState(["", "", "", "", "", ""]); // Array for 6 digits
+  const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
+  const [phoneVerificationStatus, setPhoneVerificationStatus] = useState("pending"); // 'pending', 'sent', 'resent', 'completed', 'error'
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setshowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setshowConfirmPassword((prev) => !prev);
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -47,8 +72,7 @@ const SignUp = () => {
     if (!formData.password || formData.password.length < 5)
       errors.push("Password must be at least 5 characters.");
     if (!formData.dob) errors.push("Date of birth is required.");
-    if (!formData.phone || !/^\d{10,15}$/.test(formData.phone))
-      errors.push("Enter a valid phone number.");
+    // Phone validation will be handled by the verification flow
     if (!formData.bankName.trim()) errors.push("Bank name is required.");
     if (!formData.bankAccount || isNaN(formData.bankAccount))
       errors.push("Valid bank account number is required.");
@@ -65,6 +89,116 @@ const SignUp = () => {
     });
   };
 
+  // --- Phone Verification Handlers ---
+  const handleSendSmsCode = async () => {
+    // Basic phone number validation before sending SMS
+    if (!formData.phone || !/^\d{10,15}$/.test(formData.phone)) {
+      ErrorToast("Please enter a valid phone number.");
+      return;
+    }
+
+    setIsLoading(true);
+    setPhoneVerificationMessage(""); // Clear previous messages
+    try {
+      // Simulate API call to send SMS
+      console.log(`Sending SMS to: ${formData.phone}`);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+      setPhoneVerificationStatus("sent"); //
+      setPhoneVerificationMessage("SMS code sent to your phone.");
+      setShowPhoneVerificationModal(true); // Open modal for code input
+      SuccessToast("SMS code sent successfully!");
+    } catch (error) {
+      console.error("Error sending SMS:", error);
+      setPhoneVerificationMessage("Failed to send SMS. Please try again.");
+      ErrorToast("Failed to send SMS.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendSmsCode = async () => {
+    setIsLoading(true);
+    setPhoneVerificationMessage("");
+    try {
+      // Simulate API call to resend SMS
+      console.log(`Resending SMS to: ${formData.phone}`);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+      setPhoneVerificationStatus("resent"); //
+      setPhoneVerificationMessage("The SMS has been resent."); //
+      SuccessToast("SMS code resent successfully!");
+    } catch (error) {
+      console.error("Error resending SMS:", error);
+      setPhoneVerificationMessage("Failed to resend SMS. Please try again.");
+      ErrorToast("Failed to resend SMS.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSmsCodeChange = (e, index) => {
+    const { value } = e.target;
+    if (/^\d*$/.test(value) && value.length <= 1) {
+      // Only allow single digit
+      const newSmsCode = [...smsCode];
+      newSmsCode[index] = value;
+      setSmsCode(newSmsCode);
+
+      // Auto-focus to next input
+      if (value && index < 5) {
+        const nextInput = document.getElementById(`sms-code-input-${index + 1}`);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }
+    }
+  };
+
+  const handleSmsCodeKeyDown = (e, index) => {
+    if (e.key === "Backspace" && smsCode[index] === "" && index > 0) {
+      const prevInput = document.getElementById(`sms-code-input-${index - 1}`);
+      if (prevInput) {
+        prevInput.focus();
+      }
+    }
+  };
+
+  const handleSubmitSmsCode = async () => {
+    const enteredCode = smsCode.join("");
+    if (enteredCode.length !== 6 || !/^\d{6}$/.test(enteredCode)) {
+      ErrorToast("Please enter a valid 6-digit SMS code.");
+      return;
+    }
+
+    setIsLoading(true);
+    setPhoneVerificationMessage("");
+    try {
+      // Simulate API call to verify SMS code
+      console.log(`Verifying SMS code: ${enteredCode}`);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+
+      // Simulate success/failure
+      if (enteredCode === "123456") {
+        // Example correct code
+        setPhoneVerificationStatus("completed"); //
+        setPhoneVerificationMessage("Phone verification completed."); //
+        SuccessToast("Phone verification completed!");
+        // Automatically close modal after a short delay
+        setTimeout(() => setShowPhoneVerificationModal(false), 2000);
+      } else {
+        setPhoneVerificationStatus("error");
+        setPhoneVerificationMessage("Invalid SMS code. Please try again.");
+        ErrorToast("Invalid SMS code.");
+      }
+    } catch (error) {
+      console.error("Error verifying SMS:", error);
+      setPhoneVerificationMessage("Error verifying code. Please try again.");
+      ErrorToast("Error verifying code.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // --- End Phone Verification Handlers ---
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -76,25 +210,35 @@ const SignUp = () => {
       return;
     }
 
+    // Ensure phone is verified before proceeding with main signup
+    if (phoneVerificationStatus !== "completed") {
+      ErrorToast("Please complete phone verification first.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       let imageUrl = "";
-      
+
       if (rawFile) {
         // Create FormData for image
         const formDataImage = new FormData();
         formDataImage.append("file", rawFile);
-        
+
         // Upload to backend (you’ll create this endpoint below)
-        const imageRes = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/upload", {
-          method: "POST",
-          body: formDataImage,
-        });
-        
+        const imageRes = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/upload",
+          {
+            method: "POST",
+            body: formDataImage,
+          }
+        );
+
         const imageData = await imageRes.json();
         imageUrl = imageData.url; // Get the Cloudinary URL
       }
-      
-      console.log("🚀 ~ handleSubmit ~ imageUrl:", imageUrl)
+
+      console.log("🚀 ~ handleSubmit ~ imageUrl:", imageUrl);
       // Create the new user data
       const newUser = {
         ...formData,
@@ -108,15 +252,18 @@ const SignUp = () => {
 
       if (response.ok) {
         SuccessToast(" you have successfully registered");
-        navigate("/verify");
+        navigate("/verify"); // Navigate to a success/verify page
       } else {
-        return;
+        // Error handling if response is not ok
+        // For example, if response.json() has an error message
+        const errorData = await response.json();
+        ErrorToast(errorData.message || "Sign-up failed.");
       }
 
       console.log("User signed up:", newUser);
     } catch (error) {
       console.error("Error during sign-up:", error);
-      // Optionally handle error here (e.g., show error message)
+      ErrorToast("An unexpected error occurred during sign-up.");
     } finally {
       setIsLoading(false); // Hide loading state after completion
     }
@@ -131,8 +278,8 @@ const SignUp = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="w-full max-w-5xl bg-gray-900/80  rounded-lg shadow-2xl p-6 md:p-10">
-        <h2 className="text-2xl  font-bold text-white text-center mb-8">{t("signUp.title")}</h2>
+      <div className="w-full max-w-5xl bg-gray-900/80 rounded-lg shadow-2xl p-6 md:p-10">
+        <h2 className="text-2xl font-bold text-white text-center mb-8">{t("signUp.title")}</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Username */}
@@ -168,19 +315,55 @@ const SignUp = () => {
             </div>
 
             {/* Password */}
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
                 {t("signUp.password")} <span className="text-red-500">*</span>
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 text-white rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition pr-10"
+                  required
+                />
+
+                <span
+                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </span>
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
+                {/* {t("signUp.cpassword")}  */}
+                Confirm Password
+                <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                  required
+                />
+
+                <span
+                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </span>
+              </div>
             </div>
 
             {/* Full Name */}
@@ -210,26 +393,45 @@ const SignUp = () => {
                 name="dob"
                 value={formData.dob}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                className="w-full px-4 py-3 border border-gray-600 bg-white text-gray-900 rounded-md focus:outline-none focus:border-none"
                 required
               />
             </div>
 
-            {/* Phone Number */}
+            {/* Phone Number (Initial input and Send SMS button) */}
             <div>
               <label htmlFor="phone" className="block text-sm font-semibold text-gray-100 mb-1">
                 {t("signUp.phone")} <span className="text-red-500">*</span>
               </label>
-              <input
-                type="number"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder={t("signUp.phonePlaceholder")}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic"
-                required
-              />
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t("signUp.phonePlaceholder")}
+                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic ${
+                    phoneVerificationStatus === "completed" ? "border-green-500" : ""
+                  }`}
+                  required
+                  disabled={phoneVerificationStatus === "completed"} // Disable if already completed [cite: 9]
+                />
+                {phoneVerificationStatus === "completed" ? (
+                  <span className="px-4 py-2 bg-green-500 text-white rounded-md text-sm">
+                    Completed
+                  </span> //
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSendSmsCode} // [cite: 2]
+                    disabled={isLoading || !formData.phone || !/^\d{10,15}$/.test(formData.phone)}
+                    className="px-4 py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send SMS code
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Bank Name */}
@@ -249,7 +451,6 @@ const SignUp = () => {
                   required
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 text-sm pointer-events-none">
-                  {/* Bank */}
                   {t("signUp.bankPlaceholder")}
                 </span>
               </div>
@@ -307,39 +508,51 @@ const SignUp = () => {
             {/* Guide Modal */}
             {showGuide && (
               <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-                <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+                <div className="bg-white rounded-lg shadow-lg lg:max-w-3xl w-full p-6 relative">
                   <button
                     className="absolute cursor-pointer top-3 right-3 text-gray-500 hover:text-gray-700"
                     onClick={() => setShowGuide(false)}
                   >
                     <X size={18} />
                   </button>
-                  <h2 className="text-lg font-semibold mb-3">Tether Address Guide</h2>
-                  <div className="text-sm text-gray-700 space-y-2">
-                    <p>
-                      Your <strong>Tether (USDT) address</strong> is a unique string of letters and
-                      numbers used to receive USDT cryptocurrency. We use this address to process
-                      payments or withdrawals related to your account.
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        Ensure the address is a valid <strong>TRC20</strong> or{" "}
-                        <strong>ERC20</strong> USDT address (depending on what we support).
-                      </li>
-                      <li>
-                        Copy it directly from your wallet (e.g., Trust Wallet, Binance, Coinbase,
-                        etc.).
-                      </li>
-                      <li>
-                        Make sure the address belongs to <strong>you</strong>, not someone else.
-                      </li>
-                    </ul>
-                    <p className="text-red-600 font-medium">
-                      ⚠️ Double-check the address before submitting.
-                      <br />
-                      Incorrect addresses may lead to <strong>loss of funds</strong>, and we will{" "}
-                      <strong>not</strong> be able to recover them.
-                    </p>
+
+                  <div className="lg:grid lg:items-center lg:gap-9 lg:grid-cols-12 ">
+                    <div className="col-span-7 text-justify">
+                      <h2 className="text-lg font-semibold mb-3">Tether Address Guide</h2>
+                      <div className="text-sm text-gray-700 space-y-2">
+                        <p>
+                          Your <strong>Tether (USDT) address</strong> is a unique string of letters
+                          and numbers used to receive USDT cryptocurrency. This address is linked to
+                          your account for processing payments or withdrawals.
+                        </p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>
+                            Please make sure the address is a valid <strong>Solana (SOL)</strong>{" "}
+                            address from the Phantom Wallet, which we currently support.
+                          </li>
+                          <li>Copy the address directly from your Phantom Wallet.</li>
+                          <li>
+                            The address must belong to you. Do not enter someone else's wallet
+                            address
+                          </li>
+                        </ul>
+                        <p>
+                          <strong>⚠️Please double-check the address before submitting.</strong>{" "}
+                          Entering an incorrect address may result in a
+                          <strong>loss of funds</strong>, and we will <strong>not</strong> be able
+                          to recover them.
+                        </p>
+
+                        <p>
+                          For future transactions, you must use the same wallet address you provided
+                          during sign-up in order for your transactions to be processed correctly
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="col-span-5 lg:block hidden">
+                      <img src={solanaImage} className="w-80" alt="" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -363,11 +576,35 @@ const SignUp = () => {
               />
             </div>
 
+            {/* Telegram Id */}
+            <div>
+              <label
+                htmlFor="referralCode"
+                className="block text-sm font-semibold text-gray-100 mb-1"
+              >
+                {/* {t("signUp")}  */}
+                Telegram ID
+                <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="TelegramId"
+                name="TelegramId"
+                // value={formData.Telegram}
+                onChange={handleChange}
+                pattern="[^@]*" // Regex: anything except '@'
+                title="You are not allowed to use '@' in Telegram ID"
+                placeholder="Please enter only the ID without the @"
+                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
+                required
+              />
+            </div>
+
             {/* Upload Image Guide Modal */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-semibold text-gray-100">
-                  Upload Tether ID Image
+                  Upload Face&ID Card Image
                 </label>
                 <button
                   type="button"
@@ -400,8 +637,12 @@ const SignUp = () => {
                 </div>
               )}
 
-              <p className="text-sm font-semibold text-gray-100 mt-2">
-                A photo showing both the ID card and the face together
+              <p className="text-sm font-semibold text-justify text-gray-100 mt-2">
+                A photo showing both the ID card and the face together.{" "}
+                <span className="lg:block">
+                  {" "}
+                  If you attach an additional photo, the existing one will be deleted.
+                </span>
               </p>
             </div>
 
@@ -428,13 +669,103 @@ const SignUp = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white cursor-pointer font-semibold rounded-md transition duration-200"
+            disabled={isLoading || phoneVerificationStatus !== "completed"} // Disable if phone not verified
+            className="w-full mt-8 py-3 bg-green-700 hover:bg-green-800 text-white cursor-pointer font-semibold rounded-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? <LoadingSpinner /> : t("signUp.submit")}
           </button>
         </form>
       </div>
+
+      {/* Phone Verification Modal (from pages 3-8 of PDF) */}
+      {showPhoneVerificationModal && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-lg shadow-2xl p-6 relative max-w-sm w-full border border-gray-700">
+            {/* Close button */}
+            {phoneVerificationStatus !== "completed" && ( // Don't show close button if verification completed
+              <button
+                className="absolute top-3 right-3 text-gray-400 hover:text-white"
+                onClick={() => setShowPhoneVerificationModal(false)}
+              >
+                <X size={20} />
+              </button>
+            )}
+
+            <h3 className="text-xl font-bold text-white text-center mb-6">
+              Phone Number Verification
+            </h3>
+
+            {phoneVerificationStatus !== "completed" && (
+              <>
+                <p className="text-gray-300 text-center mb-4">
+                  A 6-digit code has been sent to{" "}
+                  <span className="font-semibold">{formData.phone}</span>.
+                </p>
+
+                <div className="flex justify-center space-x-2 mb-6">
+                  {smsCode.map((digit, index) => (
+                    <input
+                      key={index}
+                      id={`sms-code-input-${index}`}
+                      type="text"
+                      maxLength="1"
+                      value={digit}
+                      onChange={(e) => handleSmsCodeChange(e, index)}
+                      onKeyDown={(e) => handleSmsCodeKeyDown(e, index)}
+                      className="w-10 h-12 text-center text-2xl font-bold text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 caret-transparent"
+                    />
+                  ))}
+                </div>
+
+                {phoneVerificationMessage && (
+                  <p
+                    className={`text-center text-sm mb-4 ${
+                      phoneVerificationStatus === "error" ? "text-red-400" : "text-green-400"
+                    }`}
+                  >
+                    {phoneVerificationMessage}
+                  </p>
+                )}
+
+                <div className="flex flex-col space-y-3">
+                  <button
+                    type="button"
+                    onClick={handleSubmitSmsCode}
+                    disabled={isLoading || smsCode.join("").length !== 6}
+                    className="w-full py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? <LoadingSpinner /> : "Submit"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleResendSmsCode}
+                    disabled={isLoading}
+                    className="w-full py-2 text-gray-300 hover:text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Resend SMS code
+                  </button>
+                </div>
+              </>
+            )}
+
+            {phoneVerificationStatus === "completed" && (
+              <div className="text-center">
+                <p className="text-green-400 text-lg font-semibold mb-4">
+                  Phone verification completed.
+                </p>{" "}
+                {/*  */}
+                <button
+                  type="button"
+                  onClick={() => setShowPhoneVerificationModal(false)}
+                  className="w-full py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
