@@ -53,6 +53,8 @@ const SignIn = () => {
           credentials: "include",
         }
       );
+
+      localStorage.removeItem("verified");
       const data = await response.json();
 
       if (!response.ok) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../utils/AuthProvider";
@@ -29,6 +29,7 @@ const SignUp = () => {
     username: "",
     nickname: "",
     password: "",
+    confirmPassword: "",
     fullName: "",
     dob: "",
     phone: "", // Keep phone in formData
@@ -43,9 +44,17 @@ const SignUp = () => {
   const [smsCode, setSmsCode] = useState(["", "", "", "", "", ""]); // Array for 6 digits
   const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
   const [phoneVerificationStatus, setPhoneVerificationStatus] = useState("pending"); // 'pending', 'sent', 'resent', 'completed', 'error'
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    const verified = JSON.parse(localStorage.getItem("verified"));
+    console.log("🚀 ~ useEffect ~ verified:", verified)
+    if (verified?.isVerified) {
+      setPhoneVerificationStatus("completed");
+      setFormData({phone: verified.phone})
+    }
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -102,7 +111,27 @@ const SignUp = () => {
     try {
       // Simulate API call to send SMS
       console.log(`Sending SMS to: ${formData.phone}`);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+      const response = await fetch(
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/sendCode",
+        "http://localhost:3000/api/v1/user/users/sendCode",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phone: formData.phone, // Pass the userId (could be from props or context)
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      // Check if the response is successful
+      if (!response.ok) {
+        setPhoneVerificationMessage(result.error || "Invalid OTP. Please try again.");
+        return;
+      }
       setPhoneVerificationStatus("sent"); //
       setPhoneVerificationMessage("SMS code sent to your phone.");
       setShowPhoneVerificationModal(true); // Open modal for code input
@@ -122,7 +151,27 @@ const SignUp = () => {
     try {
       // Simulate API call to resend SMS
       console.log(`Resending SMS to: ${formData.phone}`);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/resendverify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phone: formData.phone,
+          }), // Replace with actual user data
+        }
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        // Handle error response from API
+        setPhoneVerificationMessage(result.error || "Failed to resend OTP. Please try again.");
+        return;
+      }
+
       setPhoneVerificationStatus("resent"); //
       setPhoneVerificationMessage("The SMS has been resent."); //
       SuccessToast("SMS code resent successfully!");
@@ -168,27 +217,52 @@ const SignUp = () => {
       ErrorToast("Please enter a valid 6-digit SMS code.");
       return;
     }
+    console.log(`Verifying SMS code: ${enteredCode}`);
 
     setIsLoading(true);
     setPhoneVerificationMessage("");
     try {
       // Simulate API call to verify SMS code
-      console.log(`Verifying SMS code: ${enteredCode}`);
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+      const response = await fetch("http://localhost:3000/api/v1/user/users/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.phone, // Pass the userId (could be from props or context)
+          verificationCode: enteredCode, // The OTP entered by the user
+        }),
+      });
+
+      const result = await response.json();
+      console.log("🚀 ~ handleSubmitSmsCode ~ result:", result.data.isVerified);
+      localStorage.setItem("verified", JSON.stringify(result.data));
+
+      // Check if the response is successful
+      if (!response.ok) {
+        // Display error message if OTP verification fails
+        setPhoneVerificationMessage(result.error || "Invalid OTP. Please try again.");
+        return;
+      }
+
+      setPhoneVerificationStatus("completed"); //
+      setPhoneVerificationMessage("Phone verification completed."); //
+      SuccessToast("Phone verification completed!");
+      setShowPhoneVerificationModal(false);
 
       // Simulate success/failure
-      if (enteredCode === "123456") {
-        // Example correct code
-        setPhoneVerificationStatus("completed"); //
-        setPhoneVerificationMessage("Phone verification completed."); //
-        SuccessToast("Phone verification completed!");
-        // Automatically close modal after a short delay
-        setTimeout(() => setShowPhoneVerificationModal(false), 2000);
-      } else {
-        setPhoneVerificationStatus("error");
-        setPhoneVerificationMessage("Invalid SMS code. Please try again.");
-        ErrorToast("Invalid SMS code.");
-      }
+      // if (enteredCode === "123456") {
+      //   // Example correct code
+      //   setPhoneVerificationStatus("completed"); //
+      //   setPhoneVerificationMessage("Phone verification completed."); //
+      //   SuccessToast("Phone verification completed!");
+      //   // Automatically close modal after a short delay
+      //   setTimeout(() => setShowPhoneVerificationModal(false), 2000);
+      // } else {
+      //   setPhoneVerificationStatus("error");
+      //   setPhoneVerificationMessage("Invalid SMS code. Please try again.");
+      //   ErrorToast("Invalid SMS code.");
+      // }
     } catch (error) {
       console.error("Error verifying SMS:", error);
       setPhoneVerificationMessage("Error verifying code. Please try again.");
@@ -213,6 +287,13 @@ const SignUp = () => {
     // Ensure phone is verified before proceeding with main signup
     if (phoneVerificationStatus !== "completed") {
       ErrorToast("Please complete phone verification first.");
+      setIsLoading(false);
+      return;
+    }
+    if (formData.confirmPassword !== formData.password) {
+      ErrorToast(
+        "The passwords you entered do not match. Please make sure both fields are same."
+      );
       setIsLoading(false);
       return;
     }
@@ -252,7 +333,7 @@ const SignUp = () => {
 
       if (response.ok) {
         SuccessToast(" you have successfully registered");
-        navigate("/verify"); // Navigate to a success/verify page
+        navigate("/signin"); // Navigate to a success/verify page
       } else {
         // Error handling if response is not ok
         // For example, if response.json() has an error message
