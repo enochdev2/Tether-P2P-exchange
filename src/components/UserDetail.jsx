@@ -14,6 +14,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const [referralCode, setReferralCode] = useState(user?.referralCode);
   const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
+  const [password, setPassword] = useState(user?.password);
   const [fullName, setFullName] = useState(user?.fullName);
   const [dob, setDob] = useState(user?.dob);
   const [bankName, setBankName] = useState(user?.bankName);
@@ -43,6 +44,9 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
         break;
       case "nickname":
         setNickname(value);
+        break;
+      case "password":
+        setPassword(value);
         break;
       case "fullName":
         setFullName(value);
@@ -164,6 +168,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
           {[
             { label: "Username", name: "username", type: "text" },
             { label: "Nickname", name: "nickname", type: "text" },
+            { label: "Password", name: "password", type: "text" },
             { label: "Full Name", name: "fullName", type: "text" },
             { label: "Phone", name: "phone", type: "tel" },
             { label: "Date of Birth", name: "dob", type: "date" },
@@ -218,6 +223,8 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                       ? username
                       : name === "nickname"
                       ? nickname
+                      : name === "password"
+                      ? password
                       : name === "fullName"
                       ? fullName
                       : name === "dob"
