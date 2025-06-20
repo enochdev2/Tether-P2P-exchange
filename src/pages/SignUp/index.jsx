@@ -35,6 +35,7 @@ const SignUp = () => {
     phone: "", // Keep phone in formData
     bankName: "",
     bankAccount: "",
+    telegram: "",
     tetherAddress: "",
     referralCode: "",
   });
@@ -49,10 +50,10 @@ const SignUp = () => {
 
   useEffect(() => {
     const verified = JSON.parse(localStorage.getItem("verified"));
-    console.log("🚀 ~ useEffect ~ verified:", verified)
+    console.log("🚀 ~ useEffect ~ verified:", verified);
     if (verified?.isVerified) {
       setPhoneVerificationStatus("completed");
-      setFormData({phone: verified.phone})
+      setFormData({ phone: verified.phone });
     }
   }, []);
 
@@ -291,9 +292,7 @@ const SignUp = () => {
       return;
     }
     if (formData.confirmPassword !== formData.password) {
-      ErrorToast(
-        "The passwords you entered do not match. Please make sure both fields are same."
-      );
+      ErrorToast("The passwords you entered do not match. Please make sure both fields are same.");
       setIsLoading(false);
       return;
     }
@@ -476,7 +475,7 @@ const SignUp = () => {
             <div>
               <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
                 {/* {t("signUp.cpassword")}  */}
-                Confirm Password
+                {t("signUp.confirmPassword")}
                 <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -510,6 +509,7 @@ const SignUp = () => {
                 name="dob"
                 value={formData.dob}
                 onChange={handleChange}
+                placeholder=""
                 className="w-full px-4 py-3 border border-gray-600 bg-white text-gray-900 rounded-md focus:outline-none focus:border-none"
                 required
               />
@@ -599,17 +599,14 @@ const SignUp = () => {
 
                   <div className="lg:grid lg:items-center lg:gap-9 lg:grid-cols-12 ">
                     <div className="col-span-7 text-justify">
-                      <h2 className="text-lg font-semibold mb-3">Tether Address Guide</h2>
+                      <h2 className="text-lg font-semibold mb-3">{t("signUp.tetherGuide")}</h2>
                       <div className="text-sm text-gray-700 space-y-2">
                         <p>
-                          Your <strong>Tether (USDT) address</strong> is a unique string of letters
-                          and numbers used to receive USDT cryptocurrency. This address is linked to
-                          your account for processing payments or withdrawals.
+                          {t("signUp.tetherGuideNote1")}
                         </p>
                         <ul className="list-disc list-inside space-y-1">
                           <li>
-                            Please make sure the address is a valid <strong>Solana (SOL)</strong>{" "}
-                            address from the Phantom Wallet, which we currently support.
+                            {t("signUp.tetherGuideNote2")}
                           </li>
                           <li>Copy the address directly from your Phantom Wallet.</li>
                           <li>
@@ -664,18 +661,18 @@ const SignUp = () => {
                 className="block text-sm font-semibold text-gray-100 mb-1"
               >
                 {/* {t("signUp")}  */}
-                Telegram ID
+                 {t("signUp.telegram")}
                 <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                id="TelegramId"
-                name="TelegramId"
-                // value={formData.Telegram}
+                id="telegram"
+                name="telegram"
+                value={formData.telegram}
                 onChange={handleChange}
                 pattern="[^@]*" // Regex: anything except '@'
                 title="You are not allowed to use '@' in Telegram ID"
-                placeholder="Please enter only the ID without the @"
+                placeholder={t("signUp.telegramPlaceholder")}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
                 required
               />
@@ -685,7 +682,8 @@ const SignUp = () => {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-semibold text-gray-100">
-                  Upload Face&ID Card Image
+                  {t("signUp.uploadCardImage")}
+                  <span className="text-red-500">*</span>
                 </label>
                 <button
                   type="button"
@@ -719,11 +717,8 @@ const SignUp = () => {
               )}
 
               <p className="text-sm font-semibold text-justify text-gray-100 mt-2">
-                A photo showing both the ID card and the face together.{" "}
-                <span className="lg:block">
-                  {" "}
-                  If you attach an additional photo, the existing one will be deleted.
-                </span>
+                {t("signUp.uploadCardText1")} <br />
+                <span className="lg:block">{t("signUp.uploadCardText2")}</span>
               </p>
             </div>
 
