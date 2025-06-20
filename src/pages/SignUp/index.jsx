@@ -601,30 +601,18 @@ const SignUp = () => {
                     <div className="col-span-7 text-justify">
                       <h2 className="text-lg font-semibold mb-3">{t("signUp.tetherGuide")}</h2>
                       <div className="text-sm text-gray-700 space-y-2">
-                        <p>
-                          {t("signUp.tetherGuideNote1")}
-                        </p>
+                        <p>{t("signUp.tetherGuideNote1")}</p>
                         <ul className="list-disc list-inside space-y-1">
-                          <li>
-                            {t("signUp.tetherGuideNote2")}
-                          </li>
-                          <li>Copy the address directly from your Phantom Wallet.</li>
-                          <li>
-                            The address must belong to you. Do not enter someone else's wallet
-                            address
-                          </li>
+                          <li>{t("signUp.tetherGuideNote2")}</li>
+                          <li> {t("signUp.tetherGuideNote3")}</li>
+                          <li>{t("signUp.tetherGuideNote4")}</li>
                         </ul>
                         <p>
-                          <strong>⚠️Please double-check the address before submitting.</strong>{" "}
-                          Entering an incorrect address may result in a
-                          <strong>loss of funds</strong>, and we will <strong>not</strong> be able
-                          to recover them.
+                          <span className="font-bold">⚠️{t("signUp.tetherGuideNote5")}</span> <br />
+                          {t("signUp.tetherGuideNote6")}
                         </p>
 
-                        <p>
-                          For future transactions, you must use the same wallet address you provided
-                          during sign-up in order for your transactions to be processed correctly
-                        </p>
+                        <p>{t("signUp.tetherGuideNote7")}</p>
                       </div>
                     </div>
 
@@ -661,7 +649,7 @@ const SignUp = () => {
                 className="block text-sm font-semibold text-gray-100 mb-1"
               >
                 {/* {t("signUp")}  */}
-                 {t("signUp.telegram")}
+                {t("signUp.telegram")}
                 <span className="text-red-500">*</span>
               </label>
               <input
@@ -731,13 +719,9 @@ const SignUp = () => {
                   >
                     <X size={18} />
                   </button>
-                  <h2 className="text-lg font-semibold mb-2 text-center">Upload Guide</h2>
+                  <h2 className="text-lg font-semibold mb-2 text-center">{t("signUp.uploadGuideText1")}</h2>
                   <img src={avatarImage} alt="Guide Example" className="w-full h-56 rounded mb-3" />
-                  <p className="text-sm text-gray-700">
-                    Upload a clear image of you holding a valid ID card. Your face and ID details
-                    must be visible. The image should resemble the example above. Blurry, cropped,
-                    or fake IDs will not be accepted.
-                  </p>
+                  <p className="text-sm text-gray-700">{t("signUp.uploadGuideText2")}</p>
                 </div>
               </div>
             )}
