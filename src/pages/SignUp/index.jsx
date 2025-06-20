@@ -588,8 +588,8 @@ const SignUp = () => {
 
             {/* Guide Modal */}
             {showGuide && (
-              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-                <div className="bg-white rounded-lg shadow-lg lg:max-w-3xl w-full p-6 relative">
+              <div className="fixed mx-4 md:mx-0 inset-0 bg-black/50 z-50 flex items-center justify-center">
+                <div className="bg-white rounded-lg shadow-lg lg:max-w-3xl w-full  p-4 md:p-6 relative">
                   <button
                     className="absolute cursor-pointer top-3 right-3 text-gray-500 hover:text-gray-700"
                     onClick={() => setShowGuide(false)}
@@ -597,10 +597,10 @@ const SignUp = () => {
                     <X size={18} />
                   </button>
 
-                  <div className="lg:grid lg:items-center lg:gap-9 lg:grid-cols-12 ">
+                  <div className="lg:grid lg:items-center  lg:gap-9 lg:grid-cols-12 flex flex-col ">
                     <div className="col-span-7 text-justify">
-                      <h2 className="text-lg font-semibold mb-3">{t("signUp.tetherGuide")}</h2>
-                      <div className="text-sm text-gray-700 space-y-2">
+                      <h2 className=" text-base md:text-lg font-semibold mb-3">{t("signUp.tetherGuide")}</h2>
+                      <div className=" text-xs md:text-sm text-gray-700 space-y-2 ">
                         <p>{t("signUp.tetherGuideNote1")}</p>
                         <ul className="list-disc list-inside space-y-1">
                           <li>{t("signUp.tetherGuideNote2")}</li>
@@ -616,8 +616,8 @@ const SignUp = () => {
                       </div>
                     </div>
 
-                    <div className="col-span-5 lg:block hidden">
-                      <img src={solanaImage} className="w-80" alt="" />
+                    <div className="col-span-5 lg:block hidd">
+                      <img src={solanaImage} className=" w-40 md:w-80" alt="" />
                     </div>
                   </div>
                 </div>
