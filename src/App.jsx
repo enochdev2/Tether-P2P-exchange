@@ -32,6 +32,7 @@ import SignUp from "./pages/SignUp";
 import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
 import TetherPrice from "./pages/adminDashboard/TetherPrice";
+import AllEndedChatPage from "./pages/adminDashboard/AllEndedChatPage";
 
 function App() {
   return (
@@ -111,6 +112,7 @@ function App() {
           <Route path="buy-orders" element={<BuyLivePage />} />
           <Route path="users" element={<UserManagement />}></Route>
           <Route path="inquiries" element={<InquiryManagement />}></Route>
+          <Route path="endchat" element={<AllEndedChatPage />}></Route>
           {/* <Route path="users" element={<AllUsers />}>
             <Route path=":userId" element={<UserDetails />} />
           </Route> */}

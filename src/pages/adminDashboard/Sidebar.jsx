@@ -34,7 +34,10 @@ const sidebarSections2 = [
   },
   {
     title: t("adminPanel.sections.inquiry"),
-    items: [{ key: "inquiryBox", to: "/admin/inquiries", icon: <HelpCircle /> }],
+    items: [
+      { key: "inquiryBox", to: "/admin/inquiries", icon: <HelpCircle /> },
+      { key: "sellBuyChatEnd", to: "/admin/endchat", icon: <BiChat /> },
+    ],
   },
 ];
 

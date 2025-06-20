@@ -68,6 +68,7 @@
       "sellBuyChat": "Sell/Buy 1:1 Chat (Live)",
       "userManagement": "User Management",
       "inquiryBox": "1:1 Inquiry Box (Live)",
+      "sellBuyChatEnd": "Sell/Buy 1:1 Chat (Ended)",
       "logout": "Log out"
     }
   },
