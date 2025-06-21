@@ -15,7 +15,6 @@ const SellLivePage = () => {
   const { t } = useTranslation();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
-  console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders);
   // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
@@ -53,12 +52,10 @@ const SellLivePage = () => {
         }
       );
       // const result = await response.json();
-      // console.log("🚀 ~ handleMatch ~ result:", result)
 
       if (!response.ok) {
         const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
-        console.log("🚀 ~ handleMatch ~ errorMsg:", errorMsg);
         if (errorMsg === "These orders were created from the same account.") {
           setMatchWrong(true);
           setMatchWrongMessage(errorMsg);

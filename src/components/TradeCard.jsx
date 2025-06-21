@@ -36,8 +36,6 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
       if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
-      console.log("🚀 ~ handleCancleMatch ~ user:", user);
-      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
 
       const url = sell
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel`
@@ -162,7 +160,9 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
         <div className="flex flex-col flex-wrap sm:flex-nowrap flex-1 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1">
           <div className="flex items-center space-x-2">
             <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
-              {offer._id}
+              {sell
+              ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
+              : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
             </div>
             <button
               className="text-gray-500 hover:text-gray-700 cursor-pointer"

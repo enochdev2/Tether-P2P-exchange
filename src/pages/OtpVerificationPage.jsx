@@ -84,7 +84,6 @@ const OtpVerificationPage = ({
       return;
     }
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user); // This will give you the user data you saved earlier
 
     // "http://localhost:3000/api/v1/user/users/verify",
     try {

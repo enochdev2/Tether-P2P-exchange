@@ -9,10 +9,9 @@ import { FaTrash, FaCopy } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
- 
+
 const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
-  const { t } = useTranslation(); 
-  console.log("🚀 ~ AdminTradeCard ~ offer:", offer)
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
@@ -25,7 +24,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
     setIsModalOpen(true);
   };
 
-   const handleCopy = (id) => {
+  const handleCopy = (id) => {
     navigator.clipboard
       .writeText(id)
       .then(() => {
@@ -50,8 +49,6 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
-      console.log("🚀 ~ handleCancleMatch ~ user:", user);
-      console.log("🚀 ~ handleCancleMatch ~ user._id:", user._id);
 
       const url = sell
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
@@ -125,7 +122,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       <div className="flex items-center sm:w-24 mb-4 sm:mb-0 sm:mr-2 justify-center sm:justify-start">
         <div className="flex items-center space-x-2">
           <div className="bg-green-600 text-white font-semibold text-sm px-4 py-1.5 rounded-md select-none whitespace-nowrap shadow">
-             {t(`tradecard.${sell ? "sell" : "buy"}`)}
+            {t(`tradecard.${sell ? "sell" : "buy"}`)}
           </div>
           <div className="w-3 h-3 hidden sm:block bg-green-700 rounded-full mt-1" />
         </div>
@@ -141,7 +138,9 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         <div className="flex items-center">
           <img src={logo2} alt="Tether logo" className="w-6 h-6 md:w-7 md:h-7 mr-3" />
           <div className="flex flex-col space-y-1 text-sm text-gray-800">
-            <span className="font-medium">{t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}</span>
+            <span className="font-medium">
+              {t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}
+            </span>
             <span className="font-medium">
               {t("tradecard.balance", { amount: parseFloat(offer.amountRemaining).toFixed(4) })}
             </span>
@@ -150,10 +149,10 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       </div>
       <div className="font-semibold text-sm text-gray-700 flex-1">
         {t("tradecard.krwPrice", {
-            price: offer.krwAmount
-              ? `₩${offer.krwAmount.toLocaleString()}`
-              : `₩${offer.price.toLocaleString()}`,
-          })}
+          price: offer.krwAmount
+            ? `₩${offer.krwAmount.toLocaleString()}`
+            : `₩${offer.price.toLocaleString()}`,
+        })}
       </div>
 
       {/* Buttons */}
@@ -185,16 +184,18 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       {/* Right Section */}
       <div className="flex flex-col flex-wrap sm:flex-nowrap ml-10 lg:ml-20 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative mt-3 sm:mt-0">
         <div className="flex items-center space-x-2">
-            <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
-              {offer._id}
-            </div>
-            <button
-              className="text-gray-500 hover:text-gray-700 cursor-pointer"
-              onClick={() => handleCopy(offer._id)} // Handle copy when clicked
-            >
-              <FaCopy size={16} /> {/* Copy icon */}
-            </button>
+          <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
+            {sell
+              ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
+              : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
           </div>
+          <button
+            className="text-gray-500 hover:text-gray-700 cursor-pointer"
+            onClick={() => handleCopy(offer._id)} // Handle copy when clicked
+          >
+            <FaCopy size={16} /> {/* Copy icon */}
+          </button>
+        </div>
         <div className="flex items-center text-sm space-x-2">
           <div
             className="w-3 h-3 hidden sm:block rounded-full flex-shrink-0"
@@ -209,8 +210,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
                 : "text-green-600"
             }`}
           >
-           {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)}
-          
+            {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)}
           </span>
         </div>
         <div className="text-center sm:text-right text-gray-500 text-sm">{dateOnly}</div>

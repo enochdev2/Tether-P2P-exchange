@@ -54,7 +54,6 @@ const Navbar = () => {
   const toggleDropdownLan = () => setIsOpen(!isOpen);
 
   const selectLanguage = (lang) => {
-    console.log("🚀 ~ selectLanguage ~ lang:", lang);
     i18n.changeLanguage(lang.toLowerCase()); // Change language dynamically with i18n
     localStorage.setItem("language", lang);
     setLanguage(lang);

@@ -33,7 +33,6 @@ const InquiryModal = ({ isOpen, onCancel }) => {
           }),
         }
       );
-      console.log("🚀 ~ handleSubmit ~ response:", response);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -41,7 +40,6 @@ const InquiryModal = ({ isOpen, onCancel }) => {
       }
 
       const data = await response.json();
-      console.log("🚀 ~ handleSubmit ~ data:", data);
 
       // Optionally, reset form or close modal here
       setInquiryType("Edit Account Info");

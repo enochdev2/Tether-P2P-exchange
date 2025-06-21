@@ -46,7 +46,6 @@ const AllUsers = () => {
         }
 
         const data = await response.json();
-        console.log("Users fetched successfully 12345667", data);
         setAllUsers(data); // return parsed user data
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -58,7 +57,6 @@ const AllUsers = () => {
   const getAllUsers = async () => {
     try {
       const response = await allUser();
-      console.log("🚀 ~ getAllUsers 878787878~ response:", response);
 
       if (response) {
         setAllUsers(response);

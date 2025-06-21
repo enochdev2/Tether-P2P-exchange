@@ -35,7 +35,6 @@ const ChatRoom2 = () => {
   const navigate = useNavigate();
   let whic = orderId.length > 5 ? orderId : orderType;
   const whi = orderType.length < 5 ? orderType : orderId;
-  console.log("🚀 ~ whi:", whi);
   const buywhic = buyOrderId;
   const [userChatId, setUserChatId] = useState(whic);
   const [userChatId2, setUserChatId2] = useState(buywhic);
@@ -157,7 +156,6 @@ const ChatRoom2 = () => {
   };
 
   const fetchMessages = async () => {
-    console.log("🚀 ~ fetchMessages ~ whic:", whic);
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/${whic}`,
       {

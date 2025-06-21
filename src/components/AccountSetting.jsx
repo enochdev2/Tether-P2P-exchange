@@ -68,7 +68,6 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
         SuccessToast("You have successfully updated your data");
         setIsEditing(false);
       }
-      console.log("User Info updated:", updatedUser);
     } catch (error) {
       console.error("Error during sign-up:", error);
       ErrorToast(`something went wrong ${error}`);

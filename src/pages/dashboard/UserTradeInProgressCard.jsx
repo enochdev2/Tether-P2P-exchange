@@ -103,7 +103,9 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
       <div className="flex flex-col flex-wrap sm:flex-nowrap md:flex-2 w-full sm:w-32 items-center sm:items-end text-gray-800 text-xs space-y-1 relative">
         <div className="flex items-center space-x-2">
           <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
-            {offer._id}
+            {sell
+              ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
+              : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
           </div>
           <button
             className="text-gray-500 hover:text-gray-700 cursor-pointer"
