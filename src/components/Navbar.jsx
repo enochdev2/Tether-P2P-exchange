@@ -8,6 +8,7 @@ import { useAuth } from "../utils/AuthProvider";
 import { FaGlobe } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import AlarmBell from "./AlarmBell";
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -367,7 +368,7 @@ const Navbar = () => {
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10v1"
                   />
                 </svg>
-                {isLoading ? 'Sign Out...' : 'Sign Out'}
+                {isLoading ? "Sign Out..." : "Sign Out"}
               </Link>
             ) : (
               <>
@@ -392,6 +393,11 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      <div className="relative">
+        {/* Your dashboard content here */}
+        <AlarmBell />
+      </div>
     </nav>
   );
 };
