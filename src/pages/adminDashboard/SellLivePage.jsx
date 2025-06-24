@@ -31,7 +31,16 @@ const SellLivePage = () => {
     fetchSellOrders();
     fetchSellPendingOrders();
     fetchInProgressOrders();
-    fetchNotifications();
+    // fetchNotifications();
+
+    //  const intervalId = setInterval(() => {
+    //    fetchSellOrders();
+    //    fetchSellPendingOrders();
+    //   fetchInProgressOrders();
+    // }, 3000);
+
+    
+    // return () => clearInterval(intervalId);
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {

@@ -77,9 +77,7 @@ const History = () => {
     }
   }
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  
 
   async function fetchInProgressOrders() {
     try {

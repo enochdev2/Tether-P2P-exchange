@@ -10,7 +10,7 @@ import { LongSuccessToast } from "../../utils/LongSuccess";
 import { useTranslation } from "react-i18next";
 
 const BuyLivePage = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   const [buyOrders, setBuyOrders] = useState([]);
   const [loadingBuy, setLoadingBuy] = useState(true);
   const [pendingOrders, setPendingOrders] = useState([]);
@@ -25,6 +25,14 @@ const BuyLivePage = () => {
     fetchInProgressOrders();
     fetchBuyPendingOrders();
     fetchBuyOrders();
+
+    // const intervalId = setInterval(() => {
+    //   fetchInProgressOrders();
+    //   fetchBuyPendingOrders();
+    //   fetchBuyOrders();
+    // }, 3000);
+
+    // return () => clearInterval(intervalId);
   }, []);
 
   async function fetchBuyOrders() {
@@ -45,8 +53,7 @@ const BuyLivePage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -116,18 +123,13 @@ const BuyLivePage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
       buyInProgressOrders.sort((a, b) => {
         if (a.status === "In Progress" && b.status !== "In Progress") return -1;
-        if (
-          a.status === "Partially Matched" &&
-          b.status !== "Partially Matched"
-        )
-          return 1;
+        if (a.status === "Partially Matched" && b.status !== "Partially Matched") return 1;
         return 0;
       });
 
@@ -144,8 +146,7 @@ const BuyLivePage = () => {
 
   const handleCancleMatch = async (sellerOrderId, buyerOrderId) => {
     try {
-      if (!buyerOrderId || !sellerOrderId)
-        return ErrorToast("input buyer Order ID");
+      if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
       const response = await fetch(
@@ -207,9 +208,7 @@ const BuyLivePage = () => {
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
-      setPendingOrders((prevOrders) =>
-        prevOrders.filter((order) => order._id !== orderId)
-      );
+      setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
       return null;
@@ -243,18 +242,12 @@ const BuyLivePage = () => {
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state
-      setPendingOrders((prevOrders) =>
-        prevOrders.filter((order) => order._id !== orderId)
-      );
+      setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
     } catch (error) {
       console.error("Failed to fetch sell orders:", error);
       return null;
     }
   }
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
 
   async function fetchNotifications() {
     try {
@@ -272,8 +265,7 @@ const BuyLivePage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -307,9 +299,7 @@ const BuyLivePage = () => {
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
       // Remove the marked notification from state so the card disappears
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -343,11 +333,11 @@ const BuyLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-           body: JSON.stringify({
-        userId: user._id, 
-        type: "buyOrder", 
-        isForAdmin: true,
-      }),
+          body: JSON.stringify({
+            userId: user._id,
+            type: "buyOrder",
+            isForAdmin: true,
+          }),
         }
       );
 
@@ -368,11 +358,7 @@ const BuyLivePage = () => {
     if (selectedFilters.length === 0) return true;
 
     // Check for the different filter ranges
-    if (
-      selectedFilters.includes("500to1000") &&
-      order.krwAmount >= 500 &&
-      order.krwAmount <= 1000
-    )
+    if (selectedFilters.includes("500to1000") && order.krwAmount >= 500 && order.krwAmount <= 1000)
       return true;
 
     if (
@@ -425,8 +411,7 @@ const BuyLivePage = () => {
       return true;
 
     // Filter for amounts greater than 1,000,000 (gt1000000)
-    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000)
-      return true;
+    if (selectedFilters.includes("gt1000000") && order.krwAmount > 1000000) return true;
 
     return false;
   });
@@ -441,13 +426,13 @@ const BuyLivePage = () => {
           <div className="flex justify-between items-center mb-6 border bg-slate-200 border-slate-300 px-4 py-3 md:mb-12 rounded-2xl">
             <div className="px-5 py-2 rounded-2xl">
               <h1 className="text-3xl font-bold bg-gradient-to-br from-green-600 via-[#26a17b] to-green-800 text-transparent bg-clip-text">
-               {t("adminPanel.items.buyOrders")} 
+                {t("adminPanel.items.buyOrders")}
                 {/* (<span className="text-emerald-70 text-shadow-emerald-400">Live</span>) */}
               </h1>
             </div>
             <div className="space-x-4">
               <button className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 font-medium transition">
-                 {t("buytether.sortBy")}
+                {t("buytether.sortBy")}
               </button>
             </div>
           </div>
