@@ -59,6 +59,7 @@ const Dashboards = () => {
 
   return (
     <div className="flex-1 p-2 space-y-5 ">
+      
       <DashboardMetrics {...stats} />
       {/* <UsersCard users={users} Icon={User2} /> */}
       {/* Dynamic Content Rendering */}
