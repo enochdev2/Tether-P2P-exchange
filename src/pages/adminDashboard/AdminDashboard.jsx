@@ -9,7 +9,7 @@ import DashboardMetrics from "../../components/DashboardMetrics";
 import { useTranslation } from "react-i18next";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { ErrorToast } from "../../utils/Error";
-import { markNotificationRead } from "../../utils";
+import { handleMarkAllAsRead, markNotificationRead } from "../../utils";
 import NotificationPopup from "../../components/NotificationPopup";
 import AlarmBell from "../../components/AlarmBell";
 
@@ -17,7 +17,7 @@ const AdminDashboard = () => {
   const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser, notifications, setNotifications, isTokenExpired } =
     useAuth();
-    const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
   const [isOn, setIsOn] = useState(true);
   const [stats, setStats] = useState({
@@ -27,12 +27,12 @@ const AdminDashboard = () => {
     totalFees: 45345,
   });
 
-    const playNotificationSound = () => {
+  const playNotificationSound = () => {
     const audio = new Audio("/notification.mp3"); // Replace with actual sound path
     audio.play();
   };
 
-    // Function to fetch notifications based on the type
+  // Function to fetch notifications based on the type
   const fetchNotifications = async (endpoint) => {
     const token = localStorage.getItem("token");
 
@@ -60,23 +60,34 @@ const AdminDashboard = () => {
       return data; // Return data so it can be merged later
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      ErrorToast ("An error occurred while fetching notifications.");
+      ErrorToast("An error occurred while fetching notifications.");
       return [];
     }
   };
 
   const markNotifications = async (notificationId) => {
-  
-      try {
-        const response = await markNotificationRead({notificationId, setNotifications});
-  
-        const data = await response.json();
-  
-        return data; // Return data so it can be merged later
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
+    try {
+      const response = await markNotificationRead({ notificationId, setNotifications });
+
+      const data = await response.json();
+
+      return data; // Return data so it can be merged later
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const handleMarkAllAsReads = async () => {
+    try {
+      const response = await handleMarkAllAsRead({ setNotifications, isAdmin: true });
+
+      const data = await response.json();
+
+      return data; // Return data so it can be merged later
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
 
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
@@ -100,8 +111,6 @@ const AdminDashboard = () => {
     // Decide which set of notifications to fetch based on the user's role
     const notificationsToFetch = isUserAdmin ? adminNotifications : userNotifications;
 
-   
-
     // Fetch notifications concurrently
     const fetchAllNotifications = async () => {
       setLoadingNotifications(true);
@@ -112,17 +121,17 @@ const AdminDashboard = () => {
 
         // Merge all fetched notifications into one array
         const allNotifications = fetchedNotifications.flat(); // Flatten the array if it's an array of arrays
-         // Get the last count from localStorage before update
+        // Get the last count from localStorage before update
         const newCount = allNotifications.length;
         const lastCounts = JSON.parse(localStorage.getItem("notifications"));
-        const lastCount = lastCounts.length
-        
+        const lastCount = lastCounts.length;
+
         if (newCount > lastCount) {
-          playNotificationSound(); 
+          playNotificationSound();
           LongSuccessToast(`You have ${newCount - lastCount} new notifications`);
 
-        localStorage.setItem("notifications", JSON.stringify(allNotifications));
-        // Only play sound if the new count is greater than the old count
+          localStorage.setItem("notifications", JSON.stringify(allNotifications));
+          // Only play sound if the new count is greater than the old count
         }
         setNotifications(allNotifications); // Update state with all notifications
       } catch (error) {
@@ -133,8 +142,8 @@ const AdminDashboard = () => {
       }
     };
 
-    fetchAllNotifications(); 
-     // Set an interval to fetch notifications every 10 seconds
+    fetchAllNotifications();
+    // Set an interval to fetch notifications every 10 seconds
     const intervalId = setInterval(fetchAllNotifications, 3000);
 
     // Cleanup the interval on component unmount or route change
@@ -152,11 +161,11 @@ const AdminDashboard = () => {
 
       // Redirect non-admin users
       if (!parsedUser.admin) {
-        navigate("/"); 
+        navigate("/");
       }
     } else {
       // Not logged in
-      navigate("/login"); 
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -191,7 +200,7 @@ const AdminDashboard = () => {
             loading={loadingNotifications}
             notifications={notifications}
             onMarkRead={markNotifications}
-            // onMarkAllAsRead={handleMarkAllAsRead}
+            onMarkAllAsRead={handleMarkAllAsReads}
           />
         )}
         <AlarmBell setIsOn={setIsOn} isOn={isOn} />

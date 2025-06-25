@@ -10,7 +10,7 @@ import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import AlarmBell from "../../components/AlarmBell";
 import NotificationPopup from "../../components/NotificationPopup";
-import { markNotificationRead } from "../../utils";
+import { handleMarkAllAsRead, markNotificationRead } from "../../utils";
 
 function Dashboard() {
   const { t } = useTranslation();
@@ -59,9 +59,19 @@ function Dashboard() {
     }
   };
   const markNotifications = async (notificationId) => {
-
     try {
-      const response = await markNotificationRead({notificationId, setNotifications});
+      const response = await markNotificationRead({ notificationId, setNotifications });
+
+      const data = await response.json();
+
+      return data; // Return data so it can be merged later
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+  const handleMarkAllAsReads = async () => {
+    try {
+      const response = await handleMarkAllAsRead({ setNotifications, isAdmin: false });
 
       const data = await response.json();
 
@@ -108,7 +118,7 @@ function Dashboard() {
         const newCount = allNotifications.length;
         const lastCounts = JSON.parse(localStorage.getItem("notifications"));
         const lastCount = lastCounts.length;
-        console.log("🚀 ~ fetchAllNotifications ~ lastCount:", lastCount)
+        console.log("🚀 ~ fetchAllNotifications ~ lastCount:", lastCount);
 
         if (newCount > lastCount) {
           playNotificationSound();
@@ -200,7 +210,7 @@ function Dashboard() {
             loading={loadingNotifications}
             notifications={notifications}
             onMarkRead={markNotifications}
-            // onMarkAllAsRead={handleMarkAllAsRead}
+            onMarkAllAsRead={handleMarkAllAsReads}
           />
         )}
         <AlarmBell setIsOn={setIsOn} isOn={isOn} />

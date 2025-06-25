@@ -249,62 +249,6 @@ const BuyLivePage = () => {
     }
   }
 
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/buyOrders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        // LongSuccessToast("You have a new notification message on buy order");
-      }
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      // Remove the marked notification from state so the card disappears
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
   // Handle amount filter button clicks
   const handleAmountFilterChange = (filter) => {
     if (filter === "all") {
@@ -320,39 +264,7 @@ const BuyLivePage = () => {
     }
   };
 
-  const handleMarkAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      // Make an API call to mark all notifications as read
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            type: "buyOrder",
-            isForAdmin: true,
-          }),
-        }
-      );
 
-      const result = await response.json();
-      if (response.ok) {
-        // Handle success (for example, reset notifications)
-        // SuccessToast("All notifications marked as read");
-        setNotifications([]); // Clear the notifications or update the state accordingly
-      } else {
-        console.error(result.error);
-      }
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-    }
-  };
 
   const filteredBuyOrders = buyOrders.filter((order) => {
     if (selectedFilters.length === 0) return true;
@@ -530,13 +442,6 @@ const BuyLivePage = () => {
           </div>
         </div>
       </div>
-
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
     </div>
   );
 };

@@ -39,8 +39,7 @@ const UserManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -130,9 +129,7 @@ const UserManagement = () => {
       if (!response.ok) throw new Error("Failed to mark notification as read");
 
       // Remove the marked notification from state so the card disappears
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -164,8 +161,6 @@ const UserManagement = () => {
   if (loadingSell) return <LoadingSpiner />;
 
   const Sell = true;
-
-
 
   return (
     <div>
@@ -232,14 +227,6 @@ const UserManagement = () => {
           )}
         </section>
       </div>
-
-      {/* Notification Alert Box */}
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
     </div>
   );
 };

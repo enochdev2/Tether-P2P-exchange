@@ -36,31 +36,64 @@ export const markAllNotificationsAsRead = async ({
   }
 };
 
-export async function markNotificationRead({notificationId, setNotifications}) {
-    console.log("🚀 ~ markNotificationRead ~ notificationId:", notificationId)
+export async function markNotificationRead({ notificationId, setNotifications }) {
+  console.log("🚀 ~ markNotificationRead ~ notificationId:", notificationId);
+  try {
+    const token = localStorage.getItem("token");
+    // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+    const response = await fetch(
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const data = await response.json();
+      const errorMsg = data.error || data.message || "Failed to register user";
+      // ErrorToast(errorMsg);
+      return;
+    }
+
+    setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
+}
+
+ export const handleMarkAllAsRead = async ({setNotifications, isAdmin}) => {
     try {
       const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const user = JSON.parse(localStorage.getItem("user"));
+      // Make an API call to mark all notifications as read
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            userId: user._id,
+            isForAdmin: isAdmin,
+          }),
         }
       );
 
-      if (!response.ok) {
-        const data = await response.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        // ErrorToast(errorMsg);
-         return;
+      const result = await response.json();
+      if (response.ok) {
+        // Handle success (for example, reset notifications)
+        // SuccessToast("All notifications marked as read");
+        setNotifications([]); // Clear the notifications or update the state accordingly
+      } else {
+        console.error(result.error);
       }
-
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      console.error("Error marking all notifications as read:", error);
     }
-  }
+  };
