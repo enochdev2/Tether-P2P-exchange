@@ -75,8 +75,6 @@ const AdminDashboard = () => {
         return data; // Return data so it can be merged later
       } catch (error) {
         console.error("Error fetching notifications:", error);
-        ErrorToast("An error occurred while fetching notifications.");
-        return [];
       }
     };
 
@@ -118,7 +116,6 @@ const AdminDashboard = () => {
         const newCount = allNotifications.length;
         const lastCounts = JSON.parse(localStorage.getItem("notifications"));
         const lastCount = lastCounts.length
-        console.log("🚀 ~ fetchAllNotifications ~ lastCount:", lastCount)
         
         if (newCount > lastCount) {
           playNotificationSound(); 
