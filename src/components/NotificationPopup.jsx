@@ -20,12 +20,12 @@ const NotificationPopup = ({
     }
   };
 
-  if (loading || notifications.length === 0) return null;
+  if (notifications.length === 0) return null;
 
   return (
     <div
-      className=" bot md:bottom-5 right-1 sm:right-5 w-80 max-w-[250px] md:max-w-full bg-white border-2 border-red-700 rounded-lg shadow-lg px-2 py-3 md:p-4 z-50"
-      style={{ maxHeight: "350px", overflowY: "auto" }}
+      className=" right-5 sm:right-5 w-80 max-w-[250px] md:max-w-full bg-white border-2 border-red-700 rounded-lg shadow-lg px-2 py-3 md:p-4 z-50"
+      style={{ maxHeight: "280px", overflowY: "auto" }}
     >
       {/* Title with Mark All button */}
       <div className="flex justify-between items-center mb-2">

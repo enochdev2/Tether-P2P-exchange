@@ -1,3 +1,5 @@
+import { ErrorToast } from "./Error";
+
 // utils/markNotifications.js
 export const markAllNotificationsAsRead = async ({
   userId,
@@ -33,3 +35,32 @@ export const markAllNotificationsAsRead = async ({
     return { success: false, error };
   }
 };
+
+export async function markNotificationRead({notificationId, setNotifications}) {
+    console.log("🚀 ~ markNotificationRead ~ notificationId:", notificationId)
+    try {
+      const token = localStorage.getItem("token");
+      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      const response = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        // ErrorToast(errorMsg);
+         return;
+      }
+
+      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }

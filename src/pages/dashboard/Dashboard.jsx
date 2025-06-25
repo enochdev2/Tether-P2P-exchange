@@ -8,15 +8,18 @@ import Sidebar from "./Sidebar";
 // import io from "socket.io-client";
 import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import AlarmBell from "../../components/AlarmBell";
+import NotificationPopup from "../../components/NotificationPopup";
+import { markNotificationRead } from "../../utils";
 
 function Dashboard() {
   const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser, notifications, setNotifications, isTokenExpired } =
     useAuth();
   const navigate = useNavigate();
-  console.log("🚀 ~ Dashboard ~ notifications:", notifications);
+  // console.log("🚀 ~ Dashboard ~ notifications:", notifications);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
-  const [lastNotificationCount, setLastNotificationCount] = useState(0);
+  const [isOn, setIsOn] = useState(true);
 
   const playNotificationSound = () => {
     const audio = new Audio("/notification.mp3"); // Replace with actual sound path
@@ -47,6 +50,20 @@ function Dashboard() {
       if (Array.isArray(data) && data.length > 0) {
         LongSuccessToast(`You have a new notification for ${endpoint.split("/").pop()}`);
       }
+
+      return data; // Return data so it can be merged later
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      ErrorToast("An error occurred while fetching notifications.");
+      return [];
+    }
+  };
+  const markNotifications = async (notificationId) => {
+
+    try {
+      const response = await markNotificationRead({notificationId, setNotifications});
+
+      const data = await response.json();
 
       return data; // Return data so it can be merged later
     } catch (error) {
@@ -88,20 +105,20 @@ function Dashboard() {
 
         // Merge all fetched notifications into one array
         const allNotifications = fetchedNotifications.flat(); // Flatten the array if it's an array of arrays
-        
+
         // Get the last count from localStorage before update
         const newCount = allNotifications.length;
         const lastCounts = JSON.parse(localStorage.getItem("notifications"));
-        const lastCount = lastCounts.length
+        const lastCount = lastCounts.length;
         console.log("🚀 ~ fetchAllNotifications ~ lastCount:", lastCount)
-        
+
         if (newCount > lastCount) {
-          playNotificationSound(); 
+          playNotificationSound();
           LongSuccessToast(`You have ${newCount - lastCount} new notifications`);
 
-        localStorage.setItem("notifications", JSON.stringify(allNotifications));
-        // Only play sound if the new count is greater than the old count
+          // Only play sound if the new count is greater than the old count
         }
+        localStorage.setItem("notifications", JSON.stringify(allNotifications));
 
         setNotifications(allNotifications); // Update state with all notifications
       } catch (error) {
@@ -145,7 +162,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="flex min-h-screen pt-18 bg-gray-100">
+    <div className=" relative flex min-h-screen pt-18 bg-gray-100">
       {/* Sidebar */}
       <Sidebar />
 
@@ -177,6 +194,18 @@ function Dashboard() {
             </div>
           ))}
         </div> */}
+      </div>
+      <div className="fixed bottom-6 right-6 z-50 flex items-end  gap-x-1 ">
+        {/* Your dashboard content here */}
+        {isOn && (
+          <NotificationPopup
+            loading={loadingNotifications}
+            notifications={notifications}
+            onMarkRead={markNotifications}
+            // onMarkAllAsRead={handleMarkAllAsRead}
+          />
+        )}
+        <AlarmBell setIsOn={setIsOn} isOn={isOn} />
       </div>
     </div>
   );

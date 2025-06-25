@@ -54,6 +54,8 @@ const SuccessToast = (message) =>
         </button>
       </div>
     </div>
-  ));
+  ),
+   { duration: 2500 }
+);
 
 export { SuccessToast };

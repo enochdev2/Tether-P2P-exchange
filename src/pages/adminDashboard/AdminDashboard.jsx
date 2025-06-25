@@ -9,6 +9,9 @@ import DashboardMetrics from "../../components/DashboardMetrics";
 import { useTranslation } from "react-i18next";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { ErrorToast } from "../../utils/Error";
+import { markNotificationRead } from "../../utils";
+import NotificationPopup from "../../components/NotificationPopup";
+import AlarmBell from "../../components/AlarmBell";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -16,6 +19,7 @@ const AdminDashboard = () => {
     useAuth();
     const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
+  const [isOn, setIsOn] = useState(true);
   const [stats, setStats] = useState({
     users: 6577,
     totalSales: 1576,
@@ -60,6 +64,21 @@ const AdminDashboard = () => {
       return [];
     }
   };
+
+  const markNotifications = async (notificationId) => {
+  
+      try {
+        const response = await markNotificationRead({notificationId, setNotifications});
+  
+        const data = await response.json();
+  
+        return data; // Return data so it can be merged later
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        ErrorToast("An error occurred while fetching notifications.");
+        return [];
+      }
+    };
 
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
@@ -167,6 +186,18 @@ const AdminDashboard = () => {
 
         {/* Dynamic Content Rendering */}
         <Outlet />
+      </div>
+      <div className="fixed bottom-6 right-6 z-50 flex items-end  gap-x-1 ">
+        {/* Your dashboard content here */}
+        {isOn && (
+          <NotificationPopup
+            loading={loadingNotifications}
+            notifications={notifications}
+            onMarkRead={markNotifications}
+            // onMarkAllAsRead={handleMarkAllAsRead}
+          />
+        )}
+        <AlarmBell setIsOn={setIsOn} isOn={isOn} />
       </div>
     </div>
   );
