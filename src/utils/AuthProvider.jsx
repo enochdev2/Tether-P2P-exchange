@@ -206,6 +206,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error during user update:", error);
     }
   };
+ 
 
   // utils/auth.js
   const isTokenExpired = (token) => {

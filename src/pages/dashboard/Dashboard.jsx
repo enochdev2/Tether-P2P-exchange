@@ -144,12 +144,7 @@ function Dashboard() {
   }, [navigate]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (isTokenExpired(token)) {
-      localStorage.removeItem("token");
-      navigate("/signin"); // force logout
-    }
+    getUserProfile();
   }, []);
 
   useEffect(() => {
@@ -166,6 +161,40 @@ function Dashboard() {
       }
     }
   }, []);
+
+  const getUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user?.nickname}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          navigate("/signin");
+        }
+        // ErrorToast(errorMsg);
+      }
+
+      const data = await response.json();
+      console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data)
+
+      return data; // Return updated user data
+    } catch (error) {
+      console.error("Error during user update:", error);
+    }
+  };
 
   return (
     <div className=" relative flex min-h-screen pt-18 bg-gray-100">

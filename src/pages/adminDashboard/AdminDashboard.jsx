@@ -15,7 +15,7 @@ import AlarmBell from "../../components/AlarmBell";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
-  const { setIsLoggedIn, setUser, notifications, setNotifications } = useAuth();
+  const { setIsLoggedIn, setUser, user, notifications, setNotifications } = useAuth();
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
   const [isOn, setIsOn] = useState(true);
@@ -86,6 +86,9 @@ const AdminDashboard = () => {
       console.error("Error fetching notifications:", error);
     }
   };
+   useEffect(() => {
+    getUserProfile();
+  }, []);
 
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
@@ -166,12 +169,44 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    // Replace with real-time fetch or WebSocket subscription
-    fetch("/api/admin/metrics")
-      .then((res) => res.json())
-      .then((data) => setStats(data));
-  }, []);
+ 
+
+  const getUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(
+        "🚀 ~ getUserProfile ~ user.nickname:",
+        user?.nickname
+      )// `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
+      const response = await fetch(
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user?.nickname}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          navigate("/signin");
+        }
+        // ErrorToast(errorMsg);
+      }
+
+      const data = await response.json();
+      console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data);
+
+      return data; // Return updated user data
+    } catch (error) {
+      console.error("Error during user update:", error);
+    }
+  };
 
   return (
     <div className="flex mt-19 min-h-screen bg-gray-100 overflow-x-auto">
