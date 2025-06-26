@@ -196,6 +196,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       return; // Stop submission if validation fails
     }
 
+    // const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
@@ -487,8 +488,8 @@ const Modal = ({ isModalOpen, closeModal }) => {
           // onConfirm={() => handleCancleMatch(pendingOrderId)}
           message="Before the transaction, please transfer USDT 
 (phantom wallet) to the address below"
-      // message2={walletAddress}
-      message2={walletAddress}
+          // message2={walletAddress}
+          message2={walletAddress}
         />
       </div>
     </div>

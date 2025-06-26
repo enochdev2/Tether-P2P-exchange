@@ -218,12 +218,7 @@ const AllChatPage = () => {
           <p>{t("chat.supportNote")}</p>
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
+     
     </div>
   );
 };

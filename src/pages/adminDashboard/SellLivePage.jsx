@@ -7,7 +7,6 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
-import { markAllNotificationsAsRead } from "../../utils";
 import { useTranslation } from "react-i18next";
 import ConfirmModal2 from "../../components/ConfirmModal2";
 
@@ -18,12 +17,10 @@ const SellLivePage = () => {
   // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
-  const [notifications, setNotifications] = useState([]);
   const [matchWrong, setMatchWrong] = useState(false);
   const [matchWrongMessage, setMatchWrongMessage] = useState("");
 
   const [selectedFilters, setSelectedFilters] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   // Amount filter state for sell orders: "all", "lt500", "500to1000", "gt1000"
 
@@ -31,7 +28,15 @@ const SellLivePage = () => {
     fetchSellOrders();
     fetchSellPendingOrders();
     fetchInProgressOrders();
-    fetchNotifications();
+    // fetchNotifications();
+
+    const intervalId = setInterval(() => {
+      fetchSellOrders();
+      fetchSellPendingOrders();
+      fetchInProgressOrders();
+    }, 3000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
@@ -326,84 +331,6 @@ const SellLivePage = () => {
     }
   }
 
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/sellOrders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        // LongSuccessToast("You have a new notification message on sell order");
-      }
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await res.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
-  const handleMarkAllAsRead = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    const { success, error } = await markAllNotificationsAsRead({
-      userId: user._id,
-      type: "sellOrder", // or another type
-      isForAdmin: true, // or false depending on the context
-      token,
-    });
-
-    if (success) {
-      // SuccessToast("All notifications marked as read");
-      setNotifications([]); // or any state update
-    } else {
-      console.error(error);
-    }
-  };
-
   const handleAmountFilterChange = (filter) => {
     if (filter === "all") {
       // If "All" is clicked, reset the filters
@@ -605,14 +532,6 @@ const SellLivePage = () => {
           <ConfirmModal2 open={matchWrong} onClose={handleCloseModal} message={matchWrongMessage} />
         )}
       </div>
-
-      {/* Notification Alert Box */}
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
     </div>
   );
 };

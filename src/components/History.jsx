@@ -13,8 +13,6 @@ const History = () => {
   const { t } = useTranslation();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
 
   useEffect(() => {
@@ -77,9 +75,7 @@ const History = () => {
     }
   }
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  
 
   async function fetchInProgressOrders() {
     try {
@@ -110,96 +106,6 @@ const History = () => {
     }
   }
 
-  async function fetchNotifications() {
-    // "http://localhost:3000/api/v1/notification/unread/user/sellOrders",
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/sellOrders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await response.json();
-      if (!response.ok) {
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      if (Array.isArray(data) && data.length > 0) {
-        LongSuccessToast("You have a new notification message on Sell order");
-      }
-
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      // Remove the marked notification from state so the card disappears
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      // Make an API call to mark all notifications as read
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            type: "sellOrder",
-            isForAdmin: false,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (response.ok) {
-        // Handle success (for example, reset notifications)
-        SuccessToast("All notifications marked as read");
-        setNotifications([]); // Clear the notifications or update the state accordingly
-      } else {
-        console.error(result.error);
-      }
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-    }
-  };
 
   if (loading) return <LoadingSpiner />;
 
@@ -277,12 +183,7 @@ const History = () => {
           )}
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
+    
     </div>
   );
 };

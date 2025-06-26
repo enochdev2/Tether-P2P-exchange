@@ -3,10 +3,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import DashboardMetrics from "../../components/DashboardMetrics";
 import { useAuth } from "../../utils/AuthProvider";
 import Sidebar from "./Sidebar";
+import { LongSuccessToast } from "../../utils/LongSuccess";
+import { ErrorToast } from "../../utils/Error";
 
 const Dashboards = () => {
-  const { user, setIsLoggedIn, setUser } = useAuth();
-  const navigate = useNavigate();
+  
   const [stats, setStats] = useState({
     users: 6577,
     totalSales: 1576,
@@ -14,6 +15,9 @@ const Dashboards = () => {
     totalFees: 45345,
   });
   const [loadingStats, setLoadingStats] = useState(true);
+
+ 
+
 
   useEffect(() => {
     fetchStats();

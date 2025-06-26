@@ -421,10 +421,7 @@ const Navbar = () => {
         </div>
       )}
 
-      <div className="relative">
-        {/* Your dashboard content here */}
-        <AlarmBell />
-      </div>
+      
     </nav>
   );
 };

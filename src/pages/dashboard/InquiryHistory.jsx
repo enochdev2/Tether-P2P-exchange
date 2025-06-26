@@ -306,11 +306,6 @@ const AllInquiries = ({ open, onClose, onConfirm, message }) => {
         // onConfirm={() => handleCancleMatch(pendingOrderId)}
         message="Are you sure to the delete"
       />
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-      />
     </div>
   );
 };
