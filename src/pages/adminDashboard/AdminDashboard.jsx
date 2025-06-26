@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom"; // Import Outlet for dynamic content rendering
 import Sidebar from "./Sidebar";
 import { useAuth } from "../../utils/AuthProvider";
@@ -15,12 +15,12 @@ import AlarmBell from "../../components/AlarmBell";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
-  const { user, setIsLoggedIn, setUser, notifications, setNotifications, isTokenExpired } =
+  const {  setIsLoggedIn, setUser, notifications, setNotifications } =
     useAuth();
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
   const [isOn, setIsOn] = useState(true);
-  const [stats, setStats] = useState({
+  const [ setStats] = useState({
     users: 6577,
     totalSales: 1576,
     totalBuys: 6557,

@@ -15,8 +15,6 @@ const BuyLivePage = () => {
   const [loadingBuy, setLoadingBuy] = useState(true);
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   // Amount filter state for buy orders: "all", "lt500", "500to1000", "gt1000"
@@ -26,18 +24,18 @@ const BuyLivePage = () => {
     fetchBuyPendingOrders();
     fetchBuyOrders();
 
-    // const intervalId = setInterval(() => {
-    //   fetchInProgressOrders();
-    //   fetchBuyPendingOrders();
-    //   fetchBuyOrders();
-    // }, 3000);
+    const intervalId = setInterval(() => {
+      fetchInProgressOrders();
+      fetchBuyPendingOrders();
+      fetchBuyOrders();
+    }, 3000);
 
-    // return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, []);
 
   async function fetchBuyOrders() {
     try {
-      setLoadingBuy(true);
+      setLoadingBuy(false);
       const token = localStorage.getItem("token");
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/onbuy-orders",

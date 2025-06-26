@@ -7,7 +7,6 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
-import { markAllNotificationsAsRead } from "../../utils";
 import { useTranslation } from "react-i18next";
 import ConfirmModal2 from "../../components/ConfirmModal2";
 
@@ -18,12 +17,10 @@ const SellLivePage = () => {
   // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
-  const [notifications, setNotifications] = useState([]);
   const [matchWrong, setMatchWrong] = useState(false);
   const [matchWrongMessage, setMatchWrongMessage] = useState("");
 
   const [selectedFilters, setSelectedFilters] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   // Amount filter state for sell orders: "all", "lt500", "500to1000", "gt1000"
 
@@ -33,14 +30,13 @@ const SellLivePage = () => {
     fetchInProgressOrders();
     // fetchNotifications();
 
-    //  const intervalId = setInterval(() => {
-    //    fetchSellOrders();
-    //    fetchSellPendingOrders();
-    //   fetchInProgressOrders();
-    // }, 3000);
+    const intervalId = setInterval(() => {
+      fetchSellOrders();
+      fetchSellPendingOrders();
+      fetchInProgressOrders();
+    }, 3000);
 
-    
-    // return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
