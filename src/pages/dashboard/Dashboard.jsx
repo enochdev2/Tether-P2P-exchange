@@ -131,7 +131,6 @@ function Dashboard() {
         setNotifications(allNotifications); // Update state with all notifications
       } catch (error) {
         console.error("Error fetching notifications:", error);
-        ErrorToast("An error occurred while fetching notifications.");
       } finally {
         setLoadingNotifications(false);
       }
