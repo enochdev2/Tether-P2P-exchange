@@ -60,7 +60,6 @@ const AdminDashboard = () => {
       return data; // Return data so it can be merged later
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      ErrorToast("An error occurred while fetching notifications.");
       return [];
     }
   };
