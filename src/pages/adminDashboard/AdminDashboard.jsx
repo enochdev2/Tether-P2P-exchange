@@ -15,12 +15,11 @@ import AlarmBell from "../../components/AlarmBell";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
-  const {  setIsLoggedIn, setUser, notifications, setNotifications } =
-    useAuth();
+  const { setIsLoggedIn, setUser, notifications, setNotifications } = useAuth();
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
   const [isOn, setIsOn] = useState(true);
-  const [ setStats] = useState({
+  const [setStats] = useState({
     users: 6577,
     totalSales: 1576,
     totalBuys: 6557,
@@ -129,9 +128,9 @@ const AdminDashboard = () => {
           playNotificationSound();
           LongSuccessToast(`You have ${newCount - lastCount} new notifications`);
 
-          localStorage.setItem("notifications", JSON.stringify(allNotifications));
           // Only play sound if the new count is greater than the old count
         }
+        localStorage.setItem("notifications", JSON.stringify(allNotifications));
         setNotifications(allNotifications); // Update state with all notifications
       } catch (error) {
         console.error("Error fetching notifications:", error);
