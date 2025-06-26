@@ -9,7 +9,6 @@ const TetherPrice = () => {
   const { t } = useTranslation();
   const [tetherPrice, setTetherPrice] = useState(null); // State to store the tether price
   const [inputPrice, setInputPrice] = useState("");
-  console.log("🚀 ~ TetherPrice ~ inputPrice:", inputPrice);
 
   useEffect(() => {
     const fetchTetherPrice = async () => {
@@ -69,7 +68,6 @@ const TetherPrice = () => {
         }
       );
       const data = await response.json();
-      console.log("🚀 ~ handleSetPrice ~ data:", data);
 
       if (!response.ok) {
         const errorMsg = data.error || data.message || "Failed to register user";

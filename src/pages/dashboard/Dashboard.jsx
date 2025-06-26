@@ -145,7 +145,7 @@ function Dashboard() {
 
   useEffect(() => {
     getUserProfile();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -188,7 +188,7 @@ function Dashboard() {
       }
 
       const data = await response.json();
-      // console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data)
+      console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data)
 
       return data; // Return updated user data
     } catch (error) {

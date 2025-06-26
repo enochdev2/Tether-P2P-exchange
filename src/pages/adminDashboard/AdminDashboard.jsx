@@ -88,7 +88,7 @@ const AdminDashboard = () => {
   };
    useEffect(() => {
     getUserProfile();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
