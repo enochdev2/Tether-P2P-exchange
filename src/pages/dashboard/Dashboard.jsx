@@ -115,7 +115,7 @@ function Dashboard() {
 
         // Get the last count from localStorage before update
         const newCount = allNotifications?.length;
-        const lastCounts = JSON.parse(localStorage.getItem("notifications"));
+        const lastCounts = JSON.parse(localStorage.getItem("adminnotifications"));
         const lastCount = lastCounts?.length;
         console.log("🚀 ~ fetchAllNotifications ~ lastCount:", lastCount);
 
@@ -125,7 +125,7 @@ function Dashboard() {
 
           // Only play sound if the new count is greater than the old count
         }
-        localStorage.setItem("notifications", JSON.stringify(allNotifications));
+        localStorage.setItem("adminnotifications", JSON.stringify(allNotifications));
 
         setNotifications(allNotifications); // Update state with all notifications
       } catch (error) {
