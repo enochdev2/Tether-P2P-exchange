@@ -121,9 +121,9 @@ const AdminDashboard = () => {
         // Merge all fetched notifications into one array
         const allNotifications = fetchedNotifications.flat(); // Flatten the array if it's an array of arrays
         // Get the last count from localStorage before update
-        const newCount = allNotifications.length;
+        const newCount = allNotifications?.length;
         const lastCounts = JSON.parse(localStorage.getItem("notifications"));
-        const lastCount = lastCounts.length;
+        const lastCount = lastCounts?.length;
 
         if (newCount > lastCount) {
           playNotificationSound();
