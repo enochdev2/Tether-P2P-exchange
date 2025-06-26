@@ -79,15 +79,17 @@ const Navbar = () => {
 
   return (
     <nav className="bg-black  fixed  text-white  w-full transition-all duration-300 ease-linear z-50 h- shadow-lg py-2 px-4 border-b border-b-gray-500 ">
-      <div className="max-w-screen-xl  mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-screen-xl  mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/">
+          <div>
+            <Link to="/">
             <div className="flex flex-shrink-0 justify-center items-center text-white space-x-2 text-xl font-bold">
-              <img src={logo} className="w-12 h-12" />
+              <img src={logo} className="lg:w-12 lg:h-12 w-10 h-10" />
               <span className="lg:block hidden"> Tether Zone</span>
             </div>
           </Link>
+          </div>
 
           {/* Desktop Navbar */}
           <div className="hidden md:flex space-x-6 py-2">
@@ -302,6 +304,29 @@ const Navbar = () => {
 
           {/* Mobile Navbar Hamburger */}
           <div className="md:hidden">
+            {isLoggedIn ? (
+              <button
+              type="button"
+              className="text-white hover:text-yellow-500 focus:outline-none flex flex-col items-center"
+              aria-controls="mobile-menu"
+              aria-expanded={isMenuOpen ? "true" : "false"}
+              onClick={toggleMenu} // Toggle menu on click
+            >
+              <span className="sr-only">Open user menu</span>
+              <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                {/* Replace with your actual user image */}
+                <svg
+                  className="w-full h-full text-gray-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"></path>
+                </svg>
+              </div>
+              <span className="text-xs mt-1">My page</span>
+            </button>
+            ) : (
             <button
               type="button"
               className="text-white hover:text-yellow-500 focus:outline-none"
@@ -325,6 +350,8 @@ const Navbar = () => {
                 ></path>
               </svg>
             </button>
+
+            )}
           </div>
         </div>
       </div>
