@@ -71,7 +71,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         ErrorToast(errorMsg);
       } else {
         await fetchOrders();
-        const message = data.message || "Orders cancelled successfully!";
+        const message =  t("messages.ordersCancelled");
         SuccessToast(message);
       }
     } catch (error) {

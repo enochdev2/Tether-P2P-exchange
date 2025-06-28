@@ -65,6 +65,7 @@ export default TradingOffers;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   const { t } = useTranslation();
+   const navigate = useNavigate();
   const { priceKRW, setPriceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
@@ -78,6 +79,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // const [pendingOrderId, setPendingOrderId] = useState(offer?.sellerNickname || null);
 
   const openCancelModal = (orderId) => {
+    console.log("🚀 ~ openCancelModal ~ orderId:", orderId)
     // setPendingOrderId(orderId);
     setIsModalOpens(true);
   };
@@ -214,12 +216,21 @@ const Modal = ({ isModalOpen, closeModal }) => {
           // Add other data fields you want to submit
         }),
       });
-      const data = await response.json();
+      
 
-      if (!response.ok) {
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
+    
+
+       if (!response.ok) {
+              const data = await response.json();
+              const errorMsg = data.error || data.message || "Failed to register user";
+              if (errorMsg === "Invalid or expired token") {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                localStorage.removeItem("isLoggedIn");
+                navigate("/signin");
+              }
+              ErrorToast(errorMsg);
+            }
 
       // Optionally clear input or close modal
       if (response.ok) {
@@ -229,6 +240,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
         closeModal();
       }
     } catch (err) {
+      console.log("🚀 ~ submitOrder ~ err:", err)
       setError("Failed to submit order. Please try again.");
     } finally {
       setLoading(false);

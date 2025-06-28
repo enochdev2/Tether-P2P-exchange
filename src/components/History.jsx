@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
+import { ErrorToast } from "../utils/Error";
 import BuyTetherComponent from "./BuyTetherComponent";
 import LoadingSpiner from "./LoadingSpiner";
-import NotificationPopup from "./NotificationPopup";
 import TradeCard from "./TradeCard";
-import { ErrorToast } from "../utils/Error";
-import { LongSuccessToast } from "../utils/LongSuccess";
-import { SuccessToast } from "../utils/Success";
-import { useTranslation } from "react-i18next";
 
 const History = () => {
   const { t } = useTranslation();
+   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
@@ -28,7 +27,8 @@ const History = () => {
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
             status
           )}`
-        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          console.log("🚀 ~ fetchSellOrders ~ url:", url)
 
       const token = localStorage.getItem("token");
 
@@ -45,8 +45,15 @@ const History = () => {
 
       const sellOrders = await response.json();
 
-      if (!response.ok) {
-        const errorMsg = sellOrders.error || sellOrders.message || "Failed to register user";
+       if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 

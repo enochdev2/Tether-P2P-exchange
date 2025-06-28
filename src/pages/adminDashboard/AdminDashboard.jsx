@@ -86,7 +86,7 @@ const AdminDashboard = () => {
       console.error("Error fetching notifications:", error);
     }
   };
-   useEffect(() => {
+  useEffect(() => {
     getUserProfile();
   }, [navigate]);
 
@@ -169,15 +169,10 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
- 
-
   const getUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(
-        "🚀 ~ getUserProfile ~ user.nickname:",
-        user?.nickname
-      )// `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
+      console.log("🚀 ~ getUserProfile ~ user.nickname:", user?.nickname); // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user?.nickname}`,
         {
@@ -194,6 +189,8 @@ const AdminDashboard = () => {
         const errorMsg = data.error || data.message || "Failed to register user";
         if (errorMsg === "Invalid or expired token") {
           localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
           navigate("/signin");
         }
         // ErrorToast(errorMsg);

@@ -295,5 +295,27 @@
       "completed": "Completed"
     },
     "viewDetails": "View Details"
+  },
+  "messages": {
+    "dataUpdated": "You have successfully updated your data",
+    "commentAdded": "Comment successfully added!",
+    "ordersCancelled": "Orders cancelled successfully!",
+    "newNotificationSellOrder": "You have a new notification message on Sell order",
+    "allNotificationsRead": "All notifications marked as read",
+    "errorMarkingNotificationsRead": "Error marking all notifications as read:",
+    "inquirySubmitted": "Your inquiry has been submitted.",
+    "newNotificationBuyOrder": "You have a new notification message on buy order",
+    "ordersMatched": "Orders matched successfully!",
+    "errorMatchingOrders": "Error matching orders:",
+    "sellOrderApproved": "Sell Order Approve Successful",
+    "buyOrderRejected": "Buy Order Rejected Successful",
+    "chatClosed": "Chat closed successfully.",
+    "otpVerified": "OTP verified successfully!",
+    "loginSuccess": "Login successfully",
+    "logoutSuccess": "You have just logged out successfully",
+    "successCopied": "Successfully Copied",
+    "orderPlacedBuy": "Successfully placed a buy order",
+    "orderPlacedSell": "Successfully placed a sell order",
+    "registrationSuccess": "You have successfully registered"
   }
 }

@@ -7,11 +7,14 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
 import { LongSuccessToast } from "../../utils/LongSuccess";
+import { markAllNotificationsAsRead } from "../../utils";
 import { useTranslation } from "react-i18next";
 import ConfirmModal2 from "../../components/ConfirmModal2";
+import { useNavigate } from "react-router-dom";
 
 const SellLivePage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
   // const [loading, setLoading] = useState(true);
@@ -28,15 +31,6 @@ const SellLivePage = () => {
     fetchSellOrders();
     fetchSellPendingOrders();
     fetchInProgressOrders();
-    // fetchNotifications();
-
-    const intervalId = setInterval(() => {
-      fetchSellOrders();
-      fetchSellPendingOrders();
-      fetchInProgressOrders();
-    }, 3000);
-
-    return () => clearInterval(intervalId);
   }, []);
 
   const handleMatch = async (buyerOrderId, sellerOrderId) => {
@@ -70,7 +64,7 @@ const SellLivePage = () => {
         await fetchInProgressOrders();
         await fetchSellOrders();
         await fetchSellPendingOrders();
-        SuccessToast("Orders matched successfully!");
+        SuccessToast(t("messages.ordersMatched"));
       }
     } catch (error) {
       console.error("Error matching orders:", error);
@@ -100,12 +94,12 @@ const SellLivePage = () => {
         ErrorToast(errorMsg);
       }
 
-      const result = await response.json();
-      const message = result.message || "Orders matched successfully!";
+      // const result = await response.json();
+      // const message = result.message || "Orders matched successfully!";
       await fetchInProgressOrders();
       await fetchSellOrders();
       await fetchSellPendingOrders();
-      SuccessToast(message);
+      SuccessToast(t("messages.ordersMatched"));
     } catch (error) {
       console.error("Error matching orders:", error);
     }
@@ -136,7 +130,7 @@ const SellLivePage = () => {
         await fetchInProgressOrders();
         await fetchSellOrders();
         await fetchSellPendingOrders();
-        SuccessToast("Orders Cancelled successfully!");
+        SuccessToast(t("messages.ordersCancelled"));
       }
     } catch (error) {
       console.error("Error matching orders:", error);
@@ -169,6 +163,12 @@ const SellLivePage = () => {
       if (!response.ok) {
         const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 

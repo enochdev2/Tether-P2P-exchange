@@ -1,6 +1,7 @@
 // components/NotificationPopup.js
 import React from "react";
 import { SuccessToast } from "../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const NotificationPopup = ({
   loading = false,
@@ -9,12 +10,13 @@ const NotificationPopup = ({
   title = "Unread Notifications",
   onMarkAllAsRead = () => {},
 }) => {
+  const { t } = useTranslation();
   // Handle the API call for marking all notifications as read
   const handleMarkAllAsRead = async () => {
     try {
       // Make the API call to mark all notifications as read
       await onMarkAllAsRead();
-      SuccessToast("All notifications marked as read");
+      SuccessToast(t("messages.allNotificationsRead"));
     } catch (error) {
       console.error("Error marking all notifications as read", error);
     }

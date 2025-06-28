@@ -32,6 +32,12 @@ const AllChatPage = () => {
       const data = await res.json();
       if (!res.ok) {
         const errorMsg = data.error || data.message || "Failed to fetch messages";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
         return;
       }
@@ -100,47 +106,6 @@ const AllChatPage = () => {
     }
   };
 
-  const markNotificationRead = async (notificationId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  };
-
-  const handleMarkAllAsRead = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    const { success, error } = await markAllNotificationsAsRead({
-      userId: user._id,
-      type: "chat", // or another type
-      isForAdmin: true, // or false depending on the context
-      token,
-    });
-
-    if (success) {
-      // SuccessToast("All notifications marked as read");
-      setNotifications([]); // or any state update
-    } else {
-      console.error(error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 py-10 px-6">
       <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md shadow-xl rounded-3xl p-8 border border-green-200">
@@ -193,11 +158,13 @@ const AllChatPage = () => {
           <ul className="grid grid-cols-1 sm:grid-cols-1 gap-4">
             {filteredMessages.map((chat) => (
               <li
-              key={chat._id}
-              onClick={() =>
-                navigate(`/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`)
-              }
-              className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
+                key={chat._id}
+                onClick={() =>
+                  navigate(
+                    `/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`
+                  )
+                }
+                className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
                 <div>
                   <p className="text-sm text-gray-500">{t("chat.orderIdLabel")}</p>
@@ -218,7 +185,6 @@ const AllChatPage = () => {
           <p>{t("chat.supportNote")}</p>
         </div>
       </div>
-     
     </div>
   );
 };

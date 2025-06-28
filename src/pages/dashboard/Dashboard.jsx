@@ -14,8 +14,7 @@ import { handleMarkAllAsRead, markNotificationRead } from "../../utils";
 
 function Dashboard() {
   const { t } = useTranslation();
-  const { user, setIsLoggedIn, setUser, notifications, setNotifications, isTokenExpired } =
-    useAuth();
+  const { user, setIsLoggedIn, setUser, notifications, setNotifications } = useAuth();
   const navigate = useNavigate();
   // console.log("🚀 ~ Dashboard ~ notifications:", notifications);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
@@ -182,13 +181,15 @@ function Dashboard() {
         const errorMsg = data.error || data.message || "Failed to register user";
         if (errorMsg === "Invalid or expired token") {
           localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
           navigate("/signin");
         }
-        // ErrorToast(errorMsg);
+        ErrorToast(errorMsg);
       }
 
       const data = await response.json();
-      console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data)
+      // console.log("🚀 ~ getUserProfile12345678890-=-=-=-=-=- ~ data:", data)
 
       return data; // Return updated user data
     } catch (error) {

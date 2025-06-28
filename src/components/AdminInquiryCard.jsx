@@ -54,7 +54,7 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
           data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       } else {
-        SuccessToast("Comment successfully added!");
+        SuccessToast(t("messages.commentAdded"));
         setIsCommenting(false);
       }
     } catch (error) {

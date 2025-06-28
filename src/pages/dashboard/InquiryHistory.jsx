@@ -6,6 +6,7 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { useTranslation } from "react-i18next";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmModal from "../../components/ConfirmModal";
+import { ErrorToast } from "../../utils/Error";
 
 // const inquiries = [
 //   {
@@ -35,7 +36,6 @@ import ConfirmModal from "../../components/ConfirmModal";
 
 export default function InquiryHistory() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -54,12 +54,10 @@ export default function InquiryHistory() {
   );
 }
 
-const AllInquiries = ({ open, onClose, onConfirm, message }) => {
+const AllInquiries = () => {
   const { t } = useTranslation();
   const [allInquiry, setAllInquiry] = useState([]);
   // const { allUser } = useAuth();
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -79,7 +77,7 @@ const AllInquiries = ({ open, onClose, onConfirm, message }) => {
         }
       );
       if (!response.ok) {
-        const data = await res.json();
+        const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
@@ -94,70 +92,14 @@ const AllInquiries = ({ open, onClose, onConfirm, message }) => {
     }
   };
 
-  const handleViewUser = (userId) => {
+  const handleViewUser = () => {
     // Navigate to user detail page (adjust route as needed)
     // navigate(`/`);
   };
 
   useEffect(() => {
     allUsers();
-    fetchNotifications();
   }, []);
-
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/inquiry",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await res.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      const data = await response.json();
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        const data = await response.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
 
   if (!isLoading && allInquiry.length === 0) {
     return (

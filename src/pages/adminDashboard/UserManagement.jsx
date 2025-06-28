@@ -7,20 +7,19 @@ import NotificationPopup from "../../components/NotificationPopup";
 import { useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
-import { markAllNotificationsAsRead } from "../../utils";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const UserManagement = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loadingSell, setLoadingSell] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
   const [change, setChange] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   // const { allUser } = useAuth();
-  const { updateUser, setUser } = useAuth();
+  const { updateUser } = useAuth();
 
   const allUser = async () => {
     try {
@@ -39,7 +38,14 @@ const UserManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 
@@ -50,6 +56,7 @@ const UserManagement = () => {
       setLoadingSell(false);
     }
   };
+
   useEffect(() => {
     allUser();
   }, []);
@@ -80,77 +87,6 @@ const UserManagement = () => {
       console.error("Error during sign-up:", error);
       ErrorToast(`something went wrong ${error}`);
       // Optionally handle error here (e.g., show error message)
-    }
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/registration",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch notifications");
-
-      const data = await response.json();
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      // Remove the marked notification from state so the card disappears
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
-  const handleMarkAllAsRead = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    const { success, error } = await markAllNotificationsAsRead({
-      userId: user._id,
-      type: "registration", // or another type
-      isForAdmin: true, // or false depending on the context
-      token,
-    });
-
-    if (success) {
-      // SuccessToast("All notifications marked as read");
-      setNotifications([]); // or any state update
-    } else {
-      console.error(error);
     }
   };
 

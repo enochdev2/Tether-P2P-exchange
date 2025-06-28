@@ -8,9 +8,11 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const BuyLivePage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [buyOrders, setBuyOrders] = useState([]);
   const [loadingBuy, setLoadingBuy] = useState(true);
   const [pendingOrders, setPendingOrders] = useState([]);
@@ -51,7 +53,14 @@ const BuyLivePage = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 
@@ -261,8 +270,6 @@ const BuyLivePage = () => {
       );
     }
   };
-
-
 
   const filteredBuyOrders = buyOrders.filter((order) => {
     if (selectedFilters.length === 0) return true;

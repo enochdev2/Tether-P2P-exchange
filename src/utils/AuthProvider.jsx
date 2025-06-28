@@ -219,6 +219,7 @@ export const AuthProvider = ({ children }) => {
 
       return expiry < now;
     } catch (error) {
+      console.log("🚀 ~ isTokenExpired ~ error:", error)
       return true; // invalid token
     }
   };

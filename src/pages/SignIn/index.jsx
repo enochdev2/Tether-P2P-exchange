@@ -75,7 +75,7 @@ const SignIn = () => {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("isLoggedIn", "true");
-        SuccessToast(" Login successfully");
+        SuccessToast(t("messages.loginSuccess"));
         navigate("/dashboard/profile");
       }
 
