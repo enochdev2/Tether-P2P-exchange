@@ -47,6 +47,13 @@ const SignUp = () => {
   const [phoneVerificationStatus, setPhoneVerificationStatus] = useState("pending"); // 'pending', 'sent', 'resent', 'completed', 'error'
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+
+
+
+
 
   useEffect(() => {
     const verified = JSON.parse(localStorage.getItem("verified"));
@@ -97,7 +104,32 @@ const SignUp = () => {
       ...formData,
       [name]: value,
     });
+
+     if (name === "password") {
+    const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!pattern.test(value)) {
+      setPasswordError("Password must be at least 6 characters and include both letters and numbers.");
+    } else {
+      setPasswordError("");
+    }
+
+    // Live check confirmPassword against new password
+    if (formData.confirmPassword && value !== formData.confirmPassword) {
+      setConfirmPasswordError("The password does not match the one previously entered.");
+    } else {
+      setConfirmPasswordError("");
+    }
+  }
+
+  if (name === "confirmPassword") {
+    if (value !== formData.password) {
+      setConfirmPasswordError("The password does not match the one previously entered.");
+    } else {
+      setConfirmPasswordError("");
+    }
+  }
   };
+
 
   // --- Phone Verification Handlers ---
   const handleSendSmsCode = async () => {
@@ -407,9 +439,10 @@ const SignUp = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder={t("signUp.phonePlaceholder")}
-                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none placeholder:text-sm placeholder:text-gray-400 placeholder:italic ${
-                    phoneVerificationStatus === "completed" ? "border-green-500" : ""
-                  }`}
+                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md 
+  focus:outline-none focus:border-none 
+  placeholder:text-[10px] placeholder:text-gray-500 placeholder:italic
+  ${phoneVerificationStatus === "completed" ? "border-green-500" : ""}`}
                   required
                   disabled={phoneVerificationStatus === "completed"} // Disable if already completed [cite: 9]
                 />
@@ -447,56 +480,68 @@ const SignUp = () => {
             </div>
 
             {/* Password */}
-            <div className="relative">
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
-                {t("signUp.password")} <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 text-white rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition pr-10"
-                  required
-                />
+           <div className="relative">
+  <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
+    {t("signUp.password")} <span className="text-red-500">*</span>
+  </label>
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      id="password"
+      name="password"
+      value={formData.password}
+      onChange={handleChange}
+      className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
+        passwordError ? "border-red-500" : "border-gray-700"
+      } focus:outline-none focus:ring-2 ${
+        passwordError ? "focus:ring-red-500" : "focus:ring-green-600"
+      } transition pr-10`}
+      required
+    />
+    <span
+      className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+      onClick={togglePasswordVisibility}
+    >
+      {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+    </span>
+  </div>
+  {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
+</div>
 
-                <span
-                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                >
-                  {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                </span>
-              </div>
-            </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
-                {/* {t("signUp.cpassword")}  */}
-                {t("signUp.confirmPassword")}
-                <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                  required
-                />
+           <div>
+  <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
+    {t("signUp.confirmPassword")}
+    <span className="text-red-500">*</span>
+  </label>
+  <div className="relative">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      id="confirmPassword"
+      name="confirmPassword"
+      value={formData.confirmPassword}
+      onChange={handleChange}
+      className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
+        confirmPasswordError ? "border-red-500" : "border-gray-600"
+      } focus:outline-none focus:ring-2 ${
+        confirmPasswordError ? "focus:ring-red-500" : "focus:ring-green-600"
+      } transition pr-10`}
+      required
+    />
 
-                <span
-                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
-                  onClick={toggleConfirmPasswordVisibility}
-                >
-                  {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                </span>
-              </div>
-            </div>
+    <span
+      className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+      onClick={toggleConfirmPasswordVisibility}
+    >
+      {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+    </span>
+  </div>
+
+  {confirmPasswordError && (
+    <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>
+  )}
+</div>
+
 
             {/* Date of Birth */}
             <div>
@@ -599,7 +644,9 @@ const SignUp = () => {
 
                   <div className="lg:grid lg:items-center  lg:gap-9 lg:grid-cols-12 flex flex-col ">
                     <div className="col-span-7 text-justify">
-                      <h2 className=" text-base md:text-lg font-semibold mb-3">{t("signUp.tetherGuide")}</h2>
+                      <h2 className=" text-base md:text-lg font-semibold mb-3">
+                        {t("signUp.tetherGuide")}
+                      </h2>
                       <div className=" text-xs md:text-sm text-gray-700 space-y-2 ">
                         <p>{t("signUp.tetherGuideNote1")}</p>
                         <ul className="list-disc list-inside space-y-1">
@@ -719,7 +766,9 @@ const SignUp = () => {
                   >
                     <X size={18} />
                   </button>
-                  <h2 className="text-lg font-semibold mb-2 text-center">{t("signUp.uploadGuideText1")}</h2>
+                  <h2 className="text-lg font-semibold mb-2 text-center">
+                    {t("signUp.uploadGuideText1")}
+                  </h2>
                   <img src={avatarImage} alt="Guide Example" className="w-full h-56 rounded mb-3" />
                   <p className="text-sm text-gray-700">{t("signUp.uploadGuideText2")}</p>
                 </div>

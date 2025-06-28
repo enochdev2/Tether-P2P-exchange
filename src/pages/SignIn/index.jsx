@@ -6,6 +6,7 @@ import { SuccessToast } from "../../utils/Success";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ErrorToast } from "../../utils/Error";
 import { useTranslation } from "react-i18next";
+import ForgotNicknameModal from "../../components/ForgotNicknameModal ";
 const SignIn = () => {
   const { t } = useTranslation();
   const { login, setIsLoggedIn, setUser } = useAuth();
@@ -17,6 +18,15 @@ const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+    const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(false);
+  const [forgotType, setForgotType] = useState()
+  
+
+  const modalOpen = (type) =>{
+      setForgotType(type)
+      setIsNicknameModalOpen(true)
+  }
+
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -112,6 +122,15 @@ const SignIn = () => {
               className="w-full px-4 py-3 bg-gray-900 text-white rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-600 transition"
               required
             />
+            <div className="mt-1 text-sm text-right">
+              <button
+            type="button"
+            onClick={() => modalOpen("nickname")}
+            className="text-gray-400 italic cursor-pointer hover:underline"
+          >
+            Forgot your Nickname?
+          </button>
+            </div>
           </div>
 
           {/* Password Input with Toggle */}
@@ -136,6 +155,21 @@ const SignIn = () => {
                 {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
               </span>
             </div>
+
+             <div className="mt-1 text-sm text-right">
+              <button
+            type="button"
+            onClick={() => modalOpen("password")}
+            className="text-gray-400 italic cursor-pointer hover:underline"
+          >
+             Forgot your Password?
+          </button>
+            </div>
+            <div className="mt-1 text-sm text-right">
+              <a href="/recover-password"  className="text-gray-400 cursor-pointer italic hover:underline">
+               
+              </a>
+            </div>
           </div>
 
           {/* Submit Button */}
@@ -148,6 +182,14 @@ const SignIn = () => {
           </button>
         </form>
       </div>
+
+       {/* Modal Call */}
+      <ForgotNicknameModal
+        isOpen={isNicknameModalOpen}
+        onClose={() => setIsNicknameModalOpen(false)}
+        type={forgotType}
+        
+      />
     </div>
   );
 };

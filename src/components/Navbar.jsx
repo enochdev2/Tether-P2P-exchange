@@ -305,12 +305,12 @@ const Navbar = () => {
           {/* Mobile Navbar Hamburger */}
           <div className="md:hidden">
             {isLoggedIn ? (
-              <button
-              type="button"
+              <Link to='dashboard/profile'
+              // type="button"
               className="text-white hover:text-yellow-500 focus:outline-none flex flex-col items-center"
-              aria-controls="mobile-menu"
-              aria-expanded={isMenuOpen ? "true" : "false"}
-              onClick={toggleMenu} // Toggle menu on click
+              // aria-controls="mobile-menu"
+              // aria-expanded={isMenuOpen ? "true" : "false"}
+              // onClick={toggleMenu} 
             >
               <span className="sr-only">Open user menu</span>
               <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
@@ -325,7 +325,7 @@ const Navbar = () => {
                 </svg>
               </div>
               <span className="text-xs mt-1">My page</span>
-            </button>
+            </Link>
             ) : (
             <button
               type="button"

@@ -111,7 +111,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
             className="text-gray-500 hover:text-gray-700 cursor-pointer"
             onClick={() => handleCopy(offer._id)} // Handle copy when clicked
           >
-            <FaCopy size={16} /> {/* Copy icon */}
+            <FaCopy size={16} /> 
           </button>
         </div>
         <div className="flex items-center  md:text-[16px] space-x-2">

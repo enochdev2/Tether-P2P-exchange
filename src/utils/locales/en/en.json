@@ -77,7 +77,7 @@
     "username": "Username",
     "nickname": "Nickname (Platform Name)",
     "password": "Password",
-    "confirmPassword": "Password",
+    "confirmPassword": "Confirm Password",
     "fullName": "Full Name",
     "dob": "Date of Birth",
     "phone": "Phone Number",

@@ -3,7 +3,15 @@ import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaYoutube } from "re
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Import i18next for translation
 
-const footerData = [
+
+
+const Footers = () => {
+  const { t, i18n } = useTranslation(); // Use the i18next translation hook
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+
+  const footerData = [
   {
     title: "Trade crypto",
     path: "/",
@@ -18,14 +26,19 @@ const footerData = [
   },
   {
     title: "Support",
-    path: "/dashboard/one-on-one",
+    path: isLoggedIn ? "/dashboard/one-on-one" : "https://t.me/+VGrfRMTwfHUxMTBl",
   },
 ];
 
-const Footers = () => {
-  const { t, i18n } = useTranslation(); // Use the i18next translation hook
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
+const handleLinkClick = (path) =>{
+  if(path.startsWith("http")){
+    window.open(path, "_blank");
+  } else {
+    navigate(path)
+  }
+}
+
+
 
   useEffect(() => {
     const user = localStorage.getItem("token");
@@ -34,12 +47,6 @@ const Footers = () => {
     }
   }, []);
 
-  // Handle navigation on link click
-  const handleLinkClick = (path) => {
-    if (isLoggedIn) {
-      navigate(path); // Redirect to different area if user is logged in
-    }
-  };
 
   return (
     <footer className="bg-gray-900 text-white py-14 px-6 sm:px-12">
