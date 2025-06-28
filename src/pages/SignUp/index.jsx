@@ -46,6 +46,7 @@ const SignUp = () => {
   const [phoneVerificationMessage, setPhoneVerificationMessage] = useState("");
   const [phoneVerificationStatus, setPhoneVerificationStatus] = useState("pending"); // 'pending', 'sent', 'resent', 'completed', 'error'
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordDone, setPasswordDone] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -101,18 +102,18 @@ const SignUp = () => {
     });
 
     if (name === "password") {
-      const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      // const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
+
       if (!pattern.test(value)) {
-        setPasswordError(
-          "Password must be at least 6 characters and include both letters and numbers."
-        );
+        setPasswordError(t("signUp.passwordError"));
       } else {
         setPasswordError("");
       }
 
       // Live check confirmPassword against new password
       if (formData.confirmPassword && value !== formData.confirmPassword) {
-        setConfirmPasswordError("The password does not match the one previously entered.");
+        setConfirmPasswordError(t("signUp.matchPasswordError"));
       } else {
         setConfirmPasswordError("");
       }
@@ -120,9 +121,10 @@ const SignUp = () => {
 
     if (name === "confirmPassword") {
       if (value !== formData.password) {
-        setConfirmPasswordError("The password does not match the one previously entered.");
+        setConfirmPasswordError(t("signUp.matchPasswordError"));
       } else {
         setConfirmPasswordError("");
+        setPasswordDone(true);
       }
     }
   };
@@ -486,13 +488,16 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
+                  disabled={passwordDone}
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
                     passwordError ? "border-red-500" : "border-gray-700"
                   } focus:outline-none focus:ring-2 ${
                     passwordError ? "focus:ring-red-500" : "focus:ring-green-600"
-                  } transition pr-10`}
+                  } transition pr-10  ${
+                    passwordDone ? "cursor-not-allowed" : ""
+                  } `}
                   required
                 />
                 <span
@@ -515,13 +520,16 @@ const SignUp = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   id="confirmPassword"
                   name="confirmPassword"
+                  disabled={passwordDone}
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
                     confirmPasswordError ? "border-red-500" : "border-gray-600"
                   } focus:outline-none focus:ring-2 ${
                     confirmPasswordError ? "focus:ring-red-500" : "focus:ring-green-600"
-                  } transition pr-10`}
+                  } transition pr-10  ${
+                    passwordDone ? "cursor-not-allowed" : ""
+                  }`}
                   required
                 />
 
