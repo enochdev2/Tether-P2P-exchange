@@ -7,8 +7,9 @@ import { ErrorToast } from "../../utils/Error";
 import { useTranslation } from "react-i18next";
 import { X, UploadCloud } from "lucide-react";
 import avatarImage from "../../assets/avatarImage.png";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaCheckSquare, FaEye, FaEyeSlash, FaMarker } from "react-icons/fa";
 import solanaImage from "../../assets/solanaImage.png";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 
 // Assume these imports exist for your toasts and AuthProvider
 // import LoadingSpinner from "../../components/LoadingSpinner";
@@ -533,6 +534,12 @@ const SignUp = () => {
                   required
                 />
 
+
+                <span
+                  className="absolute right-10 top-3 text-green-600 cursor-pointer"
+                >
+                  {passwordDone && <FaCheckSquare size={26} className="text-green-700 bg-white"/>}
+                </span>
                 <span
                   className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
                   onClick={toggleConfirmPasswordVisibility}
