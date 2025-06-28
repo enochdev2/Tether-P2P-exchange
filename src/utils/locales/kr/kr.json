@@ -106,7 +106,13 @@
     "title": "다시 오신 것을 환영합니다",
     "nickname": "닉네임 (플랫폼 이름)",
     "password": "비밀번호",
-    "submit": "로그인"
+    "submit": "로그인",
+    "forgotNickname": " 닉네임을 잊으셨나요? ",
+    "forgotPassword": " 비밀번호를 잊으셨나요? ",
+    "findNickname": " 닉네임 찾기",
+    "findPassword": " 비밀번호 찾기",
+    "contactAdmin": " 텔레그램을 통해 관리자에게 문의하여 주세요. ",
+    "joinTelegram": " 텔레그램 입장 "
   },
   "profile": {
     "accountLevel": "계정 레벨: 1",
@@ -163,7 +169,7 @@
     "recentltTraded": "최근 거래:",
     "completedsale": "판매 완료",
     "completedbuy": "구매 완료",
-    "myOrdersInProgress": "승인 대기 중판매 중",
+    "myOrdersInProgress": "구매 중",
     "allPendingOrders": "승인 대기 중인 판매 주문",
     "allOrdersInProgress": "매칭 진행 중인 주문",
     "allSellOrders": "승인 된 판매 주문",
@@ -291,5 +297,27 @@
       "completed": "완료"
     },
     "viewDetails": "더보기"
+  },
+  "messages": {
+    "dataUpdated": "데이터를 성공적으로 업데이트했습니다.",
+    "commentAdded": "댓글이 성공적으로 추가되었습니다!",
+    "ordersCancelled": "주문이 성공적으로 취소되었습니다!",
+    "newNotificationSellOrder": "판매 주문에 대한 새로운 알림 메시지가 있습니다.",
+    "allNotificationsRead": "모든 알림이 읽은 상태로 표시되었습니다.",
+    "errorMarkingNotificationsRead": "모든 알림을 읽은 상태로 표시하는 중 오류가 발생했습니다:",
+    "inquirySubmitted": "문의가 제출되었습니다.",
+    "newNotificationBuyOrder": "구매 주문에 대한 새로운 알림 메시지가 있습니다.",
+    "ordersMatched": "주문이 성공적으로 매칭되었습니다!",
+    "errorMatchingOrders": "주문 매칭 중 오류가 발생했습니다:",
+    "sellOrderApproved": "판매 주문이 성공적으로 승인되었습니다.",
+    "buyOrderRejected": "구매 주문이 성공적으로 거부되었습니다.",
+    "chatClosed": "채팅이 성공적으로 종료되었습니다.",
+    "otpVerified": "OTP가 성공적으로 확인되었습니다!",
+    "loginSuccess": "로그인에 성공했습니다.",
+    "logoutSuccess": "로그아웃이 완료되었습니다.",
+    "successCopied": "복사에 성공했습니다.",
+    "orderPlacedBuy": "구매 주문이 성공적으로 등록되었습니다.",
+    "orderPlacedSell": "판매 주문이 성공적으로 등록되었습니다.",
+    "registrationSuccess": "회원가입이 완료되었습니다."
   }
 }

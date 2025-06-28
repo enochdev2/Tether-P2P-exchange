@@ -56,7 +56,7 @@ const LongSuccessToast = (message) =>
         </div>
       </div>
     ),
-    { duration: 300 } // stays for 60 seconds
+     { duration: 2500 }// stays for 60 seconds
   );
 
 export { LongSuccessToast };

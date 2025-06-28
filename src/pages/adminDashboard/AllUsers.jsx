@@ -1,27 +1,7 @@
 import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import { useEffect, useState } from "react";
-
-const users = [
-  {
-    id: "1",
-    username: "User 1",
-    fullName: "John Doe",
-    phone: "+1234567890",
-    email: "user1@example.com",
-    kycStatus: "Approved",
-    accountStatus: "Active",
-  },
-  {
-    id: "2",
-    username: "User 2",
-    fullName: "Jane Smith",
-    phone: "+0987654321",
-    email: "user2@example.com",
-    kycStatus: "Pending",
-    accountStatus: "Inactive",
-  },
-];
+import { ErrorToast } from "../../utils/Error";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
@@ -42,7 +22,15 @@ const AllUsers = () => {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch users");
+          const data = await response.json();
+          const errorMsg = data.error || data.message || "Failed to register user";
+          if (errorMsg === "Invalid or expired token") {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("isLoggedIn");
+            navigate("/signin");
+          }
+          ErrorToast(errorMsg);
         }
 
         const data = await response.json();
@@ -51,24 +39,24 @@ const AllUsers = () => {
         console.error("Error fetching users:", error);
       }
     };
-    allUser()
+    allUser();
   }, []);
 
-  const getAllUsers = async () => {
-    try {
-      const response = await allUser();
+  // const getAllUsers = async () => {
+  //   try {
+  //     const response = await allUser();
 
-      if (response) {
-        setAllUsers(response);
-      } else {
-        return;
-      }
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-    } finally {
-      setIsLoading(false); // Hide loading state after completion
-    }
-  };
+  //     if (response) {
+  //       setAllUsers(response);
+  //     } else {
+  //       return;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during sign-up:", error);
+  //   } finally {
+  //     setIsLoading(false); // Hide loading state after completion
+  //   }
+  // };
 
   const handleViewUser = (userId) => {
     // Navigate to user detail page (adjust route as needed)
@@ -85,14 +73,14 @@ const AllUsers = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">
-        All Users
-      </h1>
+      <h1 className="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">All Users</h1>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
         <table className="min-w-full table-auto border-collapse">
-          <thead className="bg-gradient-to-r from-green-400 via-green-500 to-green-700
- text-white">
+          <thead
+            className="bg-gradient-to-r from-green-400 via-green-500 to-green-700
+ text-white"
+          >
             <tr>
               <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
                 User ID
@@ -103,12 +91,8 @@ const AllUsers = () => {
               <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
                 Full Name
               </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
-                Phone
-              </th>
-              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">
-                Status
-              </th>
+              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">Phone</th>
+              <th className="px-6 py-4 text-left font-semibold uppercase tracking-wider">Status</th>
               <th className="px-6 py-4 text-center font-semibold uppercase tracking-wider">
                 Actions
               </th>
@@ -124,18 +108,10 @@ const AllUsers = () => {
                 }`}
                 onClick={() => handleViewUser(user.id)}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">
-                  {idx}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                  {user.username}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user.fullName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {user.phone || "-"}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{idx}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900">{user.username}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700">{user.fullName}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-700">{user.phone || "-"}</td>
                 <td
                   className={`px-6 py-4 whitespace-nowrap font-semibold ${
                     user.status?.toLowerCase() === "active"
@@ -164,7 +140,7 @@ const AllUsers = () => {
           </tbody>
         </table>
       </div>
-      <Outlet/>
+      <Outlet />
     </div>
   );
 };

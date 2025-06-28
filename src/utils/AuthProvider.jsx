@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null); // State to hold user data
   const [priceKRW, setPriceKRW] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     fetchPrice();
@@ -31,17 +32,20 @@ export const AuthProvider = ({ children }) => {
 
   const fetchPrice = async () => {
     try {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+        {
           method: "GET",
           headers: {
             // Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch tether price");
         }
-        const data = await response.json();
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch tether price");
+      }
+      const data = await response.json();
       setPriceKRW(data.data);
       return response;
     } catch (err) {
@@ -64,8 +68,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
         //  return response;
       }
@@ -132,8 +135,7 @@ export const AuthProvider = ({ children }) => {
 
       // Check if the response is successful
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -193,8 +195,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!response.ok) {
         const data = await response.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);
       }
 
@@ -205,6 +206,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Error during user update:", error);
     }
   };
+ 
 
   // utils/auth.js
   const isTokenExpired = (token) => {
@@ -217,6 +219,7 @@ export const AuthProvider = ({ children }) => {
 
       return expiry < now;
     } catch (error) {
+      console.log("🚀 ~ isTokenExpired ~ error:", error)
       return true; // invalid token
     }
   };
@@ -236,6 +239,8 @@ export const AuthProvider = ({ children }) => {
         priceKRW,
         setPriceKRW,
         fetchPrice,
+        notifications,
+        setNotifications,
         isTokenExpired,
       }}
     >

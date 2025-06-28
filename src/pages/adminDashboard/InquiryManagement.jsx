@@ -5,19 +5,16 @@ import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
-import { markAllNotificationsAsRead } from "../../utils";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const InquiryManagement = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loadingSell, setLoadingSell] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
 
-
   useEffect(() => {
-    fetchNotifications();
     allUser();
   }, []);
 
@@ -38,8 +35,14 @@ const InquiryManagement = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 
@@ -51,92 +54,14 @@ const InquiryManagement = () => {
     }
   };
 
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/inquiry",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  const sortedOffers = allUsers.sort((a, b) => {
+    // First, prioritize posts without comments
+    if (!a.comment && b.comment) return -1; // a should come first if a doesn't have a comment
+    if (a.comment && !b.comment) return 1; // b should come first if b doesn't have a comment
 
-      if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      const data = await response.json();
-
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await res.json();
-        const errorMsg =
-          data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-      setNotifications((prev) =>
-        prev.filter((notif) => notif._id !== notificationId)
-      );
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
-  const handleMarkAllAsRead = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-  
-    const { success, error } = await markAllNotificationsAsRead({
-      userId: user._id,
-      type: "inquiry", // or another type
-      isForAdmin: true,     // or false depending on the context
-      token,
-    });
-  
-    if (success) {
-      // SuccessToast("All notifications marked as read");
-      setNotifications([]); // or any state update
-    } else {
-      console.error(error);
-    }
-  };
-
-   const sortedOffers = allUsers.sort((a, b) => {
-      // First, prioritize posts without comments
-      if (!a.comment && b.comment) return -1; // a should come first if a doesn't have a comment
-      if (a.comment && !b.comment) return 1; // b should come first if b doesn't have a comment
-
-      // If both have comments or both don't have comments, sort by creation date (oldest first)
-      return new Date(a.createdAt) - new Date(b.createdAt);
-    });
+    // If both have comments or both don't have comments, sort by creation date (oldest first)
+    return new Date(a.createdAt) - new Date(b.createdAt);
+  });
 
   if (loadingSell) return <LoadingSpiner />;
 
@@ -156,13 +81,14 @@ const InquiryManagement = () => {
 
           {/* Section Title */}
           <div className="mb-5">
-            <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">{t("inquirys.allInquiries")}</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-800">
+              {t("inquirys.allInquiries")}
+            </h2>
 
-              
             {/* Table Header */}
             <div className="hidden sm:grid grid-cols-6 gap-4 text-white bg-[#26a17b] px-5 py-3 rounded-md text-sm font-semibold">
-              <div>   {t("inquirys.titles")}</div>
-              <div>{ t("profile.nickname")}</div>
+              <div> {t("inquirys.titles")}</div>
+              <div>{t("profile.nickname")}</div>
               <div> {t("inquirys.description")}</div>
               <div>{t("inquirys.status")}</div>
               <div>Action</div>
@@ -179,21 +105,12 @@ const InquiryManagement = () => {
                   offer={offer}
                   sell={Sell}
                   showChatButton={offer.status === "On Sale"}
-                  
                 />
               ))
             )}
           </div>
         </div>
       </div>
-
-      {/* Notification Alert Box */}
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
     </div>
   );
 };

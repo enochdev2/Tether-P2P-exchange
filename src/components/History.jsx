@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
+import { ErrorToast } from "../utils/Error";
 import BuyTetherComponent from "./BuyTetherComponent";
 import LoadingSpiner from "./LoadingSpiner";
-import NotificationPopup from "./NotificationPopup";
 import TradeCard from "./TradeCard";
-import { ErrorToast } from "../utils/Error";
-import { LongSuccessToast } from "../utils/LongSuccess";
-import { SuccessToast } from "../utils/Success";
-import { useTranslation } from "react-i18next";
 
 const History = () => {
   const { t } = useTranslation();
+   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
 
   useEffect(() => {
@@ -30,7 +27,8 @@ const History = () => {
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
             status
           )}`
-        : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+          console.log("🚀 ~ fetchSellOrders ~ url:", url)
 
       const token = localStorage.getItem("token");
 
@@ -47,8 +45,15 @@ const History = () => {
 
       const sellOrders = await response.json();
 
-      if (!response.ok) {
-        const errorMsg = sellOrders.error || sellOrders.message || "Failed to register user";
+       if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 
@@ -77,9 +82,7 @@ const History = () => {
     }
   }
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  
 
   async function fetchInProgressOrders() {
     try {
@@ -110,96 +113,6 @@ const History = () => {
     }
   }
 
-  async function fetchNotifications() {
-    // "http://localhost:3000/api/v1/notification/unread/user/sellOrders",
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/sellOrders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await response.json();
-      if (!response.ok) {
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-
-      if (Array.isArray(data) && data.length > 0) {
-        LongSuccessToast("You have a new notification message on Sell order");
-      }
-
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to mark notification as read");
-
-      // Remove the marked notification from state so the card disappears
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      // Make an API call to mark all notifications as read
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            type: "sellOrder",
-            isForAdmin: false,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (response.ok) {
-        // Handle success (for example, reset notifications)
-        SuccessToast("All notifications marked as read");
-        setNotifications([]); // Clear the notifications or update the state accordingly
-      } else {
-        console.error(result.error);
-      }
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-    }
-  };
 
   if (loading) return <LoadingSpiner />;
 
@@ -242,7 +155,6 @@ const History = () => {
               <div className="">
                 <h2 className="text-xl rounded-2xl shadow-lg py-2 border-slate-400 border font-bold mb-4 bg-slate-200 px-3">
                   {t("buytether.myOrdersInProgress")}
-                  My Orders In Progress
                 </h2>
                 {inProgressOrders.map((offer) => (
                   <UserTradeInProgressCard
@@ -277,12 +189,7 @@ const History = () => {
           )}
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
+    
     </div>
   );
 };

@@ -204,11 +204,7 @@ function ProfileOverview() {
           </div>
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-      />
+      
     </div>
   );
 }

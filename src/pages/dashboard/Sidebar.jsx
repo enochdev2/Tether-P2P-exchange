@@ -101,7 +101,7 @@ function Sidebar() {
       localStorage.removeItem("token");
       const response = await logout();
       if (response) {
-        SuccessToast("You have just logged out successfully");
+        SuccessToast(t("messages.logoutSuccess"));
         setIsLoading(false);
         navigate("/");
       }

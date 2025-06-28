@@ -3,13 +3,14 @@ import { ErrorToast } from "../../utils/Error";
 import { useTranslation } from "react-i18next";
 import { SuccessToast } from "../../utils/Success";
 import { useAuth } from "../../utils/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const TetherPrice = () => {
-     const { fetchPrice } = useAuth();
+  const { fetchPrice } = useAuth();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [tetherPrice, setTetherPrice] = useState(null); // State to store the tether price
   const [inputPrice, setInputPrice] = useState("");
-  console.log("🚀 ~ TetherPrice ~ inputPrice:", inputPrice);
 
   useEffect(() => {
     const fetchTetherPrice = async () => {
@@ -28,9 +29,19 @@ const TetherPrice = () => {
             },
           }
         );
+
         if (!response.ok) {
-          throw new Error("Failed to fetch tether price");
+          const data = await response.json();
+          const errorMsg = data.error || data.message || "Failed to register user";
+          if (errorMsg === "Invalid or expired token") {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            localStorage.removeItem("isLoggedIn");
+            navigate("/signin");
+          }
+          ErrorToast(errorMsg);
         }
+
         const data = await response.json();
         fetchPrice();
         setTetherPrice(data.data); // Update state with the fetched price
@@ -69,7 +80,6 @@ const TetherPrice = () => {
         }
       );
       const data = await response.json();
-      console.log("🚀 ~ handleSetPrice ~ data:", data);
 
       if (!response.ok) {
         const errorMsg = data.error || data.message || "Failed to register user";

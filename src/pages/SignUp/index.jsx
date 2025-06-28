@@ -26,7 +26,7 @@ const SignUp = () => {
   const [showUploadGuide, setShowUploadGuide] = useState(false);
   const [rawFile, setRawFile] = useState(null);
   const [formData, setFormData] = useState({
-    username: "",
+    // username: "",
     nickname: "",
     password: "",
     confirmPassword: "",
@@ -48,12 +48,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
-const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-
-
-
-
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   useEffect(() => {
     const verified = JSON.parse(localStorage.getItem("verified"));
@@ -83,7 +78,7 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const validateForm = () => {
     const errors = [];
 
-    if (!formData.username.trim()) errors.push("Username is required.");
+    // if (!formData.username.trim()) errors.push("Username is required.");
     if (!formData.nickname.trim()) errors.push("Nickname is required.");
     if (!formData.fullName.trim()) errors.push("Full name is required.");
     if (!formData.password || formData.password.length < 5)
@@ -105,31 +100,32 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
       [name]: value,
     });
 
-     if (name === "password") {
-    const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-    if (!pattern.test(value)) {
-      setPasswordError("Password must be at least 6 characters and include both letters and numbers.");
-    } else {
-      setPasswordError("");
+    if (name === "password") {
+      const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      if (!pattern.test(value)) {
+        setPasswordError(
+          "Password must be at least 6 characters and include both letters and numbers."
+        );
+      } else {
+        setPasswordError("");
+      }
+
+      // Live check confirmPassword against new password
+      if (formData.confirmPassword && value !== formData.confirmPassword) {
+        setConfirmPasswordError("The password does not match the one previously entered.");
+      } else {
+        setConfirmPasswordError("");
+      }
     }
 
-    // Live check confirmPassword against new password
-    if (formData.confirmPassword && value !== formData.confirmPassword) {
-      setConfirmPasswordError("The password does not match the one previously entered.");
-    } else {
-      setConfirmPasswordError("");
+    if (name === "confirmPassword") {
+      if (value !== formData.password) {
+        setConfirmPasswordError("The password does not match the one previously entered.");
+      } else {
+        setConfirmPasswordError("");
+      }
     }
-  }
-
-  if (name === "confirmPassword") {
-    if (value !== formData.password) {
-      setConfirmPasswordError("The password does not match the one previously entered.");
-    } else {
-      setConfirmPasswordError("");
-    }
-  }
   };
-
 
   // --- Phone Verification Handlers ---
   const handleSendSmsCode = async () => {
@@ -354,6 +350,7 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
       // Create the new user data
       const newUser = {
         ...formData,
+        username: formData.nickname,
         bankAccount: Number(formData.bankAccount),
         tetherIdImage: imageUrl,
         status: "inactive", // Set initial status as inactive
@@ -395,7 +392,7 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Username */}
-            <div>
+            <div className="hidden">
               <label htmlFor="username" className="block text-sm font-semibold text-gray-100 mb-1">
                 {t("signUp.username")} <span className="text-red-500">*</span>
               </label>
@@ -439,9 +436,9 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder={t("signUp.phonePlaceholder")}
-                  className={`flex-1 px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md 
+                  className={`flex-1 px-2 py-3 border border-gray-600 bg-gray-900 text-white rounded-md 
   focus:outline-none focus:border-none 
-  placeholder:text-[10px] placeholder:text-gray-500 placeholder:italic
+  placeholder:text-[12px] placeholder:text-gray-500 placeholder:italic
   ${phoneVerificationStatus === "completed" ? "border-green-500" : ""}`}
                   required
                   disabled={phoneVerificationStatus === "completed"} // Disable if already completed [cite: 9]
@@ -455,7 +452,7 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
                     type="button"
                     onClick={handleSendSmsCode} // [cite: 2]
                     disabled={isLoading || !formData.phone || !/^\d{10,15}$/.test(formData.phone)}
-                    className="px-4 py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-3 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Send SMS code
                   </button>
@@ -480,68 +477,66 @@ const [confirmPasswordError, setConfirmPasswordError] = useState("");
             </div>
 
             {/* Password */}
-           <div className="relative">
-  <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
-    {t("signUp.password")} <span className="text-red-500">*</span>
-  </label>
-  <div className="relative">
-    <input
-      type={showPassword ? "text" : "password"}
-      id="password"
-      name="password"
-      value={formData.password}
-      onChange={handleChange}
-      className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
-        passwordError ? "border-red-500" : "border-gray-700"
-      } focus:outline-none focus:ring-2 ${
-        passwordError ? "focus:ring-red-500" : "focus:ring-green-600"
-      } transition pr-10`}
-      required
-    />
-    <span
-      className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
-      onClick={togglePasswordVisibility}
-    >
-      {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-    </span>
-  </div>
-  {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
-</div>
+            <div className="relative">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.password")} <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
+                    passwordError ? "border-red-500" : "border-gray-700"
+                  } focus:outline-none focus:ring-2 ${
+                    passwordError ? "focus:ring-red-500" : "focus:ring-green-600"
+                  } transition pr-10`}
+                  required
+                />
+                <span
+                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </span>
+              </div>
+              {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
+            </div>
 
+            <div>
+              <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
+                {t("signUp.confirmPassword")}
+                <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
+                    confirmPasswordError ? "border-red-500" : "border-gray-600"
+                  } focus:outline-none focus:ring-2 ${
+                    confirmPasswordError ? "focus:ring-red-500" : "focus:ring-green-600"
+                  } transition pr-10`}
+                  required
+                />
 
-           <div>
-  <label htmlFor="cpassword" className="block text-sm font-semibold text-gray-100 mb-1">
-    {t("signUp.confirmPassword")}
-    <span className="text-red-500">*</span>
-  </label>
-  <div className="relative">
-    <input
-      type={showConfirmPassword ? "text" : "password"}
-      id="confirmPassword"
-      name="confirmPassword"
-      value={formData.confirmPassword}
-      onChange={handleChange}
-      className={`w-full px-4 py-3 bg-gray-900 text-white rounded-md border ${
-        confirmPasswordError ? "border-red-500" : "border-gray-600"
-      } focus:outline-none focus:ring-2 ${
-        confirmPasswordError ? "focus:ring-red-500" : "focus:ring-green-600"
-      } transition pr-10`}
-      required
-    />
+                <span
+                  className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </span>
+              </div>
 
-    <span
-      className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
-      onClick={toggleConfirmPasswordVisibility}
-    >
-      {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-    </span>
-  </div>
-
-  {confirmPasswordError && (
-    <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>
-  )}
-</div>
-
+              {confirmPasswordError && (
+                <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>
+              )}
+            </div>
 
             {/* Date of Birth */}
             <div>

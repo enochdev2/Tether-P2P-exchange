@@ -8,13 +8,15 @@ import { ErrorToast } from "../../utils/Error";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const TradingPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [setNotifications] = useState([]);
+  const [setLoadingNotifications] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
 
   useEffect(() => {
@@ -40,11 +42,17 @@ const TradingPage = () => {
       });
 
       const buyOrders = await response.json();
-      console.log("🚀 ~ fetchBuyOrders ~ buyOrders:", buyOrders)
+      console.log("🚀 ~ fetchBuyOrders ~ buyOrders:", buyOrders);
 
       if (!response.ok) {
         const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
         ErrorToast(errorMsg);
       }
 
@@ -104,39 +112,6 @@ const TradingPage = () => {
     }
   }
 
-  const handleMarkAllAsRead = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      // Make an API call to mark all notifications as read
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            type: "buyOrder",
-            isForAdmin: false,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      if (response.ok) {
-        SuccessToast("All notifications marked as read");
-        setNotifications([]); // Clear the notifications or update the state accordingly
-      } else {
-        console.error(result.error);
-      }
-    } catch (error) {
-      console.error("Error marking all notifications as read:", error);
-    }
-  };
-
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
@@ -170,32 +145,6 @@ const TradingPage = () => {
       console.error("Error fetching notifications:", error);
     } finally {
       setLoadingNotifications(false);
-    }
-  }
-
-  async function markNotificationRead(notificationId) {
-    try {
-      const token = localStorage.getItem("token");
-      // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-      const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        const errorMsg = data.error || data.message || "Failed to register user";
-        ErrorToast(errorMsg);
-      }
-      setNotifications((prev) => prev.filter((notif) => notif._id !== notificationId));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
     }
   }
 
@@ -257,12 +206,6 @@ const TradingPage = () => {
           )}
         </div>
       </div>
-      <NotificationPopup
-        loading={loadingNotifications}
-        notifications={notifications}
-        onMarkRead={markNotificationRead}
-        onMarkAllAsRead={handleMarkAllAsRead}
-      />
     </div>
   );
 };

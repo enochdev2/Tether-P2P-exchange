@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import ForgotNicknameModal from "../../components/ForgotNicknameModal ";
 const SignIn = () => {
   const { t } = useTranslation();
-  const { login, setIsLoggedIn, setUser } = useAuth();
+  const { setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     nickname: "",
@@ -18,15 +18,13 @@ const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
-    const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(false);
-  const [forgotType, setForgotType] = useState()
-  
+  const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(false);
+  const [forgotType, setForgotType] = useState();
 
-  const modalOpen = (type) =>{
-      setForgotType(type)
-      setIsNicknameModalOpen(true)
-  }
-
+  const modalOpen = (type) => {
+    setForgotType(type);
+    setIsNicknameModalOpen(true);
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -85,7 +83,7 @@ const SignIn = () => {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("isLoggedIn", "true");
-        SuccessToast(" Login successfully");
+        SuccessToast(t("messages.loginSuccess"));
         navigate("/dashboard/profile");
       }
 
@@ -111,7 +109,7 @@ const SignIn = () => {
           {/* Nickname Input */}
           <div>
             <label htmlFor="nickname" className="block text-sm font-medium text-gray-300 mb-1">
-              {t("signUp.nickname")}
+              {t("signUp.username")}
             </label>
             <input
               type="text"
@@ -124,12 +122,12 @@ const SignIn = () => {
             />
             <div className="mt-1 text-sm text-right">
               <button
-            type="button"
-            onClick={() => modalOpen("nickname")}
-            className="text-gray-400 italic cursor-pointer hover:underline"
-          >
-            Forgot your Nickname?
-          </button>
+                type="button"
+                onClick={() => modalOpen("nickname")}
+                className="text-gray-400 italic cursor-pointer hover:underline"
+              >
+                {t("signIn.forgotNickname")}
+              </button>
             </div>
           </div>
 
@@ -156,19 +154,20 @@ const SignIn = () => {
               </span>
             </div>
 
-             <div className="mt-1 text-sm text-right">
+            <div className="mt-1 text-sm text-right">
               <button
-            type="button"
-            onClick={() => modalOpen("password")}
-            className="text-gray-400 italic cursor-pointer hover:underline"
-          >
-             Forgot your Password?
-          </button>
+                type="button"
+                onClick={() => modalOpen("password")}
+                className="text-gray-400 italic cursor-pointer hover:underline"
+              >
+                {t("signIn.forgotPassword")}
+              </button>
             </div>
             <div className="mt-1 text-sm text-right">
-              <a href="/recover-password"  className="text-gray-400 cursor-pointer italic hover:underline">
-               
-              </a>
+              <a
+                href="/recover-password"
+                className="text-gray-400 cursor-pointer italic hover:underline"
+              ></a>
             </div>
           </div>
 
@@ -183,12 +182,11 @@ const SignIn = () => {
         </form>
       </div>
 
-       {/* Modal Call */}
+      {/* Modal Call */}
       <ForgotNicknameModal
         isOpen={isNicknameModalOpen}
         onClose={() => setIsNicknameModalOpen(false)}
         type={forgotType}
-        
       />
     </div>
   );

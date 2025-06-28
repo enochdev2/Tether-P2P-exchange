@@ -1,35 +1,35 @@
 // components/NotificationPopup.js
 import React from "react";
 import { SuccessToast } from "../utils/Success";
+import { useTranslation } from "react-i18next";
 
 const NotificationPopup = ({
   loading = false,
   notifications = [],
   onMarkRead = () => {},
   title = "Unread Notifications",
-  onMarkAllAsRead = () => {}, 
+  onMarkAllAsRead = () => {},
 }) => {
-
-   // Handle the API call for marking all notifications as read
+  const { t } = useTranslation();
+  // Handle the API call for marking all notifications as read
   const handleMarkAllAsRead = async () => {
     try {
       // Make the API call to mark all notifications as read
       await onMarkAllAsRead();
-      SuccessToast("All notifications marked as read");
+      SuccessToast(t("messages.allNotificationsRead"));
     } catch (error) {
       console.error("Error marking all notifications as read", error);
     }
   };
 
-  if (loading || notifications.length === 0) return null;
+  if (notifications.length === 0) return null;
 
   return (
     <div
-      className="fixed bottom-1 md:bottom-5 right-1 sm:right-5 w-80 max-w-[280px] md:max-w-full bg-white border-2 border-red-700 rounded-lg shadow-lg px-2 py-3 md:p-4 z-50"
-      style={{ maxHeight: "400px", overflowY: "auto" }}
+      className=" right-5 sm:right-5 w-80 max-w-[250px] md:max-w-full bg-white border-2 border-red-700 rounded-lg shadow-lg px-2 py-3 md:p-4 z-50"
+      style={{ maxHeight: "280px", overflowY: "auto" }}
     >
-
-        {/* Title with Mark All button */}
+      {/* Title with Mark All button */}
       <div className="flex justify-between items-center mb-2">
         <h3 className="font-semibold text-red-600 md:text-lg text-sm">{title}</h3>
         <button
@@ -41,10 +41,7 @@ const NotificationPopup = ({
         </button>
       </div>
       {notifications.map((notif) => (
-        <div
-          key={notif._id}
-          className="mb-3 p-3 bg-green-50 border border-green-300 rounded"
-        >
+        <div key={notif._id} className="mb-3 p-3 bg-green-50 border border-green-300 rounded">
           <p className=" text-xs md:text-sm mb-2">{notif.message}</p>
           <button
             onClick={() => onMarkRead(notif._id)}

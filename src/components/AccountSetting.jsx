@@ -18,14 +18,14 @@ import {
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { ErrorToast } from "../utils/Error";
+import { useTranslation } from "react-i18next";
 
 export default function AccountSetting({ isEditing, setIsEditing, user }) {
-  const { updateUser, setUser } = useAuth();
+  const { t } = useTranslation();
+  const { updateUser } = useAuth();
 
   const [phone, setPhone] = useState(user?.phone);
   const [username, setUsername] = useState(user?.username);
-  const [currency, setCurrency] = useState("KRW");
-  const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
   const [fullName, setFullName] = useState(user?.fullName);
@@ -37,10 +37,7 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
-    // add validation if needed
-  };
+  
 
    
 
@@ -65,7 +62,8 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
     try {
       const response = await updateUser(updatedUser);
       if (response) {
-        SuccessToast("You have successfully updated your data");
+      SuccessToast(t("message.dataUpdated"));
+
         setIsEditing(false);
       }
     } catch (error) {

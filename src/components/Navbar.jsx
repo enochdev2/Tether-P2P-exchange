@@ -27,8 +27,8 @@ const Navbar = () => {
       i18n.changeLanguage(storedLanguage.toLowerCase());
       setLanguage(storedLanguage);
     } else {
-      i18n.changeLanguage("en");
-      setLanguage("EN");
+      i18n.changeLanguage("ko");
+      setLanguage("KO");
     }
   }, []);
 
@@ -84,11 +84,11 @@ const Navbar = () => {
           {/* Logo */}
           <div>
             <Link to="/">
-            <div className="flex flex-shrink-0 justify-center items-center text-white space-x-2 text-xl font-bold">
-              <img src={logo} className="lg:w-12 lg:h-12 w-10 h-10" />
-              <span className="lg:block hidden"> Tether Zone</span>
-            </div>
-          </Link>
+              <div className="flex flex-shrink-0 justify-center items-center text-white space-x-2 text-xl font-bold">
+                <img src={logo} className="lg:w-12 lg:h-12 w-10 h-10" />
+                <span className="lg:block hidden"> Tether Zone</span>
+              </div>
+            </Link>
           </div>
 
           {/* Desktop Navbar */}
@@ -266,25 +266,12 @@ const Navbar = () => {
               className="flex items-center bg-gradient-to-br from-[#26a17b] via-[#3b82f6] to-[#f59b0b] gap-0.5 px-2 md:px-4 md:py-2 py-1 text-white rounded-md focus:outline-none hover:from-[#3b82f6] hover:via-[#f59b0b] hover:to-[#26a17b] text-xs md:text-base cursor-pointer"
             >
               <FaGlobe className="text-lg text-sky-900 mr-0" />
-              <span className="ml-0">{!language ? "ENG" : ""}</span>
+              <span className="ml-0">{!language ? "KOR" : ""}</span>
               <span>{language}</span>
             </button>
 
             {isOpen && (
               <div className="absolute -right-5 bg-[#84c9e2] text-white mt-2 w-28 bg rounded-md shadow-lg z-5000 cursor-pointer">
-                <button
-                  onClick={() => selectLanguage("EN")}
-                  className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
-                    language === "ENG" ? "font-semibold text-gray-900" : "text-gray-600"
-                  }`}
-                >
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
-                    alt="US Flag"
-                    className="w-5 h-3 mr-2"
-                  />
-                  ENG
-                </button>
                 <button
                   onClick={() => selectLanguage("KO")}
                   className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
@@ -298,6 +285,19 @@ const Navbar = () => {
                   />
                   KOR
                 </button>
+                <button
+                  onClick={() => selectLanguage("EN")}
+                  className={`flex items-center block w-full text-left px-2 md:px-4 py-2 text-xs md:text-sm hover:bg-gray-100 cursor-pointer ${
+                    language === "ENG" ? "font-semibold text-gray-900" : "text-gray-600"
+                  }`}
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+                    alt="US Flag"
+                    className="w-5 h-3 mr-2"
+                  />
+                  ENG
+                </button>
               </div>
             )}
           </div>
@@ -305,52 +305,52 @@ const Navbar = () => {
           {/* Mobile Navbar Hamburger */}
           <div className="md:hidden">
             {isLoggedIn ? (
-              <Link to='dashboard/profile'
-              // type="button"
-              className="text-white hover:text-yellow-500 focus:outline-none flex flex-col items-center"
-              // aria-controls="mobile-menu"
-              // aria-expanded={isMenuOpen ? "true" : "false"}
-              // onClick={toggleMenu} 
-            >
-              <span className="sr-only">Open user menu</span>
-              <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-                {/* Replace with your actual user image */}
+              <Link
+                to="dashboard/profile"
+                // type="button"
+                className="text-white hover:text-yellow-500 focus:outline-none flex flex-col items-center"
+                // aria-controls="mobile-menu"
+                // aria-expanded={isMenuOpen ? "true" : "false"}
+                // onClick={toggleMenu}
+              >
+                <span className="sr-only">Open user menu</span>
+                <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                  {/* Replace with your actual user image */}
+                  <svg
+                    className="w-full h-full text-gray-600"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"></path>
+                  </svg>
+                </div>
+                <span className="text-xs mt-1">My page</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="text-white hover:text-yellow-500 focus:outline-none"
+                aria-controls="mobile-menu"
+                aria-expanded={isMenuOpen ? "true" : "false"}
+                onClick={toggleMenu} // Toggle menu on click
+              >
+                <span className="sr-only">Open main menu</span>
                 <svg
-                  className="w-full h-full text-gray-600"
-                  fill="currentColor"
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
                 </svg>
-              </div>
-              <span className="text-xs mt-1">My page</span>
-            </Link>
-            ) : (
-            <button
-              type="button"
-              className="text-white hover:text-yellow-500 focus:outline-none"
-              aria-controls="mobile-menu"
-              aria-expanded={isMenuOpen ? "true" : "false"}
-              onClick={toggleMenu} // Toggle menu on click
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
-            </button>
-
+              </button>
             )}
           </div>
         </div>
@@ -420,11 +420,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
-      <div className="relative">
-        {/* Your dashboard content here */}
-        <AlarmBell />
-      </div>
     </nav>
   );
 };

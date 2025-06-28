@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ErrorToast } from "../../utils/Error";
 
 // [
 //   {
@@ -127,19 +129,38 @@ const mockData = {
 };
 
 function TransactionDetails({ details, activeTab }) {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   return (
     <div className="border border-[#26a17b] rounded-lg p-4 mt-4 bg-white shadow-md text-sm sm:text-base">
       {/* Buyer Info */}
       <div className="bg-[#f4fdf9] border border-[#26a17b] rounded-lg p-4 space-y-3">
         <div>
-          <strong> {activeTab === "buy" ? t("transactions.details.buyerNickname") : t("transactions.details.sellerNickname")}:</strong> {details.buyerNickname}
+          <strong>
+            {" "}
+            {activeTab === "buy"
+              ? t("transactions.details.buyerNickname")
+              : t("transactions.details.sellerNickname")}
+            :
+          </strong>{" "}
+          {details.buyerNickname}
         </div>
         <div>
-          <strong>{activeTab === "buy" ? t("transactions.details.buyerNumber") : t("transactions.details.sellerNumber")}:</strong> {details.buyerPhone}
+          <strong>
+            {activeTab === "buy"
+              ? t("transactions.details.buyerNumber")
+              : t("transactions.details.sellerNumber")}
+            :
+          </strong>{" "}
+          {details.buyerPhone}
         </div>
         <div>
-          <strong>{activeTab === "buy" ? t("transactions.details.buyRequestAmount") : t("transactions.details.sellRequestAmount")}:</strong> {details.buyRequestAmount}
+          <strong>
+            {activeTab === "buy"
+              ? t("transactions.details.buyRequestAmount")
+              : t("transactions.details.sellRequestAmount")}
+            :
+          </strong>{" "}
+          {details.buyRequestAmount}
         </div>
       </div>
 
@@ -169,27 +190,21 @@ function TransactionDetails({ details, activeTab }) {
                 </span>
 
                 <div>
-                  <div className="text-xs text-[#4B5563] font-semibold">
-                    Amount
-                  </div>
+                  <div className="text-xs text-[#4B5563] font-semibold">Amount</div>
                   <div className="font-semibold">{record.amount}</div>
                 </div>
               </div>
 
               {/* Nickname */}
               <div>
-                <div className="text-xs text-[#4B5563] font-semibold">
-                  Nickname
-                </div>
+                <div className="text-xs text-[#4B5563] font-semibold">Nickname</div>
                 <div className="font-semibold">{record.nickname}</div>
               </div>
 
               {/* Fee (Optional) */}
               {record.fee && (
                 <div>
-                  <div className="text-xs text-[#4B5563] font-semibold">
-                    Fee
-                  </div>
+                  <div className="text-xs text-[#4B5563] font-semibold">Fee</div>
                   <div className="font-semibold">{record.fee}</div>
                 </div>
               )}
@@ -200,9 +215,7 @@ function TransactionDetails({ details, activeTab }) {
         {/* Dates Footer */}
         <div className="mt-6 flex flex-col sm:flex-row justify-between gap-2 text-gray-700 font-medium">
           <div>
-            <span className="text-gray-500 font-normal">
-              Registration Date:{" "}
-            </span>
+            <span className="text-gray-500 font-normal">Registration Date: </span>
             {details.registrationDate}
           </div>
           <div>
@@ -216,14 +229,15 @@ function TransactionDetails({ details, activeTab }) {
 }
 
 export default function AdminTransactions() {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
   const [searchInput, setSearchInput] = useState("");
   const [expandedPost, setExpandedPost] = useState(null);
   const [filteredData, setFilteredData] = useState(mockData.buy);
 
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
 
   useEffect(() => {
     fetchSellOrders();
@@ -233,7 +247,7 @@ export default function AdminTransactions() {
 
   async function fetchSellOrders() {
     // const url = "http://localhost:3000/api/v1/sell/allmatched-orders";
-    
+
     try {
       const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
       const token = localStorage.getItem("token");
@@ -248,7 +262,15 @@ export default function AdminTransactions() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
+        ErrorToast(errorMsg);
       }
 
       const allOrders = await response.json();
@@ -273,9 +295,7 @@ export default function AdminTransactions() {
       return;
     }
     const filtered = data.filter((item) =>
-      item.postingNumber
-        .toLowerCase()
-        .includes(searchInput.trim().toLowerCase())
+      item.postingNumber.toLowerCase().includes(searchInput.trim().toLowerCase())
     );
     setFilteredData(filtered);
     setExpandedPost(null);
@@ -286,9 +306,9 @@ export default function AdminTransactions() {
   };
 
   const tabLabels = {
-  sell: 'transactions.tabs.sell',
-  buy: 'transactions.tabs.buy'
-};
+    sell: "transactions.tabs.sell",
+    buy: "transactions.tabs.buy",
+  };
 
   return (
     <div className=" lg:mx-auto mt-8 px-4 font-sans text-gray-900 text-sm">
@@ -332,7 +352,7 @@ export default function AdminTransactions() {
             }`}
           >
             {/* {tab.charAt(0).toUpperCase() + tab.slice(1)} */}
-             {t(tabLabels[tab])}
+            {t(tabLabels[tab])}
           </button>
         ))}
       </div>
@@ -347,63 +367,56 @@ export default function AdminTransactions() {
               <th className="px-4 py-3">{t("transactions.table.seller")}</th>
               <th className="px-4 py-3">{t("transactions.table.amount")}</th>
               <th className="px-4 py-3">{t("transactions.table.status")}</th>
-              <th className="px-4 py-3 text-center rounded-tr-md">{t("transactions.table.actions")}</th>
+              <th className="px-4 py-3 text-center rounded-tr-md">
+                {t("transactions.table.actions")}
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length === 0 && (
               <tr>
-                <td
-                  colSpan={6}
-                  className="text-center py-6 text-gray-400 italic bg-white"
-                >
+                <td colSpan={6} className="text-center py-6 text-gray-400 italic bg-white">
                   No transactions found.
                 </td>
               </tr>
             )}
-            {filteredData.map(
-              ({ postingNumber, buyer, seller, amount, status }) => (
-                <React.Fragment key={postingNumber}>
-                  <tr className="bg-white border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-4 py-3">{postingNumber}</td>
-                    <td className="px-4 py-3">{buyer}</td>
-                    <td className="px-4 py-3">{seller}</td>
-                    <td className="px-4 py-3">${amount}</td>
-                    <td
-                      className={`px-4 py-3 font-semibold ${
-                        status === "Completed"
-                          ? "text-emerald-600"
-                          : "text-yellow-600"
-                      }`}
+            {filteredData.map(({ postingNumber, buyer, seller, amount, status }) => (
+              <React.Fragment key={postingNumber}>
+                <tr className="bg-white border-b border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3">{postingNumber}</td>
+                  <td className="px-4 py-3">{buyer}</td>
+                  <td className="px-4 py-3">{seller}</td>
+                  <td className="px-4 py-3">${amount}</td>
+                  <td
+                    className={`px-4 py-3 font-semibold ${
+                      status === "Completed" ? "text-emerald-600" : "text-yellow-600"
+                    }`}
+                  >
+                    {t("transactions.status.completed")}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => toggleExpand(postingNumber)}
+                      className="text-[#26a17b] cursor-pointer font-medium hover:underline"
                     >
-                      {t("transactions.status.completed")}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => toggleExpand(postingNumber)}
-                        className="text-[#26a17b] cursor-pointer font-medium hover:underline"
-                      >
-                         {t("transactions.viewDetails")}
-                      </button>
+                      {t("transactions.viewDetails")}
+                    </button>
+                  </td>
+                </tr>
+                {expandedPost === postingNumber && (
+                  <tr>
+                    <td colSpan={6} className="p-4 bg-gray-50">
+                      <TransactionDetails
+                        details={
+                          filteredData.find((t) => t.postingNumber === postingNumber).details
+                        }
+                        activeTab={activeTab}
+                      />
                     </td>
                   </tr>
-                  {expandedPost === postingNumber && (
-                    <tr>
-                      <td colSpan={6} className="p-4 bg-gray-50">
-                        <TransactionDetails
-                          details={
-                            filteredData.find(
-                              (t) => t.postingNumber === postingNumber
-                            ).details
-                          }
-                          activeTab={activeTab}
-                        />
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              )
-            )}
+                )}
+              </React.Fragment>
+            ))}
           </tbody>
         </table>
       </div>

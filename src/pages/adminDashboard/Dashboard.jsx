@@ -3,10 +3,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import DashboardMetrics from "../../components/DashboardMetrics";
 import { useAuth } from "../../utils/AuthProvider";
 import Sidebar from "./Sidebar";
+import { LongSuccessToast } from "../../utils/LongSuccess";
+import { ErrorToast } from "../../utils/Error";
 
 const Dashboards = () => {
-  const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
+
   const [stats, setStats] = useState({
     users: 6577,
     totalSales: 1576,
@@ -35,7 +37,15 @@ const Dashboards = () => {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
+        ErrorToast(errorMsg);
       }
 
       const stats = await response.json();
@@ -59,12 +69,10 @@ const Dashboards = () => {
 
   return (
     <div className="flex-1 p-2 space-y-5 ">
-      
       <DashboardMetrics {...stats} />
       {/* <UsersCard users={users} Icon={User2} /> */}
       {/* Dynamic Content Rendering */}
-      <Outlet />{" "}
-      {/* This is where the child routes' components will be rendered */}
+      <Outlet /> {/* This is where the child routes' components will be rendered */}
     </div>
   );
 };
