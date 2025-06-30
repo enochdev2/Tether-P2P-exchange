@@ -51,6 +51,18 @@ const SignUp = () => {
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+   const [nicknameError, setNicknameError] = useState("");
+
+  const validateNickname = (e) => {
+    const value = e.target.value;
+    const isValid = /^[a-zA-Z0-9]+$/.test(value); // Only letters or letters+numbers
+    if (!isValid) {
+      setNicknameError("Please use a nickname with English letters or a combination of English letters and numbers.");
+    } else {
+      setNicknameError("");
+    }
+    handleChange(e); // update the form state
+  };
 
   useEffect(() => {
     const verified = JSON.parse(localStorage.getItem("verified"));
@@ -420,10 +432,16 @@ const SignUp = () => {
                 id="nickname"
                 name="nickname"
                 value={formData.nickname}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                required
+               onChange={validateNickname}
+                 className={`w-full px-4 py-3 border ${
+          nicknameError ? "border-red-500" : "border-gray-600"
+        } bg-gray-900 text-white rounded-md focus:outline-none focus:border-none`}
+        required
               />
+
+                  {nicknameError && (
+        <p className="mt-1 text-sm text-red-500 italic">{nicknameError}</p>
+      )}
             </div>
 
             {/* Phone Number (Initial input and Send SMS button) */}
