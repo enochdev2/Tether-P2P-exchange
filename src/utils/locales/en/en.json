@@ -104,6 +104,8 @@
     "uploadGuideText2": "Upload a clear image of you holding a valid ID card. Your face and ID details must be visible. The image should resemble the example above. Blurry cropped,  or fake IDs will not be accepted.",
     "submit": "Sign Up",
     "passwordError": "Please use a password that combines English letters and numbers.",
+    "nicknameError": "Please use a nickname with English letters or a combination of English letters and numbers.",
+    "nicknameAlreadyInUSe": "This nickname is already in use.",
     "matchPasswordError": "The password does not match the one previously entered."
   },
   "signIn": {

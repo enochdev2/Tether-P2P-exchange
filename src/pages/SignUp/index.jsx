@@ -58,35 +58,33 @@ const SignUp = () => {
   const validateNickname = async (e) => {
     const value = e.target.value;
     const isValid = /^[a-zA-Z0-9]+$/.test(value) && /[a-zA-Z]/.test(value);
-    setIsLoading2(true);
     // Only letters or letters+numbers
-
+    
     // Update form state immediately
     handleChange(e);
-
+    
     // Clear previous debounce timer
     if (debounceRef.current) clearTimeout(debounceRef.current);
-
+    
     // 1. Immediate character check
     if (!isValid) {
-      setNicknameError(
-        "Please use a nickname with English letters or a combination of English letters and numbers."
-      );
+      setNicknameError(t("signUp.nicknameError"));
       return;
     }
-
+    
     // 2. Set new debounce timer for async backend check
     debounceRef.current = setTimeout(async () => {
       try {
+        setIsLoading2(true);
         const res = await fetch(
           `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/check-nickname/${value}`
         );
-         setIsLoading2(false);
+        setIsLoading2(false);
         const data = await res.json();
         console.log("🚀 ~ debounceRef.current=setTimeout ~ data:", data);
 
         if (data.exists) {
-          setNicknameError("This nickname is already taken. Please choose another.");
+          setNicknameError(t("signUp.nicknameAlreadyInUSe"));
         } else {
           setNicknameError("");
         }
