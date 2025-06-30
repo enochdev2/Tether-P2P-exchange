@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../utils/AuthProvider";
@@ -51,18 +51,49 @@ const SignUp = () => {
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-   const [nicknameError, setNicknameError] = useState("");
+  const [nicknameError, setNicknameError] = useState("");
+  const [isLoading2, setIsLoading2] = useState(false);
+  const debounceRef = useRef(null);
 
-  const validateNickname = (e) => {
+  const validateNickname = async (e) => {
     const value = e.target.value;
     const isValid = /^[a-zA-Z0-9]+$/.test(value) && /[a-zA-Z]/.test(value);
-// Only letters or letters+numbers
+    setIsLoading2(true);
+    // Only letters or letters+numbers
+
+    // Update form state immediately
+    handleChange(e);
+
+    // Clear previous debounce timer
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    // 1. Immediate character check
     if (!isValid) {
-      setNicknameError("Please use a nickname with English letters or a combination of English letters and numbers.");
-    } else {
-      setNicknameError("");
+      setNicknameError(
+        "Please use a nickname with English letters or a combination of English letters and numbers."
+      );
+      return;
     }
-    handleChange(e); // update the form state
+
+    // 2. Set new debounce timer for async backend check
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/check-nickname/${value}`
+        );
+         setIsLoading2(false);
+        const data = await res.json();
+        console.log("🚀 ~ debounceRef.current=setTimeout ~ data:", data);
+
+        if (data.exists) {
+          setNicknameError("This nickname is already taken. Please choose another.");
+        } else {
+          setNicknameError("");
+        }
+      } catch (err) {
+        setNicknameError("Unable to validate nickname. Please try again.");
+      }
+    }, 100); // Adjust debounce time as needed (600ms recommended)
   };
 
   useEffect(() => {
@@ -424,7 +455,7 @@ const SignUp = () => {
             </div>
 
             {/* Nickname */}
-            <div>
+            <div className="relative">
               <label htmlFor="nickname" className="block text-sm font-semibold text-gray-100 mb-1">
                 {t("signUp.nickname")} <span className="text-red-500">*</span>
               </label>
@@ -433,16 +464,38 @@ const SignUp = () => {
                 id="nickname"
                 name="nickname"
                 value={formData.nickname}
-               onChange={validateNickname}
-                 className={`w-full px-4 py-3 border ${
-          nicknameError ? "border-red-500" : "border-gray-600"
-        } bg-gray-900 text-white rounded-md focus:outline-none focus:border-none`}
-        required
+                onChange={validateNickname}
+                className={`w-full px-4 py-3 border ${
+                  nicknameError ? "border-red-500" : "border-gray-600"
+                } bg-gray-900 text-white rounded-md focus:outline-none focus:border-none`}
+                required
               />
+              {isLoading2 && (
+                <span className="absolute  right-2 top-1/2 transform -translate-y-1/2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                </span>
+              )}
 
-                  {nicknameError && (
-        <p className="mt-1 text-sm text-red-500 italic">{nicknameError}</p>
-      )}
+              {nicknameError && <p className="mt-1 text-sm text-red-500 italic">{nicknameError}</p>}
             </div>
 
             {/* Phone Number (Initial input and Send SMS button) */}
@@ -515,9 +568,7 @@ const SignUp = () => {
                     passwordError ? "border-red-500" : "border-gray-700"
                   } focus:outline-none focus:ring-2 ${
                     passwordError ? "focus:ring-red-500" : "focus:ring-green-600"
-                  } transition pr-10  ${
-                    passwordDone ? "cursor-not-allowed" : ""
-                  } `}
+                  } transition pr-10  ${passwordDone ? "cursor-not-allowed" : ""} `}
                   required
                 />
                 <span
@@ -547,17 +598,12 @@ const SignUp = () => {
                     confirmPasswordError ? "border-red-500" : "border-gray-600"
                   } focus:outline-none focus:ring-2 ${
                     confirmPasswordError ? "focus:ring-red-500" : "focus:ring-green-600"
-                  } transition pr-10  ${
-                    passwordDone ? "cursor-not-allowed" : ""
-                  }`}
+                  } transition pr-10  ${passwordDone ? "cursor-not-allowed" : ""}`}
                   required
                 />
 
-
-                <span
-                  className="absolute right-10 top-3 text-green-600 cursor-pointer"
-                >
-                  {passwordDone && <FaCheckSquare size={26} className="text-green-700 bg-white"/>}
+                <span className="absolute right-10 top-3 text-green-600 cursor-pointer">
+                  {passwordDone && <FaCheckSquare size={26} className="text-green-700 bg-white" />}
                 </span>
                 <span
                   className="absolute right-3 top-3 text-gray-400 hover:text-white cursor-pointer"
