@@ -55,7 +55,8 @@ const SignUp = () => {
 
   const validateNickname = (e) => {
     const value = e.target.value;
-    const isValid = /^[a-zA-Z0-9]+$/.test(value); // Only letters or letters+numbers
+    const isValid = /^[a-zA-Z0-9]+$/.test(value) && /[a-zA-Z]/.test(value);
+// Only letters or letters+numbers
     if (!isValid) {
       setNicknameError("Please use a nickname with English letters or a combination of English letters and numbers.");
     } else {
