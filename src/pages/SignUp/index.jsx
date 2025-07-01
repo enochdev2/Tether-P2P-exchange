@@ -59,19 +59,19 @@ const SignUp = () => {
     const value = e.target.value;
     const isValid = /^[a-zA-Z0-9]+$/.test(value) && /[a-zA-Z]/.test(value);
     // Only letters or letters+numbers
-    
+
     // Update form state immediately
     handleChange(e);
-    
+
     // Clear previous debounce timer
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    
+
     // 1. Immediate character check
     if (!isValid) {
       setNicknameError(t("signUp.nicknameError"));
       return;
     }
-    
+
     // 2. Set new debounce timer for async backend check
     debounceRef.current = setTimeout(async () => {
       try {
@@ -163,8 +163,11 @@ const SignUp = () => {
     }
 
     if (name === "confirmPassword") {
+      const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
       if (value !== formData.password) {
         setConfirmPasswordError(t("signUp.matchPasswordError"));
+      } else if (!pattern.test(formData.password)) {
+        setConfirmPasswordError(t("signUp.passwordError"));
       } else {
         setConfirmPasswordError("");
         setPasswordDone(true);
