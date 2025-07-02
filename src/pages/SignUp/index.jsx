@@ -189,8 +189,8 @@ const SignUp = () => {
       // Simulate API call to send SMS
       console.log(`Sending SMS to: ${formData.phone}`);
       const response = await fetch(
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/sendCode",
-        "http://localhost:3000/api/v1/user/users/sendCode",
+        // "http://localhost:3000/api/v1/user/users/sendCode",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/sendCode",
         {
           method: "POST",
           headers: {
@@ -300,7 +300,7 @@ const SignUp = () => {
     setPhoneVerificationMessage("");
     try {
       // Simulate API call to verify SMS code
-      const response = await fetch("http://localhost:3000/api/v1/user/users/verify", {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

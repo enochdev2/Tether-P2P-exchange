@@ -179,8 +179,8 @@ export const AuthProvider = ({ children }) => {
   const updateUser = async (updatedData) => {
     try {
       const token = localStorage.getItem("token");
+      // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
       const response = await fetch(
-        // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${updatedData.nickname}`,
         {
           method: "PUT",

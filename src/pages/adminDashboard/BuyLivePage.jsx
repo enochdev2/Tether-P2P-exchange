@@ -189,9 +189,9 @@ const BuyLivePage = () => {
     try {
       const token = localStorage.getItem("token");
 
+      // `http://localhost:3000/api/v1/buy/admin/buy-orders/${orderId}/approve`,
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/approve`,
-        // `http://localhost:3000/api/v1/buy/admin/buy-orders/${orderId}/approve`,
         {
           method: "POST",
           headers: {

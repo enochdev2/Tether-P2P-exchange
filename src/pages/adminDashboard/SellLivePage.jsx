@@ -38,8 +38,8 @@ const SellLivePage = () => {
       if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
+      // `http://localhost:3000/api/v1/sell/admin/match-orders`,
       const response = await fetch(
-        // `http://localhost:3000/api/v1/sell/admin/match-orders`,
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/match-orders`,
         {
           method: "POST",
@@ -227,8 +227,8 @@ const SellLivePage = () => {
     try {
       const token = localStorage.getItem("token");
 
+      // "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
       const response = await fetch(
-        // "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
         {
           method: "GET",
