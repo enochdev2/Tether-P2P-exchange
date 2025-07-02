@@ -188,8 +188,8 @@ const SignUp = () => {
     try {
       // Simulate API call to send SMS
       console.log(`Sending SMS to: ${formData.phone}`);
+      // "http://localhost:3000/api/v1/user/users/sendCode",
       const response = await fetch(
-        // "http://localhost:3000/api/v1/user/users/sendCode",
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/sendCode",
         {
           method: "POST",
@@ -506,7 +506,7 @@ const SignUp = () => {
               </label>
               <div className="flex items-center space-x-2">
                 <input
-                  type="number"
+                  type="tel"
                   id="phone"
                   name="phone"
                   value={formData.phone}
