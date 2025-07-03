@@ -33,6 +33,7 @@ import Support from "./pages/Support";
 import TransactionHistory from "./pages/TransactionHistory";
 import TetherPrice from "./pages/adminDashboard/TetherPrice";
 import AllEndedChatPage from "./pages/adminDashboard/AllEndedChatPage";
+import ChatRoom3 from "./pages/ChatRoom3";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/chats/:orderId/:orderType" element={<ChatRoom />} />
         <Route path="/chat/:orderId/:buyOrderId/:orderType" element={<ChatRoom2 />} />
+        <Route path="/chats/:orderId/:buyOrderId/:orderType" element={<ChatRoom3 />} />
         {/* <Route path="/chat/:offerId" element={<ChatRoom2 />} /> */}
         <Route path="/adnin/users/:userId" element={<UserDetails />} />
 

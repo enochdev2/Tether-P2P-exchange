@@ -158,7 +158,7 @@ const AllEndedChatPage = () => {
                 key={chat._id}
                 onClick={() =>
                   navigate(
-                    `/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`
+                    `/chats/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`
                   )
                 }
                 className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"

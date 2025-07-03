@@ -180,6 +180,7 @@ const ChatRoom2 = () => {
     socket.emit("closeChat", { whic });
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
+      // `http://localhost:3000/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
         headers: {
@@ -188,8 +189,7 @@ const ChatRoom2 = () => {
         },
       }
     );
-    const ress = await handleCloseChat2();
-    if (ress.ok && res.ok) {
+    if (res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
@@ -329,6 +329,7 @@ const ChatRoom2 = () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${buywhic}`,
+      // `http://localhost:3000/api/v1/chat/close/${buywhic}`,
       {
         method: "PATCH",
         headers: {
@@ -337,8 +338,8 @@ const ChatRoom2 = () => {
         },
       }
     );
-     const ress = await handleCloseChat();
-    if (ress.ok && res.ok) {
+
+    if (res.ok) {
       SuccessToast("Chat closed successfully.");
       navigate("/admin/dashboard");
     }
@@ -392,8 +393,6 @@ const ChatRoom2 = () => {
     return new Blob([arrayBuffer], { type: mimeString });
   };
 
-
-
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
@@ -409,7 +408,11 @@ const ChatRoom2 = () => {
         image={image}
         isConnected={isConnected}
         handleSendMessage={handleSendMessage}
-        handleCloseChat={handleCloseChat}
+        // handleCloseChat={ () => {handleCloseChat(),handleCloseChat2()} }
+        handleCloseChat={() => {
+          handleCloseChat();
+          handleCloseChat2();
+        }}
         users={chatUserInfo}
         customer={orderType === "sell" ? "Seller" : "Buyer"}
       />
@@ -426,7 +429,11 @@ const ChatRoom2 = () => {
         image={image2}
         isConnected={isConnected2}
         handleSendMessage={handleSendMessage2}
-        handleCloseChat={handleCloseChat2}
+        // handleCloseChat={handleCloseChat2}
+        handleCloseChat={() => {
+          handleCloseChat();
+          handleCloseChat2();
+        }}
         users={chatUserInfo2}
         customer={orderType === "sell" ? "Buyer" : "Seller"}
       />
