@@ -108,7 +108,7 @@ const AllEndedChatPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-white to-green-200 py-10 px-6">
       <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md shadow-xl rounded-3xl p-8 border border-green-200">
-        <h1 className="text-red-500 text-4xl">Working in Progress</h1> <br />
+        {/* <h1 className="text-red-500 text-4xl">Working in Progress</h1> <br /> */}
         <div className="flex items-center gap-3 mb-6">
           <FaComments className="text-green-600 text-3xl" />
           <h2 className="text-3xl font-bold text-green-800">{t("chat.title")}</h2>
