@@ -19,7 +19,7 @@ const AllEndedChatPage = () => {
   const fetchMessages = async () => {
     try {
       const res = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/allchat`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/end/allchat`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
