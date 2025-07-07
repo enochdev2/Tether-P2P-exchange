@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const OtpVerificationPage = ({
   onVerifySuccess,
   onResendOtp,
   userIdentifier,
 }) => {
+   const { t } = useTranslation();
+
   // const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -113,7 +116,7 @@ const OtpVerificationPage = ({
       }
 
       navigate("/signin");
-      SuccessToast("OTP verified successfully!");
+      SuccessToast(t("messages.otpVerified"));
     } catch (error) {
       setErrorMessage(
         "An error occurred during verification. Please try again."

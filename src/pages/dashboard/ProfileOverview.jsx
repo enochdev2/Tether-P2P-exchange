@@ -149,7 +149,7 @@ function ProfileOverview() {
 
   const copyToClipboard = (text, label = "Copied") => {
     navigator.clipboard.writeText(text);
-    toast.success(`${label} Copied Successfully`);
+    toast.success(`${label} ${t("messages.successCopied")} `);
   };
 
   return (
@@ -204,7 +204,6 @@ function ProfileOverview() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

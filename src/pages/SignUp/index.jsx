@@ -408,7 +408,7 @@ const SignUp = () => {
       const response = await signUp(newUser);
 
       if (response.ok) {
-        SuccessToast(" you have successfully registered");
+        SuccessToast(t("messages.registrationSuccess"));
         navigate("/signin"); // Navigate to a success/verify page
       } else {
         // Error handling if response is not ok

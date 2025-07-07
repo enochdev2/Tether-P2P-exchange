@@ -166,7 +166,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // Copy wallet address to clipboard
   const copyWalletAddress = () => {
     navigator.clipboard.writeText(walletAddress);
-    SuccessToast("Successfully Copied");
+    SuccessToast(t("messages.successCopied"));
   };
 
   const validateInputs = () => {
@@ -236,7 +236,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       if (response.ok) {
         setWonAmount("");
         setUsdtAmount("");
-        SuccessToast("Successfully placed a sell order");
+        SuccessToast(t("messages.orderPlacedSell"));
         closeModal();
       }
     } catch (err) {

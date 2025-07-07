@@ -80,7 +80,6 @@ const UserDetails = () => {
         }
 
         const data = await response.json();
-        console.log("Users fetched successfully 12345667", data);
         setUsers(data); // return parsed user data
       } catch (error) {
         console.error("Error fetching users:", error);

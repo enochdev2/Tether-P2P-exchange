@@ -67,7 +67,7 @@ const Navbar = () => {
       localStorage.removeItem("token");
       const response = await logout();
       if (response) {
-        toast.success("You have just logged out successfully");
+        toast.success(t("messages.logoutSuccess"));
         setIsLoading(false);
         navigate("/");
         setIsMenuOpen(false);

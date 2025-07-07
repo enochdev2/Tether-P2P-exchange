@@ -176,7 +176,7 @@ const ChatRoom = () => {
       }
     );
     if (res.ok) {
-      SuccessToast("Chat closed successfully.");
+      SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
     }
     // Or navigate away:

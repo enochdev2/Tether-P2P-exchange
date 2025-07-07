@@ -58,7 +58,9 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
         ErrorToast(errorMsg);
       } else {
         await fetchOrders();
-        const message = data.message || "Orders cancelled successfully!";
+
+        const messages = data.message || "Orders cancelled successfully!";
+        const message = t("messages.ordersCancelled") || messages;
         SuccessToast(message);
       }
     } catch (error) {
@@ -161,8 +163,8 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
           <div className="flex items-center space-x-2">
             <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
               {sell
-              ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
-              : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
+                ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
+                : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
             </div>
             <button
               className="text-gray-500 hover:text-gray-700 cursor-pointer"

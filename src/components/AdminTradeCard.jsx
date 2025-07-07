@@ -29,7 +29,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       .writeText(id)
       .then(() => {
         // Optionally, you can show a success message or change the icon state
-        SuccessToast("ID copied to clipboard!");
+        SuccessToast(t("messages.successCopied"));
       })
       .catch((err) => {
         console.error("Failed to copy: ", err);

@@ -87,7 +87,7 @@ const SignIn = () => {
         navigate("/dashboard/profile");
       }
 
-      console.log("User signed up:", user);
+      // console.log("User signed up:", user);
     } catch (error) {
       console.error("Error during sign-up:", error);
       // Optionally handle error here (e.g., show error message)

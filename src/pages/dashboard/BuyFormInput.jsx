@@ -181,7 +181,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
       // Optionally clear input or close modal
       setWonAmount("");
       setUsdtAmount("");
-      SuccessToast("Successfully placed a buy order");
+      SuccessToast(t("messages.orderPlacedBuy"));
       if (response.ok) {
         closeModal();
       }

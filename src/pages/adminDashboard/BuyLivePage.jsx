@@ -174,7 +174,8 @@ const BuyLivePage = () => {
 
       const result = await response.json();
 
-      const message = result.message || "Orders cancelled successfully!";
+      const messages = result.message || "Orders cancelled successfully!";
+        const message = t("messages.ordersCancelled") || messages;
 
       await fetchInProgressOrders();
       await fetchBuyOrders();
@@ -208,6 +209,7 @@ const BuyLivePage = () => {
 
       const result = await response.json();
       const message = result.message || "Buy Order Approved Successfully";
+      
 
       await fetchInProgressOrders();
       await fetchBuyOrders();

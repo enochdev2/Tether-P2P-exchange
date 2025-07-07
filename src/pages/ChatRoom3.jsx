@@ -103,7 +103,7 @@ const ChatRoom3 = () => {
     );
     const ress = await handleCloseChat2();
     if (ress.ok && res.ok) {
-      SuccessToast("Chat closed successfully.");
+      SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
     }
     // Or navigate away:
@@ -177,7 +177,7 @@ const ChatRoom3 = () => {
     );
      const ress = await handleCloseChat();
     if (ress.ok && res.ok) {
-      SuccessToast("Chat closed successfully.");
+      SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
     }
 

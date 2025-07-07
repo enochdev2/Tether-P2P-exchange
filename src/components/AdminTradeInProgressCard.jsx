@@ -50,7 +50,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
       .writeText(id)
       .then(() => {
         // Optionally, you can show a success message or change the icon state
-        SuccessToast("ID copied to clipboard!");
+        SuccessToast(t("messages.successCopied"));
       })
       .catch((err) => {
         console.error("Failed to copy: ", err);
@@ -84,7 +84,8 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         ErrorToast(errorMsg);
       } else {
         await fetchOrders();
-        const message = data.message || "Orders cancelled successfully!";
+        const messages = data.message || "Orders cancelled successfully!";
+        const message = t("messages.ordersCancelled") || messages;
         SuccessToast(message);
       }
     } catch (error) {

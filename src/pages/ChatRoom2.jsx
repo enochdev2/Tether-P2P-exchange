@@ -190,7 +190,7 @@ const ChatRoom2 = () => {
       }
     );
     if (res.ok) {
-      SuccessToast("Chat closed successfully.");
+      SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
     }
     // Or navigate away:
@@ -340,7 +340,7 @@ const ChatRoom2 = () => {
     );
 
     if (res.ok) {
-      SuccessToast("Chat closed successfully.");
+      SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
     }
 

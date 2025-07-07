@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { ErrorToast } from "../utils/Error";
+import { useTranslation } from "react-i18next";
 
 const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
+   const { t } = useTranslation();
   const { updateUser, setUser } = useAuth();
   // const user = initialUser
   const [user, setUsers] = useState(initialUser || initialUser);
@@ -100,7 +102,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       const response = await updateUser(updatedUser);
       if (response.nickname) {
         await handleUpdate();
-        SuccessToast("You have successfully updated your data");
+        SuccessToast(t("messages.dataUpdated")); 
         setIsSaving(false);
         setPhone(phone);
         setUsername(username);
