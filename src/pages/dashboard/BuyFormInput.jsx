@@ -55,6 +55,32 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
   useEffect(() => {
+  const fetchPrice = async () => {
+    try {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch tether price");
+
+      const data = await response.json();
+      setRate(data.data);
+      setPriceKRW(data.data);
+      setLastRefreshed(new Date());
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Initial fetch on mount
+  fetchPrice();
+}, []); // ← run only once on mount
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setError(null);
     }, 2000);
@@ -131,6 +157,10 @@ const Modal = ({ isModalOpen, closeModal }) => {
       return false;
     }
     if (!usdtAmount || isNaN(usdtAmount) || Number(usdtAmount) <= 0) {
+      setError("USDT amount must be greater than 0.");
+      return false;
+    }
+    if (!rate || isNaN(rate) || Number(rate) <= 0) {
       setError("USDT amount must be greater than 0.");
       return false;
     }

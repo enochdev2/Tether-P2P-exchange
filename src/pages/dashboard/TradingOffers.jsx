@@ -65,7 +65,7 @@ export default TradingOffers;
 
 const Modal = ({ isModalOpen, closeModal }) => {
   const { t } = useTranslation();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { priceKRW, setPriceKRW } = useAuth();
 
   const [usdtAmount, setUsdtAmount] = useState("");
@@ -79,7 +79,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // const [pendingOrderId, setPendingOrderId] = useState(offer?.sellerNickname || null);
 
   const openCancelModal = (orderId) => {
-    console.log("🚀 ~ openCancelModal ~ orderId:", orderId)
+    console.log("🚀 ~ openCancelModal ~ orderId:", orderId);
     // setPendingOrderId(orderId);
     setIsModalOpens(true);
   };
@@ -90,6 +90,32 @@ const Modal = ({ isModalOpen, closeModal }) => {
   );
   const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [agreed, setAgreed] = useState(false);
+
+  useEffect(() => {
+  const fetchPrice = async () => {
+    try {
+      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw new Error("Failed to fetch tether price");
+
+      const data = await response.json();
+      setRate(data.data);
+      setPriceKRW(data.data);
+      setLastRefreshed(new Date());
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Initial fetch on mount
+  fetchPrice();
+}, []); // ← run only once on mount
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -172,10 +198,17 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const validateInputs = () => {
     if (!wonAmount || isNaN(wonAmount) || Number(wonAmount) <= 0) {
       setError("Please enter a valid KRW amount greater than 0.");
+      setIsModalOpens(false);
       return false;
     }
     if (!usdtAmount || isNaN(usdtAmount) || Number(usdtAmount) <= 0) {
       setError("USDT amount must be greater than 0.");
+      setIsModalOpens(false);
+      return false;
+    }
+    if (!rate || isNaN(rate) || Number(rate) <= 0) {
+      setError("USDT amount must be greater than 0.");
+      setIsModalOpens(false);
       return false;
     }
     // Optional: check if usdtAmount roughly matches wonAmount / rate
@@ -216,21 +249,18 @@ const Modal = ({ isModalOpen, closeModal }) => {
           // Add other data fields you want to submit
         }),
       });
-      
 
-    
-
-       if (!response.ok) {
-              const data = await response.json();
-              const errorMsg = data.error || data.message || "Failed to register user";
-              if (errorMsg === "Invalid or expired token") {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                localStorage.removeItem("isLoggedIn");
-                navigate("/signin");
-              }
-              ErrorToast(errorMsg);
-            }
+      if (!response.ok) {
+        const data = await response.json();
+        const errorMsg = data.error || data.message || "Failed to register user";
+        if (errorMsg === "Invalid or expired token") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isLoggedIn");
+          navigate("/signin");
+        }
+        ErrorToast(errorMsg);
+      }
 
       // Optionally clear input or close modal
       if (response.ok) {
@@ -240,7 +270,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
         closeModal();
       }
     } catch (err) {
-      console.log("🚀 ~ submitOrder ~ err:", err)
+      console.log("🚀 ~ submitOrder ~ err:", err);
       setError("Failed to submit order. Please try again.");
     } finally {
       setLoading(false);
