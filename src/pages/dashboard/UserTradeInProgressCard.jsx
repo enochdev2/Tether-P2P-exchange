@@ -4,10 +4,12 @@ import logo2 from "../../assets/Tether2.png";
 import { useState } from "react";
 import { FaCopy } from "react-icons/fa";
 import { SuccessToast } from "../../utils/Success";
+import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
 
 const UserTradeInProgressCard = ({ offer, sell }) => {
+   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
@@ -60,7 +62,7 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
       <div className="flex flex-2 items-center sm:w-f sm:w-24 mb-4 sm:mb-0 sm:mr-6 justify-center sm:justify-start">
         <div className="flex items-center space-x-1 md:space-x-2 ">
           <div className="bg-green-600 text-white font-semibold text-xs sm:text-sm md:text-base px-1 md:px-4 py-2 rounded-md select-none whitespace-nowrap">
-            Matching In Progress
+            {t("buytether.myOrdersInProgress")}
           </div>
         </div>
       </div>
