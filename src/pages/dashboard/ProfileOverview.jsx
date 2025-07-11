@@ -3,7 +3,7 @@ import ProfileCard from "../../components/ProfileCard";
 import InfoCard from "../../components/InfoCard";
 import AccountSetting from "../../components/AccountSetting";
 import ProfileSetting from "../../components/ProfileSetting";
-import { Banknote, BanknoteIcon, PiggyBank, ShieldAlertIcon, Wallet2Icon } from "lucide-react";
+import { Banknote, BanknoteIcon, PiggyBank, ShieldAlertIcon, UserCheck2Icon, Wallet2Icon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import NotificationPopup from "../../components/NotificationPopup";
@@ -183,7 +183,6 @@ function ProfileOverview() {
           {/* <InfoCard /> */}
         </div>
 
-        <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
           <div className="min-w-[280px]  sm:min-w-0 flex-1">
             <InfoCard
               className=""
@@ -193,12 +192,21 @@ function ProfileOverview() {
               copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
             />
           </div>
+        <div className="flex gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
 
           <div className="min-w-[280px] sm:min-w-0 flex-1">
             <InfoCard
               icon={<Wallet2Icon size={24} />}
               title={t("profile.referralCode")}
               actionText={user?.referralCode}
+              copyToClipboard={() => copyToClipboard(user?.referralCode, "Referral Code")}
+            />
+          </div>
+          <div className="min-w-[280px] sm:min-w-0 flex-1">
+            <InfoCard
+              icon={<UserCheck2Icon size={24} />}
+              title={t("profile.telegram")}
+              actionText={user?.telegram}
               copyToClipboard={() => copyToClipboard(user?.referralCode, "Referral Code")}
             />
           </div>

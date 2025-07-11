@@ -129,6 +129,7 @@
     "dateOfBirth": "Date of Birth",
     "username": "Username",
     "referralCode": "Referral Code",
+    "telegram": "Telegram ID ",
     "bankName": "Bank Name",
     "walletAddress": "Wallet Address (Solana)",
     "bankAccountNumber": "Bank Account Number",
