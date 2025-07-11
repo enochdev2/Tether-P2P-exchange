@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 
 const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
    const { t } = useTranslation();
-  const { updateUser, setUser } = useAuth();
+  const { updateUser } = useAuth();
   // const user = initialUser
   const [user, setUsers] = useState(initialUser || initialUser);
+  console.log("🚀 ~ UserDetail ~ user:", user)
 
   const [phone, setPhone] = useState(user?.phone);
   const [username, setUsername] = useState(user?.username);
-  const [currency, setCurrency] = useState("KRW");
   const [referralCode, setReferralCode] = useState(user?.referralCode);
   const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
@@ -20,6 +20,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
   const [fullName, setFullName] = useState(user?.fullName);
   const [dob, setDob] = useState(user?.dob);
   const [bankName, setBankName] = useState(user?.bankName);
+  const [telegram, setTelegram] = useState(user?.telegram);
   const [bankAccount, setBankAccount] = useState(user?.bankAccount);
   const [tetherAddress, setTetherAddress] = useState(user?.tetherAddress);
   const [status, setStatus] = useState(user?.status || "inactive");
@@ -92,6 +93,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       fullName,
       dob,
       bankName,
+      telegram,
       bankAccount: Number(bankAccount),
       tetherAddress,
       status,
@@ -176,6 +178,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             { label: "Date of Birth", name: "dob", type: "date" },
             { label: "Bank Name", name: "bankName", type: "text" },
             { label: "Bank Account", name: "bankAccount", type: "text" },
+            { label: "Telegram ID", name: "telegram", type: "text" },
             { label: "Tether Address", name: "tetherAddress", type: "text" },
             { label: "Referral Code", name: "referralCode", type: "text" },
             {
@@ -237,6 +240,8 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                       ? bankName
                       : name === "bankAccount"
                       ? bankAccount
+                      : name === "telegram"
+                      ? telegram
                       : name === "tetherAddress"
                       ? tetherAddress
                       : name === "status"

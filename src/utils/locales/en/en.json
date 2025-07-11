@@ -1,5 +1,6 @@
 {
   "welcomeMessage": "Welcome to React and react-i18next",
+  "okay": "Okay",
   "text2": "Effortlessly exchange with complete transparency, security, and convenience. Your journey to financial freedom starts here.",
   "The Secure": "The Secure,",
   "People-powered way to": "People-powered way to",
@@ -154,7 +155,9 @@
       "usdtFixedPriceNote": "USDT rates may slightly fluctuate depending on transaction completion time."
     },
     "confirmationText": "I hereby acknowledge that I have carefully read and understood all of the above notices. I accept full responsibility for any financial loss caused by not following them.",
+    "confirmationText2": "Before the transaction, please transfer USDT (phantom wallet) to the address below.",
     "cancel": "Cancel",
+    "Check": "Check",
     "submit": "Submit",
     "tetherRate": "Tether Rate Calculator",
     "refresh": "Refresh",

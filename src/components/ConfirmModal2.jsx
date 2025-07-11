@@ -1,8 +1,10 @@
 import { FaCopy } from "react-icons/fa";
 import { SuccessToast } from "../utils/Success";
+import { useTranslation } from "react-i18next";
 
 // components/ConfirmModal.jsx
 const ConfirmModal2 = ({ open, onClose, onConfirm, message, classname = "fixed", message2 }) => {
+  const { t } = useTranslation();
   if (!open) return null;
 
   const handleCopy = (id) => {
@@ -54,7 +56,7 @@ const ConfirmModal2 = ({ open, onClose, onConfirm, message, classname = "fixed",
             }}
             className="px-4 py-2 text-xl cursor-pointer rounded-md bg-[#26a17b] hover:bg-green-700 text-white font-medium transition-all"
           >
-            Check
+            {t("sellorder.Check")}
           </button>
         </div>
       </div>

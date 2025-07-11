@@ -1,5 +1,6 @@
 {
   "welcomeMessage": "React와 react-i18next에 오신 것을 환영합니다",
+  "okay": "확인",
   "text2": "완벽한 투명성, 보안성, 편의성을 갖춘 간편한 환전 서비스를 경험해 보세요. 경제적 자유를 향한 당신의 여정은 여기서 시작됩니다.",
   "The Secure": "가장 안전한,",
   "People-powered way to": "P2P 방식으로",
@@ -67,6 +68,7 @@
       "sellBuyChat": "판매/구매 주문 1:1 채팅(Live)",
       "userManagement": "유저 관리",
       "inquiryBox": "1:1 문의함 (Live)",
+      "sellBuyChatEnd": "판매/구매 주문 1:1채팅(Ended)",
       "logout": "로그아웃"
     }
   },
@@ -83,7 +85,7 @@
     "bankAccount": "계좌 번호",
     "tetherAddress": "테더 주소(팬텀 주소)",
     "referralCode": "래퍼럴 코드",
-    "telegram": "아이디",
+    "telegram": "텔레그램 아이디",
     "tetherGuide": "테더 주소 안내",
     "tetherGuideNote1": "테더(USDT) 주소는 USDT 암호화폐를 수신하기 위해 사용되는 고유한 문자와 숫자의 조합입니다. 이 주소는 결제나 출금 처리 시 귀하의 계정과 연결하여 사용됩니다.",
     "tetherGuideNote2": "해당 주소가 저희가 지원하는 팬텀 지갑의 SOLANA(SOL) 주소인지 반드시 확인해 주세요.",
@@ -152,7 +154,9 @@
       "usdtFixedPriceNote": "판매 등록 당시 고정된 가격이라도 거래 완료 시점에 따라 환율이 소폭 변동될 수 있습니다."
     },
     "confirmationText": "본인은 위의 모든 안내 사항을 신중히 읽고 충분히 이해하였음을 확인합니다. 또한, 해당 지침을 준수하지 않아 발생할 수 있는 금전적 손실에 대해 전적으로 본인이 책임질 것임을 인정합니다.",
+    "confirmationText2": "거래를 진행하기 전에, 아래 주소로 $USDT를 전송해 주세요. (팬텀 지갑) * 회원 가입 시 등록한 지갑에서 이체를 진행해주세요.",
     "cancel": "취소",
+    "Check": "확인",
     "submit": "제출",
     "tetherRate": "테더 환율 계산기",
     "refresh": "새로고침",

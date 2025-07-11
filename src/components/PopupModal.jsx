@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { IoMdClose } from "react-icons/io"; // using react-icons for the close icon
 
 const PopupModal = ({ message, onClose }) => {
+  const { t } = useTranslation();
   return (
     <div
       className="fixed inset-0 z-[999] bg-black/80 bg-opacity-40 flex items-center justify-center px-4"
@@ -29,7 +31,8 @@ const PopupModal = ({ message, onClose }) => {
             onClick={onClose}
             className="px-6 py-2 text-sm md:text-base font-medium text-white bg-gradient-to-br from-[#26a17b] to-[#0d4e3a] rounded-lg hover:bg-[#0d4e3a] cursor-pointer transition duration-300"
           >
-            Okay
+            
+            {t("okay")}
           </button>
        </div>
         </div>

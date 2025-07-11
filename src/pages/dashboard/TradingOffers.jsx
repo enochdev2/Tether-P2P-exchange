@@ -528,8 +528,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
           open={isModalOpens}
           onClose={submitOrder}
           // onConfirm={() => handleCancleMatch(pendingOrderId)}
-          message="Before the transaction, please transfer USDT 
-(phantom wallet) to the address below"
+          message= {t("sellorder.confirmationText2")}
           // message2={walletAddress}
           message2={walletAddress}
         />
