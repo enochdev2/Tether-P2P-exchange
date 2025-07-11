@@ -451,7 +451,7 @@ const SignUp = () => {
                 value={formData.username}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                required
+                
               />
             </div>
 

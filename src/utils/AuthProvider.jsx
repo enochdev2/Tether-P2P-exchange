@@ -117,9 +117,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // "http://localhost:3000/api/v1/user/users",
   const signUp = async (newUser) => {
     try {
-      // "http://localhost:3000/api/v1/user/users",
       // const response = await fetch("
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
