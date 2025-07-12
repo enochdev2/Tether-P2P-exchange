@@ -331,5 +331,11 @@
     "orderPlacedBuy": "Successfully placed a buy order",
     "orderPlacedSell": "Successfully placed a sell order",
     "registrationSuccess": "You have successfully registered"
+  },
+  "status": {
+    "inProgress": "In Progress",
+    "pendingApproval": "Pending Approval",
+    "onSale": "On Sale",
+    "waitingForBuy": "Waiting for Buy"
   }
 }

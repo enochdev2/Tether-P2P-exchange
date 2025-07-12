@@ -144,7 +144,8 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
                 : "text-green-600"
             }`}
           >
-            {offer.status}
+            {/* {offer.status} */}
+            {offer.status === "Pending Approval" && t("status.pendingApproval")}
           </span>
         </div>
 

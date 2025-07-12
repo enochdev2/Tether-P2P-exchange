@@ -187,7 +187,10 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
                   : "text-lime-600"
               }`}
             >
-              {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)}
+              {offer.status === "Pending Approval" && t("status.pendingApproval")}
+              {sell && offer.status === "On Sale" && t("status.onSale")}
+              {!sell && offer.status === "Waiting for Buy" && t("status.waitingForBuy")}
+              {/* {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)} */}
             </span>
           </div>
           <div className="text-center sm:text-right">{dateOnly}</div>

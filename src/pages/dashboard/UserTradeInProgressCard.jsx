@@ -130,7 +130,8 @@ const UserTradeInProgressCard = ({ offer, sell }) => {
                 : "text-lime-600"
             }`}
           >
-            {offer.status}
+            {offer.status === "In Progress" && t("status.inProgress")}
+            {/* {offer.status} */}
           </span>
         </div>
         <div className="text-center sm:text-right">{dateOnly}</div>

@@ -71,7 +71,7 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         ErrorToast(errorMsg);
       } else {
         await fetchOrders();
-        const message =  t("messages.ordersCancelled");
+        const message = t("messages.ordersCancelled");
         SuccessToast(message);
       }
     } catch (error) {
@@ -210,7 +210,9 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
                 : "text-green-600"
             }`}
           >
-            {t(`tradecard.status.${offer.status.replace(" ", "").toLowerCase()}`, offer.status)}
+            {/* {offer.status} */}
+            {sell && offer.status === "On Sale" && t("status.onSale")}
+            {!sell && offer.status === "Waiting for Buy" && t("status.waitingForBuy")}
           </span>
         </div>
         <div className="text-center sm:text-right text-gray-500 text-sm">{dateOnly}</div>

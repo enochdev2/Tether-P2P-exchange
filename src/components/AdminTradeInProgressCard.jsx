@@ -313,7 +313,10 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
               <FaCopy size={16} /> {/* Copy icon */}
             </button>
           </div>
-          <p className="font-bold text-green-700">{offer.status}</p>
+          <p className="font-bold text-green-700">
+            {offer.status === "In Progress" && t("status.inProgress")}
+            {/* {offer.status} */}
+            </p>
           <p className="text-gray-500">{dateOnly}</p>
         </div>
       </div>
