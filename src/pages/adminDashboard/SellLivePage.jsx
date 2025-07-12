@@ -17,6 +17,7 @@ const SellLivePage = () => {
   const navigate = useNavigate();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
+  // console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders)
   // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);

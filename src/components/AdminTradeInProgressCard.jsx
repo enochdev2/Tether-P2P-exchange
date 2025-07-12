@@ -12,6 +12,10 @@ import ConfirmModal3 from "./ConfirmModal3";
 // import your logo and statusColors accordingly
 
 const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fetchOrders }) => {
+  console.log(
+    "🚀 ~ AdminTradeInProgressCard ~ offer:",
+    offer?.currentBuyOrderInProgress?.buyerNickname
+  );
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -110,22 +114,24 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
   };
 
   const handleMatchComplete = () => {
-    onMatch(offer.currentBuyOrderInProgress, pendingOrderId); // Trigger matching in the parent component
+    onMatch(offer?.currentBuyOrderInProgress?._id, pendingOrderId); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
 
   const handleMatchCancel = () => {
     const currentOrderInProgress = sell
-      ? offer.currentBuyOrderInProgress
-      : offer.currentSellOrderInProgress;
+      ? offer?.currentBuyOrderInProgress?._id
+      : offer.currentSellOrderInProgress?._id;
     onCancel(currentOrderInProgress, pendingOrderId); // Trigger matching in the parent component
     setIsMatchModalOpen(false); // Close the modal
     setBuyerOrderId(""); // Reset the input field
   };
 
   const orderType = sell ? "sell" : "buy";
-  const buyOrderId = sell ? offer.currentBuyOrderInProgress : offer.currentSellOrderInProgress;
+  const buyOrderId = sell
+    ? offer?.currentBuyOrderInProgress?._id
+    : offer.currentSellOrderInProgress?._id;
 
   const Links = sell
     ? `/chat/${offer._id}/${buyOrderId}/${orderType}`
@@ -170,10 +176,36 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
             {t("tradecard.matchInProgress")}
           </span>
           <button
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-md font-medium px-3 py-1 rounded-md transition"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className=" hover:bg-gray-200 text-gray-700 text-md font-medium px-3 py-1 rounded-md transition"
+            // onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
-            {offer?.userId?.nickname || "Nickname"}
+            {sell ? (
+              <>
+                <span className="mr-3 bg-gray-100 py-2 px-2 rounded-sm">
+                  {" "}
+                  <span className="text-white text-xl bg-red-500 px-2 py- ">S</span>{" "}
+                  {offer?.userId?.nickname || "Nickname"}{" "}
+                </span>
+                <span className="bg-gray-100 py-2 px-2 rounded-sm">
+                  {" "}
+                  <span className="text-white text-xl bg-green-500 px-2 py- ">B</span>{" "}
+                  {offer?.currentBuyOrderInProgress?.buyerNickname || "Nickname"}{" "}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="mr-3 bg-gray-100 py-2 px-2 rounded-sm">
+                  {" "}
+                  <span className="text-white text-xl bg-green-500 px-2 py- ">B</span>{" "}
+                  {offer?.userId?.nickname || "Nickname"}{" "}
+                </span>
+                <span className="bg-gray-100 py-2 px-2 rounded-sm">
+                  {" "}
+                  <span className="text-white text-xl bg-red-500 px-2 py- ">S</span>{" "}
+                  {offer?.currentSellOrderInProgress?.sellerNickname || "Nickname"}{" "}
+                </span>
+              </>
+            )}
           </button>
         </div>
 
@@ -270,9 +302,9 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         <div className="text-xs text-gray-600 text-right space-y-0.5 leading-snug">
           <div className="flex items-center space-x-2">
             <div className="break-words break-all text-center text-xs  sm:text-right w-full font-bold sm:w-auto">
-             {sell
-              ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
-              : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
+              {sell
+                ? `Sell${Math.floor(offer.amount)}-${offer._id.slice(16)}`
+                : `Buy${Math.floor(offer.amount)}-${offer._id.slice(16)}`}
             </div>
             <button
               className="text-gray-500 hover:text-gray-700 cursor-pointer"
