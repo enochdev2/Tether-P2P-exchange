@@ -49,7 +49,7 @@ const ChatRoom2 = () => {
 
     setSocket(newSocket);
 
-    fetchChatUserInfo()
+    fetchChatUserInfo();
 
     fetchMessages();
 
@@ -229,7 +229,7 @@ const ChatRoom2 = () => {
 
     setSocket(newSocket);
 
-    fetchChatUserInfo2()
+    fetchChatUserInfo2();
 
     fetchMessages2();
 
@@ -339,6 +339,7 @@ const ChatRoom2 = () => {
 
           socket.emit("sendMessage", messageData);
 
+          // await fetch("http://localhost:3000/api/v1/chat", {
           await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
             method: "POST",
             headers: {
@@ -358,6 +359,7 @@ const ChatRoom2 = () => {
 
         socket.emit("sendMessage", messageData);
 
+        // await fetch("http://localhost:3000/api/v1/chat", {
         await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
           method: "POST",
           headers: {
