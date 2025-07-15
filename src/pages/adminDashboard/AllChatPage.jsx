@@ -158,14 +158,15 @@ const AllChatPage = () => {
           <ul className="grid grid-cols-1 sm:grid-cols-1 gap-4">
             {filteredMessages.map((chat) => (
               <li
-                key={chat._id}
-                onClick={() =>
-                  navigate(
-                    `/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`
-                  )
-                }
-                className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
+              key={chat._id}
+              onClick={() =>
+                navigate(
+                  `/chat/${chat.orderId}/${chat?.currentOrderInProgress}/${chat.orderType}`
+                )
+              }
+              className="cursor-pointer bg-white rounded-xl border border-green-300 shadow-md p-5 hover:bg-green-100 transition-all duration-200 ease-in-out flex justify-between items-center"
               >
+                {console.log("🚀 ~ AllChatPage ~ chat:", chat)}
                 <div>
                   <p className="text-sm text-gray-500">{t("chat.orderIdLabel")}</p>
                   <p className="text-lg font-semibold text-green-800">{chat.orderId}</p>

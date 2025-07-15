@@ -94,6 +94,7 @@ const ChatRoom2 = () => {
         content: newMessage ? newMessage : "Image",
         sender: user.nickname,
         orderId: whic,
+        currentOrderInProgress: buywhic,
         orderType: whi === "sell" ? "sell" : "buy",
         timestamp: new Date().toISOString(),
       };
@@ -308,6 +309,7 @@ const ChatRoom2 = () => {
         content: newMessage2 ? newMessage2 : "Image",
         sender: user.nickname,
         orderId: buywhic,
+        currentOrderInProgress: whic,
         orderType: whi === "sell" ? "buy" : "sell",
         timestamp: new Date().toISOString(),
       };
