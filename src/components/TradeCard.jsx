@@ -36,7 +36,8 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
       if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
-
+      const storedLanguage = localStorage.getItem("language");
+      console.log("🚀 ~ handleCancleMatch ~ storedLanguage:", storedLanguage)
       const url = sell
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel`
         : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;
@@ -49,7 +50,7 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
         },
         body: JSON.stringify({
           nickname: user.nickname,
-          storedLanguage: localStorage.getItem("language"),
+          storedLanguage: storedLanguage,
         }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });

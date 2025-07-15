@@ -237,6 +237,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
     // const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
     try {
       const token = localStorage.getItem("token");
+      const storedLanguage = localStorage.getItem("language");
       const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/sell", {
         method: "POST",
         headers: {
@@ -249,7 +250,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
           amount: Number(usdtAmount),
           price: Number(rate),
           krwAmount: Number(wonAmount),
-          storedLanguage: localStorage.getItem("language"),
+          storedLanguage: storedLanguage,
           // Add other data fields you want to submit
         }),
       });
