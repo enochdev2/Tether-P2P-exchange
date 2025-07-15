@@ -31,6 +31,7 @@ const History = () => {
           console.log("🚀 ~ fetchSellOrders ~ url:", url)
 
       const token = localStorage.getItem("token");
+      
 
       const response = await fetch(
         "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders",

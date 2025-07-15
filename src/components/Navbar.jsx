@@ -28,6 +28,7 @@ const Navbar = () => {
       setLanguage(storedLanguage);
     } else {
       i18n.changeLanguage("ko");
+      localStorage.setItem("language", "ko");
       setLanguage("KO");
     }
   }, []);

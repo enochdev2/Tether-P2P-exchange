@@ -76,6 +76,7 @@ const TetherPrice = () => {
           },
           body: JSON.stringify({
             tetherPrice: Number(inputPrice), // Make sure it's a number
+            // storedLanguage : localStorage.getItem("language")
           }),
         }
       );

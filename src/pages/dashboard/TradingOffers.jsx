@@ -92,30 +92,33 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
-  const fetchPrice = async () => {
-    try {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) throw new Error("Failed to fetch tether price");
+    const fetchPrice = async () => {
+      try {
+        const response = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to fetch tether price");
 
-      const data = await response.json();
-      setRate(data.data);
-      setPriceKRW(data.data);
-      setLastRefreshed(new Date());
-    } catch (err) {
-      console.log(err.message);
-    } finally {
-      setRefreshing(false);
-    }
-  };
+        const data = await response.json();
+        setRate(data.data);
+        setPriceKRW(data.data);
+        setLastRefreshed(new Date());
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setRefreshing(false);
+      }
+    };
 
-  // Initial fetch on mount
-  fetchPrice();
-}, []); // ← run only once on mount
+    // Initial fetch on mount
+    fetchPrice();
+  }, []); // ← run only once on mount
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -246,6 +249,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
           amount: Number(usdtAmount),
           price: Number(rate),
           krwAmount: Number(wonAmount),
+          storedLanguage: localStorage.getItem("language"),
           // Add other data fields you want to submit
         }),
       });
@@ -528,7 +532,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
           open={isModalOpens}
           onClose={submitOrder}
           // onConfirm={() => handleCancleMatch(pendingOrderId)}
-          message= {t("sellorder.confirmationText2")}
+          message={t("sellorder.confirmationText2")}
           // message2={walletAddress}
           message2={walletAddress}
         />

@@ -47,7 +47,10 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickname: user.nickname }),
+        body: JSON.stringify({
+          nickname: user.nickname,
+          storedLanguage: localStorage.getItem("language"),
+        }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });
       const data = await response.json();

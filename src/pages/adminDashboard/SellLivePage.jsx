@@ -267,9 +267,11 @@ const SellLivePage = () => {
   async function approveOrders(orderId) {
     try {
       const token = localStorage.getItem("token");
+      const storedLanguage = localStorage.getItem("language");
+      
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/approve`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
@@ -301,9 +303,11 @@ const SellLivePage = () => {
   async function rejectOrders(orderId) {
     try {
       const token = localStorage.getItem("token");
+      const storedLanguage = localStorage.getItem("language");
+      
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/reject`,
+        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
