@@ -164,7 +164,11 @@ const BuyLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+          body: JSON.stringify({
+            buyerOrderId,
+            sellerOrderId,
+            storedLanguage: localStorage.getItem("language"),
+          }),
         }
       );
 
@@ -175,7 +179,7 @@ const BuyLivePage = () => {
       const result = await response.json();
 
       const messages = result.message || "Orders cancelled successfully!";
-        const message = t("messages.ordersCancelled") || messages;
+      const message = t("messages.ordersCancelled") || messages;
 
       await fetchInProgressOrders();
       await fetchBuyOrders();
@@ -199,6 +203,9 @@ const BuyLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            storedLanguage: localStorage.getItem("language"),
+          }),
           // credentials: "include",
         }
       );
@@ -209,7 +216,6 @@ const BuyLivePage = () => {
 
       const result = await response.json();
       const message = result.message || "Buy Order Approved Successfully";
-      
 
       await fetchInProgressOrders();
       await fetchBuyOrders();
@@ -238,6 +244,9 @@ const BuyLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            storedLanguage: localStorage.getItem("language"),
+          }),
           // credentials: "include",
         }
       );

@@ -55,30 +55,33 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
   useEffect(() => {
-  const fetchPrice = async () => {
-    try {
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) throw new Error("Failed to fetch tether price");
+    const fetchPrice = async () => {
+      try {
+        const response = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to fetch tether price");
 
-      const data = await response.json();
-      setRate(data.data);
-      setPriceKRW(data.data);
-      setLastRefreshed(new Date());
-    } catch (err) {
-      console.log(err.message);
-    } finally {
-      setRefreshing(false);
-    }
-  };
+        const data = await response.json();
+        setRate(data.data);
+        setPriceKRW(data.data);
+        setLastRefreshed(new Date());
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setRefreshing(false);
+      }
+    };
 
-  // Initial fetch on mount
-  fetchPrice();
-}, []); // ← run only once on mount
+    // Initial fetch on mount
+    fetchPrice();
+  }, []); // ← run only once on mount
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -91,13 +94,16 @@ const Modal = ({ isModalOpen, closeModal }) => {
     if (!refreshing) return;
     const fetchPrice = async () => {
       try {
-        const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price", {
-          method: "GET",
-          headers: {
-            // Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          {
+            method: "GET",
+            headers: {
+              // Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch tether price");
         }
@@ -121,15 +127,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
   // Korean currency button values in won (number format)
   const krwButtons = [10000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
 
-
-   // Conditional formatting based on language
+  // Conditional formatting based on language
   const formatCurrency = (value) => {
-    if (i18next.language === 'ko') {
+    if (i18next.language === "ko") {
       return `${value / 10000} ${t("sellorder.price")}`; // For Korean, show '만원'
     }
     return `${value / 1000}${t("sellorder.price")}`; // For English, show 'K'
   };
-
 
   // When KRW button clicked, set won amount (string) and clear USDT for now
   const handleKRWButtonClick = (value) => {
@@ -197,12 +201,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
           amount: Number(usdtAmount),
           krwAmount: Number(wonAmount),
           price: Number(wonAmount),
+          storedLanguage: localStorage.getItem("language"),
           // Add other data fields you want to submit
         }),
       });
 
       const data = await response.json();
-      console.log("🚀 ~ submitOrder ~ data:", data)
+      console.log("🚀 ~ submitOrder ~ data:", data);
       if (!response.ok) {
         const errorMsg = data.error || data.message || "Failed to register user";
         ErrorToast(errorMsg);

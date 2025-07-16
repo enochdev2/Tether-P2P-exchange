@@ -77,7 +77,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickname: offer?.sellerNickname }),
+        body: JSON.stringify({ nickname: offer?.sellerNickname, storedLanguage: localStorage.getItem("language"), }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });
       const data = await response.json();
