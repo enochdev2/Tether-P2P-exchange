@@ -215,7 +215,7 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      const message = result.message || "Buy Order Approved Successfully";
+      const message = t("messages.buyOrderApproved") || result.message || "Buy Order Approved Successfully";
 
       await fetchInProgressOrders();
       await fetchBuyOrders();
@@ -256,7 +256,8 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      const message = result.message || "Buy Order Rejected Successfully";
+      const message = t("messages.buyOrderRejectedConfirm") || result.message;
+      
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state

@@ -327,7 +327,18 @@
     "successCopied": "복사에 성공했습니다.",
     "orderPlacedBuy": "구매 주문이 성공적으로 등록되었습니다.",
     "orderPlacedSell": "판매 주문이 성공적으로 등록되었습니다.",
-    "registrationSuccess": "회원가입이 완료되었습니다."
+    "registrationSuccess": "회원가입이 완료되었습니다.",
+    "noTradeOrSellOrder": "당신은 아직 거래를 하지 않았거나 판매 주문이 없습니다.",
+    "imageUpdated": "이미지가 성공적으로 업데이트되었습니다!",
+    "otpResent": "OTP가 성공적으로 다시 전송되었습니다!",
+    "buyOrderApproved": "구매 주문이 성공적으로 승인되었습니다.",
+    "buyOrderRejectedConfirm": "구매 주문이 거절되었습니다.",
+    "tetherPriceSet": "테더 가격이 설정되었습니다.",
+    "statusUpdated": "상태가 성공적으로 업데이트되었습니다.",
+    "smsCodeSent": "SMS 코드가 성공적으로 전송되었습니다!",
+    "smsCodeResent": "SMS 코드가 성공적으로 재전송 되었습니다!",
+    "areYouSureDeleteBuyOrder": "구매 주문을 삭제하시겠습니까?",
+    "areYouSureDeleteSellOrder": "판매 주문을 삭제하시겠습니까?"
   },
   "status": {
     "inProgress": "진행 중",

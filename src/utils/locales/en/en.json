@@ -330,7 +330,18 @@
     "successCopied": "Successfully Copied",
     "orderPlacedBuy": "Successfully placed a buy order",
     "orderPlacedSell": "Successfully placed a sell order",
-    "registrationSuccess": "You have successfully registered"
+    "registrationSuccess": "You have successfully registered",
+    "noTradeOrSellOrder": "You haven’t traded yet or you don't have any sell Order",
+    "imageUpdated": "Image updated successfully!",
+    "otpResent": "OTP has been re-sent successfully!",
+    "buyOrderApproved": "Buy Order Approved Successfully",
+    "buyOrderRejectedConfirm": "Buy Order Rejected Successfully",
+    "tetherPriceSet": "Tether Price successfully set",
+    "statusUpdated": "You have successfully updated the status",
+    "smsCodeSent": "SMS code sent successfully!",
+    "smsCodeResent": "SMS code resent successfully!",
+    "areYouSureDeleteBuyOrder": "Are you sure you want to delete your buy Order?",
+    "areYouSureDeleteSellOrder": "Are you sure you want to delete your sell Order?"
   },
   "status": {
     "inProgress": "In Progress",

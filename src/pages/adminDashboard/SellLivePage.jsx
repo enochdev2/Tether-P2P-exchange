@@ -48,7 +48,11 @@ const SellLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+          body: JSON.stringify({
+            buyerOrderId,
+            sellerOrderId,
+            storedLanguage: localStorage.getItem("language"),
+          }),
         }
       );
       // const result = await response.json();
@@ -85,7 +89,11 @@ const SellLivePage = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+          body: JSON.stringify({
+            buyerOrderId,
+            sellerOrderId,
+            storedLanguage: localStorage.getItem("language"),
+          }),
         }
       );
 
@@ -268,7 +276,6 @@ const SellLivePage = () => {
     try {
       const token = localStorage.getItem("token");
       const storedLanguage = localStorage.getItem("language");
-      
 
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
@@ -304,7 +311,6 @@ const SellLivePage = () => {
     try {
       const token = localStorage.getItem("token");
       const storedLanguage = localStorage.getItem("language");
-      
 
       const response = await fetch(
         `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,

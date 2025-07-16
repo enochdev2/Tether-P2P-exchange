@@ -60,7 +60,10 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickname: user.nickname }),
+        body: JSON.stringify({
+          nickname: user.nickname,
+          storedLanguage: localStorage.getItem("language"),
+        }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });
       const data = await response.json();
@@ -221,7 +224,9 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => handleCancleMatch(pendingOrderId)}
-        message="Are you sure you want to delete your buy Order?"
+        message={
+          sell ? t("messages.areYouSureDeleteBuyOrder") : t("messages.areYouSureDeleteSellOrder")
+        }
       />
 
       {/* Modal */}

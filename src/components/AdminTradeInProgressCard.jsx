@@ -77,7 +77,10 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickname: offer?.sellerNickname, storedLanguage: localStorage.getItem("language"), }),
+        body: JSON.stringify({
+          nickname: offer?.sellerNickname,
+          storedLanguage: localStorage.getItem("language"),
+        }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });
       const data = await response.json();
@@ -202,7 +205,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
                 <span className="bg-gray-100 py-2 px-2 rounded-sm">
                   {" "}
                   <span className="text-white text-xl bg-red-500 px-2 py- ">S</span>{" "}
-                  {offer?.currentSellOrderInProgress?.sellerNickname || "Nickname"}{" "}
+                  {offer?.currentSellOrderInProgress?.sellerNickname || null}{" "}
                 </span>
               </>
             )}
@@ -316,7 +319,7 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
           <p className="font-bold text-green-700">
             {offer.status === "In Progress" && t("status.inProgress")}
             {/* {offer.status} */}
-            </p>
+          </p>
           <p className="text-gray-500">{dateOnly}</p>
         </div>
       </div>
@@ -325,7 +328,9 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => handleCancleMatch(pendingOrderId)}
-        message="Are you sure you want to delete the buy Order?"
+        message={
+          sell ? t("messages.areYouSureDeleteBuyOrder") : t("messages.areYouSureDeleteSellOrder")
+        }
       />
       <ConfirmModal3
         open={isModalOpens}
