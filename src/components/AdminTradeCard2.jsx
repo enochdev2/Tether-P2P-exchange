@@ -155,7 +155,9 @@ const AdminTradeCard2 = ({ offer, sell, approveOrders, rejectOrders }) => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => (isApprove ? approveOrders(pendingOrderId) : rejectOrders(pendingOrderId))}
-        message="Are you sure you want to delete your buy Order?"
+        message={
+          sell ? t("messages.areYouSureDeleteBuyOrder") : t("messages.areYouSureDeleteSellOrder")
+        }
       />
     </div>
   );

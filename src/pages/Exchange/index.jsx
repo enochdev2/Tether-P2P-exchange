@@ -15,14 +15,11 @@ const TradingPage = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [setNotifications] = useState([]);
-  const [setLoadingNotifications] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
 
   useEffect(() => {
     fetchInProgressOrders();
     fetchBuyOrders();
-    fetchNotifications();
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
@@ -112,41 +109,6 @@ const TradingPage = () => {
     }
   }
 
-  async function fetchNotifications() {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/buyOrders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        const data = await response.json();
-        if (data.message === "Invalid or expired token") {
-          window.location.href = "/signin"; // Adjust path as needed
-          return;
-        }
-        ErrorToast(data.message);
-        return;
-      }
-
-      if (Array.isArray(data) && data.length > 0) {
-        SuccessToast("You have a new notification message on buy order");
-      }
-      setNotifications(data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    } finally {
-      setLoadingNotifications(false);
-    }
-  }
 
   if (loading) return <LoadingSpiner />;
 

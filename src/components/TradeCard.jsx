@@ -37,7 +37,7 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
       const storedLanguage = localStorage.getItem("language");
-      console.log("🚀 ~ handleCancleMatch ~ storedLanguage:", storedLanguage)
+      
       const url = sell
         ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel`
         : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;

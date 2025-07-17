@@ -321,7 +321,7 @@
     "newNotificationBuyOrder": "You have a new notification message on buy order",
     "ordersMatched": "Orders matched successfully!",
     "errorMatchingOrders": "Error matching orders:",
-    "sellOrderApproved": "Sell Order Approve Successful",
+    "sellOrderApproved": "Sell Order Approve Successfully",
     "buyOrderRejected": "Buy Order Rejected Successful",
     "chatClosed": "Chat closed successfully.",
     "otpVerified": "OTP verified successfully!",

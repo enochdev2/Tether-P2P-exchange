@@ -295,7 +295,7 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      const message = result.message || "Sell Order Approve Successful";
+      const message = t("messages.sellOrderApproved") || result.message || "Sell Order Approve Successful";
       await fetchSellOrders();
       SuccessToast(message);
 
@@ -330,7 +330,7 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      const message = result.message || "Buy Order Rejected Successful";
+      const message = t("messages.buyOrderRejectedConfirm") || result.message;
       await fetchSellOrders();
       SuccessToast(message);
 
