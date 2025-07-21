@@ -45,6 +45,7 @@ const ChatRoom3 = () => {
 
     setSocket(newSocket);
 
+    fetchChatUserInfo();
     fetchMessages();
 
     newSocket.on("connect", () => {
@@ -66,8 +67,6 @@ const ChatRoom3 = () => {
     };
   }, [whic]);
 
- 
-
   const fetchMessages = async () => {
     const res = await fetch(
       `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/end/${whic}`,
@@ -85,8 +84,28 @@ const ChatRoom3 = () => {
       ErrorToast(errorMsg);
     }
     setMessages(data.messages);
-    setChatUserInfo(data.chatDetails);
-    setUserChatId(data.chatDetails.nickname);
+    
+  };
+
+  const fetchChatUserInfo = async () => {
+    const res = await fetch(
+      // `http://localhost:3000/api/v1/chat/admin/userInfo/${whic}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/userInfo/${whic}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      const data = await res.json();
+      const errorMsg = data.error || data.message || "Failed to register user";
+      ErrorToast(errorMsg);
+    }
+    setChatUserInfo(data);
+    setUserChatId(data.nickname);
   };
 
   const handleCloseChat = async () => {
@@ -119,6 +138,7 @@ const ChatRoom3 = () => {
 
     setSocket(newSocket);
 
+    fetchChatUserInfo2()
     fetchMessages2();
 
     newSocket.on("connect", () => {
@@ -157,11 +177,28 @@ const ChatRoom3 = () => {
       ErrorToast(errorMsg);
     }
     setMessages2(data.messages);
-    setChatUserInfo2(data.chatDetails);
-    setUserChatId2(data.chatDetails.nickname);
   };
 
- 
+   const fetchChatUserInfo2 = async () => {
+    const res = await fetch(
+      // `http://localhost:3000/api/v1/chat/admin/userInfo/${buywhic}`,
+      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/userInfo/${buywhic}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    if (!res.ok) {
+      const data = await res.json();
+      const errorMsg = data.error || data.message || "Failed to register user";
+      ErrorToast(errorMsg);
+    }
+    setChatUserInfo2(data);
+    setUserChatId2(data.nickname);
+  };
 
   const handleCloseChat2 = async () => {
     socket.emit("closeChat", { orderId });
@@ -175,7 +212,7 @@ const ChatRoom3 = () => {
         },
       }
     );
-     const ress = await handleCloseChat();
+    const ress = await handleCloseChat();
     if (ress.ok && res.ok) {
       SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");
@@ -229,8 +266,6 @@ const ChatRoom3 = () => {
 
     return new Blob([arrayBuffer], { type: mimeString });
   };
-
-
 
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {

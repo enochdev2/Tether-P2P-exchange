@@ -1,14 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { useAuth } from "../utils/AuthProvider";
-import { SuccessToast } from "../utils/Success";
-import { FiArrowLeft, FiImage } from "react-icons/fi";
-import { ErrorToast } from "../utils/Error";
 import { useTranslation } from "react-i18next";
-import InfoCard from "../components/InfoCard";
-import { BanknoteIcon, PiggyBank, Wallet2Icon } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import ChatRoomPanel from "../components/chat/ChatRoomPanel";
+import { useAuth } from "../utils/AuthProvider";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
 
 // const socket = io("http://localhost:3000", {
 //   path: "/socket.io", // Ensure the path matches server-side configuration
@@ -216,7 +213,7 @@ const ChatRoom2 = () => {
       }
     );
     if (res.ok) {
-      SuccessToast(t(messages.chatClosed));
+      SuccessToast(t("messages.chatClosed"));
       navigate("/admin/dashboard");
     }
     // Or navigate away:
@@ -366,7 +363,7 @@ const ChatRoom2 = () => {
         const storedLanguage = localStorage.getItem("language");
 
         // await fetch("http://localhost:3000/api/v1/chat", {
-          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -394,11 +391,9 @@ const ChatRoom2 = () => {
     );
 
     if (res.ok) {
-      SuccessToast(t(messages.chatClosed));
+      SuccessToast(t("messages.chatClosed"));
       navigate("/admin/dashboard");
     }
-
-    // Or navigate away:
   };
 
   const readImageAsDataURL = (file, callback) => {
@@ -447,8 +442,6 @@ const ChatRoom2 = () => {
     return new Blob([arrayBuffer], { type: mimeString });
   };
 
-  // Check if the user is authorized to access the chatroom
-  // if (!userRole === 'admin' || !userOrderId === orderId) {
   return (
     <div className="min-h-screen mt-10 bg-gray-100 flex gap-6 items-center justify-center p-4">
       <ChatRoomPanel
@@ -496,46 +489,3 @@ const ChatRoom2 = () => {
 };
 
 export default ChatRoom2;
-
-// {userInfo && (
-//       <div className="mr-5 bg-slate-300 px-2 rounded-lg">
-//         <div className="flex flex-col gap-4 w-full lg:space-x-6 my-4 overflow-x-auto sm:overflow-visible">
-//           <div className="min-w-[280px]  sm:min-w-0 flex-1">
-//             <InfoCard
-//               icon={<PiggyBank size={24} />}
-//               title={t("profile.bankName")}
-//               actionText={user?.bankName}
-//               onAction={() => console.log("Navigate to security questions")}
-//               copyToClipboard={() => copyToClipboard(user?.bankName, "Bank Name")}
-//             />
-//           </div>
-//           <div className="min-w-[280px] sm:min-w-0 flex-1">
-//             <InfoCard
-//               icon={<BanknoteIcon size={24} />}
-//               title={t("profile.bankAccountNumber")}
-//               actionText={user?.bankAccount}
-//               copyToClipboard={() => copyToClipboard(user?.bankAccount, "Bank Account Number")}
-//               onAction={() => console.log("Navigate to security questions")}
-//             />
-//           </div>
-
-//           <div className="min-w-[280px]  sm:min-w-0 flex-1">
-//             <InfoCard
-//               className=""
-//               icon={<Wallet2Icon size={24} />}
-//               title={tether.slice(0, 15)}
-//               actionText={tether.slice(15, 60)}
-//               copyToClipboard={() => copyToClipboard(tether, "Tether Wallet")}
-//             />
-//           </div>
-//         </div>
-//         <div className="flex w-full justify-end">
-//           <button
-//             onClick={hanleToggleUserInfo}
-//             className="  bg-red-600 px-2 text-lg rounded-lg text-yellow-50 cursor-pointer font-bold"
-//           >
-//             X
-//           </button>
-//         </div>
-//       </div>
-//     )}

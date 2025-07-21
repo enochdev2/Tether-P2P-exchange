@@ -1,21 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { UploadCloud, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FaCheckSquare, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import avatarImage from "../../assets/avatarImage.png";
+import solanaImage from "../../assets/solanaImage.png";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../utils/AuthProvider";
-import { SuccessToast } from "../../utils/Success";
 import { ErrorToast } from "../../utils/Error";
-import { useTranslation } from "react-i18next";
-import { X, UploadCloud } from "lucide-react";
-import avatarImage from "../../assets/avatarImage.png";
-import { FaCheckSquare, FaEye, FaEyeSlash, FaMarker } from "react-icons/fa";
-import solanaImage from "../../assets/solanaImage.png";
-import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-
-// Assume these imports exist for your toasts and AuthProvider
-// import LoadingSpinner from "../../components/LoadingSpinner";
-// import { useAuth } from "../../utils/AuthProvider";
-// import { SuccessToast } from "../../utils/Success";
-// import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
 
 const SignUp = () => {
   const { t } = useTranslation();
@@ -212,7 +205,7 @@ const SignUp = () => {
       setPhoneVerificationStatus("sent"); //
       setPhoneVerificationMessage("SMS code sent to your phone.");
       setShowPhoneVerificationModal(true); // Open modal for code input
-      SuccessToast("SMS code sent successfully!");
+      SuccessToast(t("messages.smsCodeSent"));
     } catch (error) {
       console.error("Error sending SMS:", error);
       setPhoneVerificationMessage("Failed to send SMS. Please try again.");
@@ -251,7 +244,7 @@ const SignUp = () => {
 
       setPhoneVerificationStatus("resent"); //
       setPhoneVerificationMessage("The SMS has been resent."); //
-      SuccessToast("SMS code resent successfully!");
+      SuccessToast(t("messages.smsCodeResent"));
     } catch (error) {
       console.error("Error resending SMS:", error);
       setPhoneVerificationMessage("Failed to resend SMS. Please try again.");
@@ -300,16 +293,19 @@ const SignUp = () => {
     setPhoneVerificationMessage("");
     try {
       // Simulate API call to verify SMS code
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phone: formData.phone, // Pass the userId (could be from props or context)
-          verificationCode: enteredCode, // The OTP entered by the user
-        }),
-      });
+      const response = await fetch(
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phone: formData.phone, // Pass the userId (could be from props or context)
+            verificationCode: enteredCode, // The OTP entered by the user
+          }),
+        }
+      );
 
       const result = await response.json();
       console.log("🚀 ~ handleSubmitSmsCode ~ result:", result.data.isVerified);
@@ -451,7 +447,6 @@ const SignUp = () => {
                 value={formData.username}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-600 bg-gray-900 text-white rounded-md focus:outline-none focus:border-none"
-                
               />
             </div>
 
