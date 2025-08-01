@@ -53,7 +53,7 @@ const SignIn = () => {
 
       // const response = await fetch("http://localhost:3000/api/v1/user/login",
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logins",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
