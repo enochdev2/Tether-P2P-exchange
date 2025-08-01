@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // const response = await fetch("
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/usersS",
         {
           method: "POST",
           headers: {
