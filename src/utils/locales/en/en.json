@@ -73,6 +73,15 @@
       "logout": "Log out"
     }
   },
+
+  
+  "managerItems": {
+    "managerItems" : "Manager Account",
+    "managerDashboard": "Dashboard",
+    "userlist": "User List",
+    "fee": "Fee"
+  },
+
   "signUp": {
     "title": "Sign Up",
     "username": "Username",

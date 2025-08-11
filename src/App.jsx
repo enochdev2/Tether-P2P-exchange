@@ -34,6 +34,11 @@ import TransactionHistory from "./pages/TransactionHistory";
 import TetherPrice from "./pages/adminDashboard/TetherPrice";
 import AllEndedChatPage from "./pages/adminDashboard/AllEndedChatPage";
 import ChatRoom3 from "./pages/ChatRoom3";
+import ManagerDashboard from "./pages/managerDashboard/ManagerDashboard";
+import DashboardManager from "./pages/managerDashboard/Dashboard";
+import UserList from "./pages/managerDashboard/UserList";
+import Fee from "./pages/managerDashboard/Fee";
+// import ManagerDashboard from "./pages/managerDashboard/ManagerDashboard";
 
 function App() {
   return (
@@ -96,6 +101,14 @@ function App() {
           <Route path="inquiry-history" element={<InquiryHistory />} />
           <Route path="edit-info" element={<AccountSettings />} />
           {/* <Route path="support" element={<Support />} /> */}
+        </Route>
+
+        {/* Manager */}
+
+        <Route path="/manager" element={<ManagerDashboard />}>
+          <Route path="dashboard" element={<DashboardManager />} />
+          <Route path="user-list" element={<UserList />} />
+          <Route path="fee" element={<Fee />} />
         </Route>
 
         <Route
