@@ -7,7 +7,6 @@ import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { BiChat } from "react-icons/bi";
 import { FaSortAmountUpAlt, FaUserCog } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 
 const sidebarSections = [
   {

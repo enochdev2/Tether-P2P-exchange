@@ -261,6 +261,17 @@ const Navbar = () => {
               </Link>
             </div>
           )}
+          {user && user.manager && (
+            <div className="flex items-center gap-5 justify-between">
+              <Link
+                to="/manager/dashboard"
+                className="text-white bg-green-800 hidden lg:block px-3 shadow-green-700 shadow-2xl  py-2 md:py-3 rounded-xl text-[12px] md:text-[15px] font-bold "
+                onClick={() => handleLinkClick("admin-dashboard")}
+              >
+                {t("Manager")}
+              </Link>
+            </div>
+          )}
           <div className="relative inline-block z-100 text-left">
             <button
               onClick={toggleDropdownLan}

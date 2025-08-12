@@ -1,8 +1,12 @@
 import React from 'react'
+import AdminTransactions from '../adminDashboard/AdminTransactions'
 
 const Fee = () => {
   return (
-    <div>Fee</div>
+    <div>
+   <AdminTransactions />
+
+    </div>
   )
 }
 

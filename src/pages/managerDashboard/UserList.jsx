@@ -1,8 +1,12 @@
 import React from 'react'
+import UserManagement from '../adminDashboard/UserManagement'
 
 const UserList = () => {
   return (
-    <div>UserList</div>
+    <div>
+
+      <UserManagement/>
+    </div>
   )
 }
 

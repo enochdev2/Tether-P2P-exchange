@@ -47,6 +47,7 @@
   "Transaction History": "거래 기록",
   "My Page": "마이 페이지",
   "Admin": "관리자",
+  "Manager": "매니저",
   "Verify Me": "내 인증하기",
   "USDT/₩": "USDT/₩",
   "AccountLevel": "계정 레벨",
@@ -72,6 +73,14 @@
       "logout": "로그아웃"
     }
   },
+
+  "managerItems": {
+    "managerItems": "매니저 계정",
+    "managerDashboard": "대시보드",
+    "userlist": "사용자 목록",
+    "fee": "수수료"
+  },
+
   "signUp": {
     "title": "회원가입",
     "username": "아이디",
