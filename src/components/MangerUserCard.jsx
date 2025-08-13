@@ -1,0 +1,100 @@
+import { useState } from "react";
+import UserDetail from "./UserDetail";
+import { useTranslation } from "react-i18next";
+import UserDetailManager from "./UserDetailManager";
+
+const ManagerUserCard = ({ users, handleStatusChange, handleUpdate }) => {
+  const { t } = useTranslation();
+  const [expandedUsers, setExpandedUsers] = useState({});
+
+  const toggleUserExpansion = (userId) => {
+    setExpandedUsers(prev => ({
+      ...prev,
+      [userId]: !prev[userId]
+    }));
+  };
+
+  return (
+    <div className="overflow-x-auto w-full rounded-lg border border-gray-200 bg-white shadow-sm">
+      <table className="min-w-[600px] w-full table-auto text-left text-sm text-gray-800">
+        <thead className="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th className="px-4 py-3">{t("usermanagement.nickname")}</th>
+            <th className="px-4 py-3">{t("usermanagement.phone")}</th>
+            <th className="px-4 py-3 text-center">{t("usermanagement.bank")}</th>
+            <th className="px-4 py-3 text-center">View Details</th>
+            <th className="px-4 py-3">Date</th> 
+            <th className="px-4 py-3">Date</th> 
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => {
+            const dateObj = new Date(user.createdAt);
+            const dateOnly = dateObj.toLocaleDateString("en-CA");
+
+            return (
+              <>
+                <tr key={user._id} className="border-b border-gray-200">
+                  {/* Nickname */}
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="truncate block max-w-xs">{user?.nickname}</span>
+                  </td>
+
+                  {/* Phone */}
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="truncate block max-w-xs">{user?.phone}</span>
+                  </td>
+                  {/* Phone */}
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="truncate block max-w-xs">{user?.bankName}</span>
+                  </td>
+
+                  {/* View Details */}
+                  <td className="px-4 py-3 text-center">
+                    <button
+                      onClick={() => toggleUserExpansion(user._id)}
+                      className="px-3 py-1 lg:py-3 cursor-pointer bg-[#26a17b] hover:bg-green-700 text-white rounded text-xs font-semibold"
+                    >
+                      {expandedUsers[user._id] ? "Hide Details" : "View Details"}
+                    </button>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span
+                      className={`font-semibold ${
+                        user.status === "inactive" ? "text-red-600" : "text-lime-600"
+                      }`}
+                    >
+                      {user.status}
+                    </span>
+                  </td>
+
+                  {/* Date */}
+                  <td className="px-4 py-3 whitespace-nowrap text-center">{dateOnly}</td>
+                </tr>
+
+                {/* Expanded user details row */}
+                {expandedUsers[user._id] && (
+                  <tr>
+                    <td colSpan="6" className="p-0">
+                      <div className="p-4 bg-gray-50">
+                        <UserDetailManager
+                          user={user}
+                          setIsViewing={() => toggleUserExpansion(user._id)}
+                          handleUpdate={handleUpdate}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default ManagerUserCard;

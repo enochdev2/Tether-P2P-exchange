@@ -8,6 +8,7 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import ManagerUserCard from "../../components/MangerUserCard";
 
 const UserList = () => {
   const { t } = useTranslation();
@@ -150,13 +151,8 @@ const UserList = () => {
               {t("usermanagement.noUsers")}
             </div>
           ) : (
-            <AdminUserCard
+            <ManagerUserCard
               users={filteredUsers}
-              handleStatusChange={(user, status) => {
-                // Handle the status change here
-                handleSubmit(user.nickname, status);
-                setChange((prev) => !prev);
-              }}
               handleUpdate={allUser}
             />
           )}

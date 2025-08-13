@@ -270,6 +270,7 @@
     "searchPlaceholder": "Search user by name...",
     "nickname": "Nickname",
     "phone": "Phone",
+    "bank": "bank Name",
     "status": "Status",
     "statusToggle": "Status Toggle",
     "viewDetails": "View Details",
