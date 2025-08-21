@@ -82,6 +82,7 @@ const SignUp = () => {
           setNicknameError("");
         }
       } catch (err) {
+        console.log("🚀 ~ validateNickname ~ err:", err)
         setNicknameError("Unable to validate nickname. Please try again.");
       }
     }, 100); // Adjust debounce time as needed (600ms recommended)

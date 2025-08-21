@@ -355,5 +355,16 @@
     "pendingApproval": "승인 대기 중",
     "onSale": "판매 중",
     "waitingForBuy": "구매 대기 중"
+  },
+  "managerfee": {
+    "todaySales": "금일 테더 판매량",
+    "totalSales": "총 테더 판매량",
+    "totalFee": "테더 판매량 수수료 (1%)",
+    "totalUSDT": "총 테더 판매량",
+    "referral": "레퍼럴코드",
+    "nickname": "닉네임",
+    "amount": "테더 판매량",
+    "buyer": "구매자 닉네임",
+    "fee": "수수료 (1%)"
   }
 }

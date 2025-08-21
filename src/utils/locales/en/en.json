@@ -75,9 +75,8 @@
     }
   },
 
-  
   "managerItems": {
-    "managerItems" : "Manager Account",
+    "managerItems": "Manager Account",
     "managerDashboard": "Dashboard",
     "userlist": "User List",
     "fee": "Fee"
@@ -359,5 +358,16 @@
     "pendingApproval": "Pending Approval",
     "onSale": "On Sale",
     "waitingForBuy": "Waiting for Buy"
+  },
+  "managerfee": {
+    "todaySales": "Today's Tether sales volume",
+    "totalSales": "Total Tether sales volume",
+    "totalFee": "Total fee (1%)",
+    "totalUSDT": "Total USDT sold",
+    "referral": "Referral code",
+    "nickname": "NickName",
+    "amount": "Amount (USDT)",
+    "buyer": "Buyer nickname",
+    "fee": "Fee(1%)"
   }
 }

@@ -1,106 +1,111 @@
-import React from "react";
-import AdminTransactions from "../adminDashboard/AdminTransactions";
-// interface Transaction {
-//   id: string;
-//   user: string;
-//   referralCode: string;
-//   tetherAmount: number; // in USDT
-// }
-// interface FeeCategoryProps {
-//   transactions: Transaction[];
-// }
-const users = [
-  {
-    id: "u1",
-    name: "Alice",
-    referralCode: "QWET4",
-    trades: [
-      { id: "t1", type: "buy", amount: 2000 },
-      { id: "t2", type: "sell", amount: 3000 },
-    ],
-  },
-  {
-    id: "u2",
-    name: "Bob",
-    referralCode: "QWET4",
-    trades: [{ id: "t3", type: "sell", amount: 1500 }],
-  },
-  {
-    id: "u3",
-    name: "Charlie",
-    referralCode: "XYZ99",
-    trades: [{ id: "t4", type: "buy", amount: 5000 }],
-  },
+import React, { useState } from "react";
+
+const dummyData = [
+  { referral: "QWET4", nickname: "User234", amount: 714.28, buyer: "User111", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User213", amount: 714.28, buyer: "User212", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User314", amount: 714.28, buyer: "User313", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User413", amount: 714.28, buyer: "User414", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User523", amount: 714.28, buyer: "User155", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User623", amount: 714.28, buyer: "User616", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User623", amount: 714.28, buyer: "User617", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User223", amount: 714.28, buyer: "User128", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User123", amount: 714.28, buyer: "User119", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User823", amount: 714.28, buyer: "User108", fee: 7.1428 },
+  { referral: "QWET4", nickname: "User142", amount: 714.28, buyer: "User294", fee: 7.1428 },
 ];
+export default function Fee() {
+  const [selected, setSelected] = useState("Total Tether sales volume");
+  const [search, setSearch] = useState("");
 
-const Fee = () => {
-  const managerCode = "QWET4";
+  const totalUSDT = dummyData.reduce((acc, d) => acc + d.amount, 0);
+  const totalFee = dummyData.reduce((acc, d) => acc + d.fee, 0);
 
-  // Get only users under this manager
-  const referredUsers = users.filter((user) => user.referralCode === managerCode);
-
-  // Calculate totals
-  const totalManagerFee = referredUsers.reduce((sum, user) => {
-    return sum + user.trades.reduce((tSum, trade) => tSum + trade.amount * 0.01, 0);
-  }, 0);
+  const filteredData = dummyData.filter((row) => {
+    const term = search.toLowerCase();
+    return (
+      row.nickname.toLowerCase().includes(term) ||
+      row.buyer.toLowerCase().includes(term) ||
+      row.amount.toString().toLowerCase().includes(term)
+    );
+  });
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 max-w-3xl w-full mx-auto border border-gray-200">
-      {referredUsers.length === 0 ? (
-        <p className="text-gray-500">No users registered with this referral code.</p>
-      ) : (
-        <div className="space-y-8">
-          {referredUsers.map((user) => {
-            const userFeeTotal = user.trades.reduce((sum, trade) => sum + trade.amount * 0.01, 0);
+    <div className="p-4 bg-gray-100 min-h-screen flex justify-center">
+      <div className="w-full max-w-7xl bg-white rounded-lg shadow p-4">
+        {/* Selection Button */}
+        <div className="relative flex justify-center w-[100%] mb-4">
+          {/* <Down/> */}
+          <select
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+            className="bg-green-500 text-white px-4 py-2 w-[100%] rounded-md shadow text-center font-bold text-2xl hover:bg-green-700 outline-0 cursor-pointer"
+          >
+            <option>Total Tether sales volume</option>
+            <option>Today's Tether sales volume</option>
+          </select>
+        </div>
 
-            return (
-              <div key={user.id} className="border rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {user.name} <span className="text-sm text-gray-500">(User ID: {user.id})</span>
-                </h3>
-                <table className="w-full mt-3 border-collapse">
-                  <thead>
-                    <tr className="text-left text-gray-600 border-b">
-                      <th className="p-2">Trade Type</th>
-                      <th className="p-2">Amount (USDT)</th>
-                      <th className="p-2">Fee (1%)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {user.trades.map((trade) => (
-                      <tr key={trade.id} className="border-b last:border-0">
-                        <td className="p-2 capitalize">{trade.type}</td>
-                        <td className="p-2">{trade.amount.toLocaleString()}</td>
-                        <td className="p-2 text-green-600">
-                          {(trade.amount * 0.01).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="font-semibold border-t">
-                      <td className="p-2" colSpan={2}>
-                        Total Fee for {user.name}
-                      </td>
-                      <td className="p-2 text-green-700">{userFeeTotal.toLocaleString()} USDT</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            );
-          })}
-
-          {/* Manager's total fee from all referred users */}
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="text-lg font-bold text-gray-800">
-              Total Manager Fee:{" "}
-              <span className="text-green-700">{totalManagerFee.toLocaleString()} USDT</span>
-            </p>
+        {/* Total Section */}
+        <div className="grid grid-cols-2 border rounded mb-4 text-center">
+          <div className="p-4 border-r">
+            <p className="font-semibold">Total USDT sold</p>
+            <p className="text-xl font-bold">{totalUSDT.toLocaleString()}</p>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold">Total fee (1%)</p>
+            <p className="text-xl font-bold">{totalFee.toFixed(2)}</p>
           </div>
         </div>
-      )}
+
+        {/* Table */}
+        <div className="border rounded overflow-x-auto overflow-y-auto h-[60vh]">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="border px-2 py-2">Referral code</th>
+                <th className="border px-2 py-2">NickName</th>
+                <th className="border px-2 py-2">Amount (USDT)</th>
+                <th className="border px-2 py-2">Buyer nickname</th>
+                <th className="border px-2 py-2">Fee(1%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="border px-2 py-2">{row.referral}</td>
+                  <td className="border px-2 py-2">{row.nickname}</td>
+                  <td className="border px-2 py-2">{row.amount}</td>
+                  <td className="border px-2 py-2">{row.buyer}</td>
+                  <td className="border px-2 py-2">{row.fee.toFixed(4)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Search bar */}
+        <div className="mt-3">
+          <input
+            type="text"
+            placeholder="Search by nickname, amount or buyer..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded px-3 py-1 md:w-[40%] "
+          />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Fee;
+}
