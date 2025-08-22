@@ -62,13 +62,13 @@ export default function Fee() {
         {/* Total Section */}
         <div className="grid grid-cols-2 border rounded mb-4 text-center py-5">
           <div className="p-4 border-r flex justify-between items-center">
-            <div className="flex space-x-5 mx-auto items-center">
+            <div className="flex space-x-16 mx-auto items-center">
             <p className="font-semibold text-2xl">{t("managerfee.totalUSDT")}</p>
             <p className="text-xl font-bold">{totalUSDT.toLocaleString()}</p>
             </div>
           </div>
           <div className="p-4 border-r flex justify-between items-center">
-            <div className="flex space-x-5 mx-auto items-center">
+            <div className="flex space-x-16 mx-auto items-center">
             <p className="font-semibold text-2xl">{t("managerfee.totalFee")}</p>
             <p className="text-xl font-bold">{totalFee.toFixed(2)}</p>
 
