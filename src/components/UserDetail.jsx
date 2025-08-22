@@ -97,6 +97,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       bankAccount: Number(bankAccount),
       tetherAddress,
       status,
+      referralCode,
       admin: user?.admin || false, // preserve existing admin status
     };
 
@@ -115,6 +116,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
         setBankAccount(bankAccount);
         setTetherAddress(tetherAddress);
         setStatus(status);
+        setReferralCode(referralCode)
       }
     } catch (error) {
       console.error("Error during sign-up:", error);
