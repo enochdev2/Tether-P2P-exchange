@@ -359,8 +359,8 @@
   "managerfee": {
     "todaySales": "금일 테더 판매량",
     "totalSales": "총 테더 판매량",
-    "totalFee": "테더 판매량 수수료 (1%)",
-    "totalUSDT": "총 테더 판매량",
+    "totalFee": "수수료 (1%)",
+    "totalUSDT": "테더 판매량",
     "referral": "레퍼럴코드",
     "nickname": "닉네임",
     "amount": "테더 판매량",
