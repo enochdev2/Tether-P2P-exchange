@@ -34,7 +34,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch(
         // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
+        "http://localhost:3000/api/v1/tetherprice/get-tether-price",
         {
           method: "GET",
           headers: {

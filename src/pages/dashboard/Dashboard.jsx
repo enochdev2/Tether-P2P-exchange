@@ -41,8 +41,8 @@ function Dashboard() {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg = data.error || data.message || "Failed to fetch notifications";
-        ErrorToast(errorMsg);
+        // const errorMsg = data.error || data.message || "Failed to fetch notifications";
+        // ErrorToast(errorMsg);
         return [];
       }
 
