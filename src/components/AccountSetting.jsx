@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from "react";
-import InfoCard from "./InfoCard";
 import {
-  Banknote,
   BanknoteIcon,
   Calendar,
   PhoneIcon,
   PiggyBank,
   ShieldAlertIcon,
-  User,
   User2,
-  User2Icon,
   UserCircle2,
   UserIcon,
   VaultIcon,
-  Wallet2Icon,
+  Wallet2Icon
 } from "lucide-react";
-import { useAuth } from "../utils/AuthProvider";
-import { SuccessToast } from "../utils/Success";
-import { ErrorToast } from "../utils/Error";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../utils/AuthProvider";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
+import InfoCard from "./InfoCard";
 
 export default function AccountSetting({ isEditing, setIsEditing, user }) {
   const { t } = useTranslation();
@@ -69,9 +66,8 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
     } catch (error) {
       console.error("Error during sign-up:", error);
       ErrorToast(`something went wrong ${error}`);
-      // Optionally handle error here (e.g., show error message)
     } finally {
-      setIsLoading(false); // Hide loading state after completion
+      setIsLoading(false); 
     }
   };
 
@@ -83,7 +79,6 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
 
   return (
     <div className="space-y-8 mt-10">
-      {/* Top grid: Phone & Username */}
       <form action="" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Username */}

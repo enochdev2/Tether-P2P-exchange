@@ -21,8 +21,8 @@ const Notifications = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg = data.error || data.message || "Failed to fetch notifications";
-        ErrorToast(errorMsg);
+        // const errorMsg = data.error || data.message || "Failed to fetch notifications";
+        // ErrorToast(errorMsg);
         return;
       }
 
@@ -33,7 +33,7 @@ const Notifications = () => {
       setNotifications(data); // Update notifications state
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      ErrorToast("An error occurred while fetching notifications.");
+      // ErrorToast("An error occurred while fetching notifications.");
     } finally {
       setLoadingNotifications(false);
     }

@@ -1,15 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/AuthProvider";
-import { SuccessToast } from "../utils/Success";
-import { ErrorToast } from "../utils/Error";
 import { useTranslation } from "react-i18next";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
 
 const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
   const { t } = useTranslation();
-  const { allUser } = useAuth();
-  const navigate = useNavigate();
-  const [status, setStatus] = useState(offer?.status);
   const [isCommenting, setIsCommenting] = useState(false); // Track comment form visibility
   const [commentText, setCommentText] = useState(""); // To store comment input
   const [loading, setLoading] = useState(false);
@@ -52,7 +47,7 @@ const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
 
       if (!response.ok) {
         const errorMsg =
-          data.error || data.message || "Failed to register user";
+          data.error || data.message || "Failed";
         ErrorToast(errorMsg);
       } else {
         SuccessToast(t("messages.commentAdded"));
