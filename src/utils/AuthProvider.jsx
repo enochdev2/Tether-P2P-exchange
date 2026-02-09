@@ -126,7 +126,7 @@ export const AuthProvider = ({ children }) => {
       // const response = await fetch("
       const response = await fetch(
         // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users0s",
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users0s",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
         {
           method: "POST",
           headers: {
