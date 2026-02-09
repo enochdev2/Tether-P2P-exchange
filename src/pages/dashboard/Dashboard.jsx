@@ -136,7 +136,7 @@ function Dashboard() {
 
     fetchAllNotifications();
     // Set an interval to fetch notifications every 10 seconds
-    const intervalId = setInterval(fetchAllNotifications, 3000);
+    const intervalId = setInterval(fetchAllNotifications, 300000);
 
     // Cleanup the interval on component unmount or route change
     return () => clearInterval(intervalId);
