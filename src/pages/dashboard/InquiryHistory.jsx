@@ -67,7 +67,7 @@ const AllInquiries = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry/user",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/inquiry/user",
         {
           method: "GET",
           headers: {

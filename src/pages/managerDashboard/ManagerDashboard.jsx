@@ -94,17 +94,17 @@ const ManagerDashboard = () => {
 //   useEffect(() => {
 //     // Example API endpoints for the user and admin notifications
 //     const userNotifications = [
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/sellOrders",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/buyOrders",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/registration",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/inquiry",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/sellOrders",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/buyOrders",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/inquiry",
 //     ];
 
 //     const adminNotifications = [
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/sellOrders",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/buyOrders",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/chatSession",
-//       "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/registration",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/sellOrders",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/buyOrders",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
+//       "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/registration",
 //     ];
 
 //     // Assuming you have some way to differentiate the user's role (e.g., `isAdmin` flag)
@@ -175,7 +175,7 @@ const ManagerDashboard = () => {
 //       const token = localStorage.getItem("token");
 //       console.log("🚀 ~ getUserProfile ~ user.nickname:", user?.nickname); // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
 //       const response = await fetch(
-//         `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user?.nickname}`,
+//         `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${user?.nickname}`,
 //         {
 //           method: "GET",
 //           headers: {

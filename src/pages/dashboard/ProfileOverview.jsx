@@ -47,7 +47,7 @@ function ProfileOverview() {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${user.nickname}`,
+          `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${user.nickname}`,
           {
             method: "GET",
             headers: {
@@ -90,7 +90,7 @@ function ProfileOverview() {
       }
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/user/registration",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
         {
           method: "GET",
           headers: {
@@ -128,7 +128,7 @@ function ProfileOverview() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read/${notificationId}`,
         {
           method: "PUT",
           headers: {

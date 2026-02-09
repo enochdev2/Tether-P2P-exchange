@@ -70,7 +70,7 @@ const SignUp = () => {
       try {
         setIsLoading2(true);
         const res = await fetch(
-          `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/check-nickname/${value}`
+          `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/check-nickname/${value}`
         );
         setIsLoading2(false);
         const data = await res.json();
@@ -184,7 +184,7 @@ const SignUp = () => {
       console.log(`Sending SMS to: ${formData.phone}`);
       // "http://localhost:3000/api/v1/user/users/sendCode",
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/sendCode",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/sendCode",
         {
           method: "POST",
           headers: {
@@ -224,7 +224,7 @@ const SignUp = () => {
       console.log(`Resending SMS to: ${formData.phone}`);
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/resendverify",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/resendverify",
         {
           method: "POST",
           headers: {
@@ -295,7 +295,7 @@ const SignUp = () => {
     try {
       // Simulate API call to verify SMS code
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/verify",
         {
           method: "POST",
           headers: {
@@ -380,7 +380,7 @@ const SignUp = () => {
 
         // Upload to backend (you’ll create this endpoint below)
         const imageRes = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/upload",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/upload",
           {
             method: "POST",
             body: formDataImage,

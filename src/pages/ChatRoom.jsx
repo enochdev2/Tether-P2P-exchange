@@ -30,7 +30,7 @@ const ChatRoom = () => {
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -60,7 +60,7 @@ const ChatRoom = () => {
 
   const fetchMessages = async () => {
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/messages/${whic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/messages/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -126,7 +126,7 @@ const ChatRoom = () => {
 
           // "http://localhost:3000/api/v1/chat",
           await fetch(
-            "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+            "https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat",
             {
               method: "POST",
               headers: {
@@ -149,7 +149,7 @@ const ChatRoom = () => {
 
         // "http://localhost:3000/api/v1/chat",
         await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/chat",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat",
            {
           method: "POST",
           headers: {
@@ -166,7 +166,7 @@ const ChatRoom = () => {
   const handleCloseChat = async () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
         headers: {

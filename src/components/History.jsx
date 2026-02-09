@@ -23,18 +23,19 @@ const History = () => {
   async function fetchSellOrders(status = "") {
     try {
       // Build the URL with optional status query parameter
-      const url = status
-        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
-            status
-          )}`
-          : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-          console.log("🚀 ~ fetchSellOrders ~ url:", url)
+      // const url = status
+      //   ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
+      //       status
+      //     )}`
+      //     : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+         
 
       const token = localStorage.getItem("token");
       
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders",
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders",
         {
           method: "GET",
           headers: {
@@ -90,7 +91,8 @@ const History = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/user/inProgress-orders",
+        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/user/inProgress-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/user/inProgress-orders",
         {
           method: "GET",
           headers: {

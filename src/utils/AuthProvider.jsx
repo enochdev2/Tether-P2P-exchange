@@ -33,7 +33,8 @@ export const AuthProvider = ({ children }) => {
   const fetchPrice = async () => {
     try {
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
         {
           method: "GET",
           headers: {
@@ -57,7 +58,8 @@ export const AuthProvider = ({ children }) => {
     try {
       // const response = await fetch("http://localhost:3000/api/v1/user/login",
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -96,7 +98,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("isLoggedIn");
       // const response = await fetch("http://localhost:5173/api/v1/user/logout", {
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/logout",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/logout",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/logout",
         {
           method: "POST",
           credentials: "include",
@@ -122,7 +125,8 @@ export const AuthProvider = ({ children }) => {
     try {
       // const response = await fetch("
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users0s",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users0s",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users0s",
         {
           method: "POST",
           headers: {
@@ -155,7 +159,8 @@ export const AuthProvider = ({ children }) => {
     try {
       // const response = await fetch("http://localhost:5173/api/v1/user/users", {
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
         {
           method: "GET",
           headers: {
@@ -181,7 +186,8 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/${updatedData.nickname}`,
+        // `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${updatedData.nickname}`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${updatedData.nickname}`,
         {
           method: "PUT",
           headers: {

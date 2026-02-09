@@ -249,7 +249,7 @@ export default function AdminTransactions() {
     // const url = "http://localhost:3000/api/v1/sell/allmatched-orders";
 
     try {
-      const url = "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allmatched-orders";
+      const url = "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allmatched-orders";
       const token = localStorage.getItem("token");
 
       const response = await fetch(url, {

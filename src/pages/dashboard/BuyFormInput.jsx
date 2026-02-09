@@ -58,7 +58,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
     const fetchPrice = async () => {
       try {
         const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
           {
             method: "GET",
             headers: {
@@ -95,7 +95,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
     const fetchPrice = async () => {
       try {
         const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
           {
             method: "GET",
             headers: {
@@ -190,7 +190,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/buy", {
+      const response = await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

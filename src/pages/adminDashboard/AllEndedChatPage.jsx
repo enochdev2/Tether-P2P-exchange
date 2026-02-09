@@ -19,7 +19,7 @@ const AllEndedChatPage = () => {
   const fetchMessages = async () => {
     try {
       const res = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/end/allchat`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/end/allchat`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +57,7 @@ const AllEndedChatPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/unread/chatSession",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
         {
           method: "GET",
           headers: {

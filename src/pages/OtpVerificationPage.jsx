@@ -92,7 +92,7 @@ const OtpVerificationPage = ({
     try {
       // Make API call to verify the OTP
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/verify",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/verify",
         {
           method: "POST",
           headers: {
@@ -140,7 +140,7 @@ const OtpVerificationPage = ({
       const user = JSON.parse(localStorage.getItem("user"));
       console.log(user);
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users/resendverify",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/resendverify",
         {
           method: "POST",
           headers: {

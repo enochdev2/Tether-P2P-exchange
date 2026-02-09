@@ -41,7 +41,7 @@ const SellLivePage = () => {
 
       // `http://localhost:3000/api/v1/sell/admin/match-orders`,
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/match-orders`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/match-orders`,
         {
           method: "POST",
           headers: {
@@ -82,7 +82,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/complete-orders`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/complete-orders`,
         {
           method: "POST",
           headers: {
@@ -120,7 +120,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/cancel-orders`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/cancel-orders`,
         {
           method: "POST",
           headers: {
@@ -149,16 +149,16 @@ const SellLivePage = () => {
   async function fetchSellOrders() {
     try {
       //   const url = status
-      //     ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
+      //     ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders?status=${encodeURIComponent(
       //         status
       //       )}`
-      //     : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
+      //     : "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders";
 
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/onsale-orders",
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/onsale-orders",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
           headers: {
@@ -202,8 +202,8 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/pending-orders",
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/pending-orders",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
           headers: {
@@ -238,7 +238,7 @@ const SellLivePage = () => {
 
       // "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/all/inProgress-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/inProgress-orders",
         {
           method: "GET",
           headers: {
@@ -278,8 +278,8 @@ const SellLivePage = () => {
       const storedLanguage = localStorage.getItem("language");
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
           headers: {
@@ -313,8 +313,8 @@ const SellLivePage = () => {
       const storedLanguage = localStorage.getItem("language");
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
           headers: {

@@ -40,7 +40,7 @@ const BuyLivePage = () => {
       setLoadingBuy(false);
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/onbuy-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/onbuy-orders",
         {
           method: "GET",
           headers: {
@@ -84,8 +84,8 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/pending-orders",
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/pending-orders",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
           headers: {
@@ -115,8 +115,8 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/all/inProgress-orders",
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/inProgress-orders",
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "GET",
           headers: {
@@ -157,7 +157,7 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/cancel-orders`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/cancel-orders`,
         {
           method: "POST",
           headers: {
@@ -196,7 +196,7 @@ const BuyLivePage = () => {
 
       // `http://localhost:3000/api/v1/buy/admin/buy-orders/${orderId}/approve`,
       const response = await fetch(
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/approve`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/approve`,
         {
           method: "POST",
           headers: {
@@ -235,9 +235,9 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        // `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/reject`,
-        `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/reject`,
-        // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/allonsell-orders-orders",
+        // `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/reject`,
+        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/reject`,
+        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
         {
           method: "POST",
           headers: {

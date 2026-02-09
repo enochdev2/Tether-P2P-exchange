@@ -20,7 +20,7 @@ const TetherPrice = () => {
         // const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/get-tether-price",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
           {
             method: "GET",
             headers: {
@@ -63,10 +63,10 @@ const TetherPrice = () => {
     const token = localStorage.getItem("token");
 
     try {
-      // "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/login",
+      // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
       //   const response = await fetch(
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/tetherprice/update-tether-price",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/update-tether-price",
         {
           method: "POST",
 

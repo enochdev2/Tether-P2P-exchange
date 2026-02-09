@@ -51,8 +51,10 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       const url = sell
-        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
-        : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+        ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        : `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+        // ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        // : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
 
       const response = await fetch(url, {
         method: "DELETE",

@@ -39,7 +39,7 @@ const ChatRoom2 = () => {
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -124,7 +124,7 @@ const ChatRoom2 = () => {
           socket.emit("sendMessage", messageData);
           const storedLanguage = localStorage.getItem("language");
 
-          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+          await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -144,7 +144,7 @@ const ChatRoom2 = () => {
         socket.emit("sendMessage", messageData);
         const storedLanguage = localStorage.getItem("language");
 
-        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+        await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -159,7 +159,7 @@ const ChatRoom2 = () => {
 
   const fetchMessages = async () => {
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/${whic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -181,7 +181,7 @@ const ChatRoom2 = () => {
   const fetchChatUserInfo = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${whic}`,
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/userInfo/${whic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -202,7 +202,7 @@ const ChatRoom2 = () => {
   const handleCloseChat = async () => {
     socket.emit("closeChat", { whic });
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${whic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${whic}`,
       // `http://localhost:3000/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
@@ -222,7 +222,7 @@ const ChatRoom2 = () => {
   //? .......BUYER................
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2p-exchang-backend.onrender.com", {
+    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -254,7 +254,7 @@ const ChatRoom2 = () => {
 
   const fetchMessages2 = async () => {
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/messages/${buywhic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/${buywhic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -276,7 +276,7 @@ const ChatRoom2 = () => {
   const fetchChatUserInfo2 = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${buywhic}`,
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/admin/userInfo/${buywhic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${buywhic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -342,7 +342,7 @@ const ChatRoom2 = () => {
           const storedLanguage = localStorage.getItem("language");
 
           // await fetch("http://localhost:3000/api/v1/chat", {
-          await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+          await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -363,7 +363,7 @@ const ChatRoom2 = () => {
         const storedLanguage = localStorage.getItem("language");
 
         // await fetch("http://localhost:3000/api/v1/chat", {
-        await fetch("https://tether-p2p-exchang-backend.onrender.com/api/v1/chat", {
+        await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -379,7 +379,7 @@ const ChatRoom2 = () => {
   const handleCloseChat2 = async () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/chat/close/${buywhic}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${buywhic}`,
       // `http://localhost:3000/api/v1/chat/close/${buywhic}`,
       {
         method: "PATCH",

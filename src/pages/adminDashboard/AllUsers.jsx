@@ -12,7 +12,7 @@ const AllUsers = () => {
     const allUser = async () => {
       try {
         const response = await fetch(
-          "https://tether-p2p-exchang-backend.onrender.com/api/v1/user/users",
+          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
           {
             method: "GET",
             headers: {

@@ -39,8 +39,8 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
       const storedLanguage = localStorage.getItem("language");
       
       const url = sell
-        ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders/${orderId}/cancel`
-        : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/buy-orders/${orderId}/cancel`;
+        ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders/${orderId}/cancel`
+        : `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/buy-orders/${orderId}/cancel`;
 
       const response = await fetch(url, {
         method: "DELETE",

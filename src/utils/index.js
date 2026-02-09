@@ -9,7 +9,7 @@ export const markAllNotificationsAsRead = async ({
 }) => {
   try {
     const response = await fetch(
-      "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
+      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read",
       {
         method: "PUT",
         headers: {
@@ -40,9 +40,9 @@ export async function markNotificationRead({ notificationId, setNotifications })
   console.log("🚀 ~ markNotificationRead ~ notificationId:", notificationId);
   try {
     const token = localStorage.getItem("token");
-    // `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+    // `https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read/${notificationId}`,
     const response = await fetch(
-      `https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read/${notificationId}`,
+      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read/${notificationId}`,
       {
         method: "PUT",
         headers: {
@@ -71,7 +71,7 @@ export async function markNotificationRead({ notificationId, setNotifications })
       const user = JSON.parse(localStorage.getItem("user"));
       // Make an API call to mark all notifications as read
       const response = await fetch(
-        "https://tether-p2p-exchang-backend.onrender.com/api/v1/notification/mark-read",
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read",
         {
           method: "PUT",
           headers: {

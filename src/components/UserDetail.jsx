@@ -133,7 +133,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
     const formData = new FormData();
     formData.append("file", rawFile);
 
-    const res = await fetch(`https://tether-p2p-exchang-backend.onrender.com/api/v1/user/${userId}/image`, {
+    const res = await fetch(`https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/${userId}/image`, {
       method: "PUT",
       body: formData,
     });
