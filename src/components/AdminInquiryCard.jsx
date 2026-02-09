@@ -3,24 +3,21 @@ import { useTranslation } from "react-i18next";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 
-const AdminInquiryCard = ({ offer, sell, handleSubmit, setChange }) => {
+const AdminInquiryCard = ({ offer }) => {
   const { t } = useTranslation();
   const [isCommenting, setIsCommenting] = useState(false); // Track comment form visibility
   const [commentText, setCommentText] = useState(""); // To store comment input
   const [loading, setLoading] = useState(false);
 
-  const isPending = sell
-    ? offer.status === "Pending Approval"
-    : offer.status === "Waiting for uy";
+  // const isPending = sell
+  //   ? offer.status === "Pending Approval"
+  //   : offer.status === "Waiting for uy";
 
   const timestamp = offer.createdAt;
   const dateObj = new Date(timestamp);
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
-  const handleOnChange = (change) => {
-    setChange(change);
-    handleSubmit();
-  };
+
 
   const handleCommentSubmit = async (inquiryId) => {
     if (!commentText.trim()) return;

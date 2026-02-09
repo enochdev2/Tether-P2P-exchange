@@ -23,7 +23,6 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
 
   const [phone, setPhone] = useState(user?.phone);
   const [username, setUsername] = useState(user?.username);
-  const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
   const [fullName, setFullName] = useState(user?.fullName);
   const [dob, setDob] = useState(user?.dob);
@@ -71,11 +70,6 @@ export default function AccountSetting({ isEditing, setIsEditing, user }) {
     }
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files?.[0] ?? null;
-    if (file) setImage(file);
-    // upload logic...
-  };
 
   return (
     <div className="space-y-8 mt-10">

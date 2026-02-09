@@ -15,8 +15,7 @@ const Navbar = () => {
   const { isLoggedIn, user, priceKRW } = useAuth();
   const [activeLink, setActiveLink] = useState(""); // Track the active link
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Manage mobile menu visibility
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Manage dropdown visibility
-  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+  const [isDropdownOpen, ] = useState(false); // Manage dropdown visibility
   const [language, setLanguage] = useState(i18n.language.toUpperCase() || "EN"); // Initial language state
   const [isOpen, setIsOpen] = useState(false);
 
@@ -46,8 +45,6 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen); // Toggle the mobile menu
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen); // Toggle the profile dropdown
-  const togglePasswordVisibility = () => setShowPassword(!showPassword); // Toggle password visibility
   const [isLoading, setIsLoading] = useState(false);
   const { logout } = useAuth();
 

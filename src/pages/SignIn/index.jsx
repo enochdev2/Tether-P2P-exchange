@@ -51,9 +51,9 @@ const SignIn = () => {
       // const data = await login(user);
       // const data = await response.json();
 
-      const response = await fetch("http://localhost:3000/api/v1/user/login",
-      // const response = await fetch(
-      //   "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
+      // const response = await fetch("http://localhost:3000/api/v1/user/login",
+      const response = await fetch(
+        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
