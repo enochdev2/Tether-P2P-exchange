@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { ErrorToast } from "../utils/Error";
 import { useTranslation } from "react-i18next";
@@ -15,16 +15,19 @@ const UserDetailManager = ({ user: initialUser, setIsViewing, handleUpdate }) =>
   const [username, setUsername] = useState(user?.username);
   const [referralCode, setReferralCode] = useState(user?.referralCode);
   const [nickname, setNickname] = useState(user?.nickname);
-  const [password, setPassword] = useState(user?.password);
+  const [setPassword] = useState(user?.password);
   const [fullName, setFullName] = useState(user?.fullName);
   const [dob, setDob] = useState(user?.dob);
   const [bankName, setBankName] = useState(user?.bankName);
-  const [telegram, setTelegram] = useState(user?.telegram);
+  const [telegram] = useState(user?.telegram);
   const [bankAccount, setBankAccount] = useState(user?.bankAccount);
   const [tetherAddress, setTetherAddress] = useState(user?.tetherAddress);
   const [status, setStatus] = useState(user?.status || "inactive");
   const [, setIsSaving] = useState(false);
-  const [rawFile, ] = useState(null);
+
+   useEffect(() => {
+    setUsers(initialUser || {});
+  }, [initialUser]);
 
   if (!user) {
     return <div className="p-8 text-center text-gray-600">No user data available.</div>;
@@ -76,9 +79,7 @@ const UserDetailManager = ({ user: initialUser, setIsViewing, handleUpdate }) =>
     }
   };
 
-  useEffect(() => {
-    setUsers(initialUser || {});
-  }, [initialUser]);
+ 
 
   const handleSave = async () => {
     // e.preventDefault();
@@ -121,32 +122,6 @@ const UserDetailManager = ({ user: initialUser, setIsViewing, handleUpdate }) =>
     } finally {
       setIsSaving(false);
       setIsViewing(false);
-    }
-  };
-
-  const updateImage = async (userId) => {
-    if (!rawFile) return ErrorToast("Please select an image to upload.");
-
-    const formData = new FormData();
-    formData.append("file", rawFile);
-
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/${userId}/image`,
-      {
-        method: "PUT",
-        body: formData,
-      }
-    );
-
-    const data = await res.json();
-    if (res.ok) {
-      setUsers((prev) => ({
-        ...prev,
-        tetherIdImage: data.imageUrl,
-      }));
-      SuccessToast("Image updated successfully!");
-    } else {
-      console.error("Image update failed:", data.message);
     }
   };
 
@@ -221,22 +196,22 @@ const UserDetailManager = ({ user: initialUser, setIsViewing, handleUpdate }) =>
                     name === "phone"
                       ? phone
                       : name === "username"
-                      ? username
-                      : name === "nickname"
-                      ? nickname
-                      : name === "fullName"
-                      ? fullName
-                      : name === "dob"
-                      ? dob
-                      : name === "referralCode"
-                      ? referralCode
-                      : name === "bankName"
-                      ? bankName
-                      : name === "telegram"
-                      ? telegram
-                      : name === "status"
-                      ? status
-                      : ""
+                        ? username
+                        : name === "nickname"
+                          ? nickname
+                          : name === "fullName"
+                            ? fullName
+                            : name === "dob"
+                              ? dob
+                              : name === "referralCode"
+                                ? referralCode
+                                : name === "bankName"
+                                  ? bankName
+                                  : name === "telegram"
+                                    ? telegram
+                                    : name === "status"
+                                      ? status
+                                      : ""
                   }
                   onChange={handleChange}
                   disabled={

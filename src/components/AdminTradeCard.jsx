@@ -1,18 +1,16 @@
-import { useNavigate } from "react-router-dom";
-import { CheckCircle, Clock, Star } from "lucide-react";
-import logo2 from "../assets/Tether2.png";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FaCopy, FaTrash } from "react-icons/fa";
+import logo2 from "../assets/Tether2.png";
+import { Bankend_Url } from "../utils/AuthProvider";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./ConfirmModal";
-import { FaTrash, FaCopy } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
 
 // import your logo and statusColors accordingly
 
 const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
   const [buyerOrderId, setBuyerOrderId] = useState("");
 
@@ -51,10 +49,8 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       const url = sell
-        ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/cancel`
-        : `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
-        // ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
-        // : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+        ? `${Bankend_Url}/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        : `${Bankend_Url}/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
 
       const response = await fetch(url, {
         method: "DELETE",
@@ -68,7 +64,6 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
         }),
         // body: JSON.stringify({ orderId, nickname: user.nickname }),
       });
-      const data = await response.json();
 
       if (!response.ok) {
         const data = await response.json();
@@ -98,8 +93,6 @@ const AdminTradeCard = ({ offer, sell, onMatch, fetchOrders }) => {
     setBuyerOrderId(""); // Reset the input field
   };
 
-  const orderType = sell ? "sell" : "buy";
-  const offerId = offer._id;
 
   // Status colors example (define your actual statusColors object elsewhere)
   // const statusColors = {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import avatarImage from "../../assets/avatarImage.png";
 import solanaImage from "../../assets/solanaImage.png";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { useAuth } from "../../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 
@@ -69,9 +69,7 @@ const SignUp = () => {
     debounceRef.current = setTimeout(async () => {
       try {
         setIsLoading2(true);
-        const res = await fetch(
-          `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/check-nickname/${value}`
-        );
+        const res = await fetch(`${Bankend_Url}/api/v1/user/check-nickname/${value}`);
         setIsLoading2(false);
         const data = await res.json();
         console.log("🚀 ~ debounceRef.current=setTimeout ~ data:", data);
@@ -82,7 +80,7 @@ const SignUp = () => {
           setNicknameError("");
         }
       } catch (err) {
-        console.log("🚀 ~ validateNickname ~ err:", err)
+        console.log("🚀 ~ validateNickname ~ err:", err);
         setNicknameError("Unable to validate nickname. Please try again.");
       }
     }, 100); // Adjust debounce time as needed (600ms recommended)
@@ -183,18 +181,15 @@ const SignUp = () => {
       // Simulate API call to send SMS
       console.log(`Sending SMS to: ${formData.phone}`);
       // "http://localhost:3000/api/v1/user/users/sendCode",
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/sendCode",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: formData.phone, // Pass the userId (could be from props or context)
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/sendCode`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.phone, // Pass the userId (could be from props or context)
+        }),
+      });
 
       const result = await response.json();
 
@@ -223,18 +218,15 @@ const SignUp = () => {
       // Simulate API call to resend SMS
       console.log(`Resending SMS to: ${formData.phone}`);
 
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/resendverify",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: formData.phone,
-          }), // Replace with actual user data
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/resendverify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.phone,
+        }), // Replace with actual user data
+      });
 
       const result = await response.json();
       if (!response.ok) {
@@ -294,19 +286,16 @@ const SignUp = () => {
     setPhoneVerificationMessage("");
     try {
       // Simulate API call to verify SMS code
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/verify",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: formData.phone, // Pass the userId (could be from props or context)
-            verificationCode: enteredCode, // The OTP entered by the user
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.phone, // Pass the userId (could be from props or context)
+          verificationCode: enteredCode, // The OTP entered by the user
+        }),
+      });
 
       const result = await response.json();
       console.log("🚀 ~ handleSubmitSmsCode ~ result:", result.data.isVerified);
@@ -379,13 +368,10 @@ const SignUp = () => {
         formDataImage.append("file", rawFile);
 
         // Upload to backend (you’ll create this endpoint below)
-        const imageRes = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/upload",
-          {
-            method: "POST",
-            body: formDataImage,
-          }
-        );
+        const imageRes = await fetch(`${Bankend_Url}/api/v1/upload`, {
+          method: "POST",
+          body: formDataImage,
+        });
 
         const imageData = await imageRes.json();
         imageUrl = imageData.url; // Get the Cloudinary URL
@@ -425,13 +411,20 @@ const SignUp = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen px-4 py-10 pt-28"
+      className="relative flex justify-center items-center min-h-screen px-4 py-10 pt-28"
       style={{
         backgroundImage: "url('/bgg.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+       <div className="absolute top-20 left-0 w-full bg-[#110101] text-red-400 overflow-hidden z-10">
+        <div className="flex whitespace-nowrap">
+          <div className="marquee py-2 text-base font-bold">
+            ⚠️ This business is currently on hold. The website is downgraded to a free server and may take up to 50 seconds to load initially.
+          </div>
+        </div>
+      </div>
       <div className="w-full max-w-5xl bg-gray-900/80 rounded-lg shadow-2xl p-6 md:p-10">
         <h2 className="text-2xl font-bold text-white text-center mb-8">{t("signUp.title")}</h2>
         <form onSubmit={handleSubmit}>

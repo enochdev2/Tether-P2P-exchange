@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import ChatRoomPanel from "../components/chat/ChatRoomPanel";
-import { useAuth } from "../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../utils/AuthProvider";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 
@@ -25,8 +25,6 @@ const ChatRoom2 = () => {
   const [newMessage2, setNewMessage2] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [isConnected2, setIsConnected2] = useState(false);
-  const [userInfo, setUserInfo] = useState(true);
-  // const [userOrderId, setUserOrderId] = useState(null);
   const [image, setImage] = useState(null);
   const [image2, setImage2] = useState(null);
   const navigate = useNavigate();
@@ -39,7 +37,7 @@ const ChatRoom2 = () => {
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
+    const newSocket = io(`${Bankend_Url}`, {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -71,21 +69,11 @@ const ChatRoom2 = () => {
 
   const handleSendMessage = async () => {
     if (newMessage.trim() || image) {
-      const message = { sender: user.nickname, content: newMessage, whic };
+      // const message = { sender: user.nickname, content: newMessage, whic };
 
       const token = localStorage.getItem("token");
 
       // socket.emit("sendMessage", message);
-
-      const messageData = {
-        content: newMessage ? newMessage : "Image",
-        sender: user.nickname,
-        orderId: orderId,
-        orderType: orderType, // Pass orderType as well
-        timestamp: new Date().toISOString(),
-      };
-
-      let base64Image = null;
 
       const commonMessageData = {
         content: newMessage ? newMessage : "Image",
@@ -124,7 +112,7 @@ const ChatRoom2 = () => {
           socket.emit("sendMessage", messageData);
           const storedLanguage = localStorage.getItem("language");
 
-          await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
+          await fetch(`${Bankend_Url}/api/v1/chat`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -144,7 +132,7 @@ const ChatRoom2 = () => {
         socket.emit("sendMessage", messageData);
         const storedLanguage = localStorage.getItem("language");
 
-        await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
+        await fetch(`${Bankend_Url}/api/v1/chat`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -158,15 +146,12 @@ const ChatRoom2 = () => {
   };
 
   const fetchMessages = async () => {
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/${whic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/admin/messages/${whic}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       const data = await res.json();
@@ -181,7 +166,7 @@ const ChatRoom2 = () => {
   const fetchChatUserInfo = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${whic}`,
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${whic}`,
+      `${Bankend_Url}/api/v1/chat/admin/userInfo/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -202,7 +187,7 @@ const ChatRoom2 = () => {
   const handleCloseChat = async () => {
     socket.emit("closeChat", { whic });
     const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${whic}`,
+      `${Bankend_Url}/api/v1/chat/close/${whic}`,
       // `http://localhost:3000/api/v1/chat/close/${whic}`,
       {
         method: "PATCH",
@@ -222,7 +207,7 @@ const ChatRoom2 = () => {
   //? .......BUYER................
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
+    const newSocket = io(`${Bankend_Url}`, {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -253,15 +238,12 @@ const ChatRoom2 = () => {
   }, [buywhic]);
 
   const fetchMessages2 = async () => {
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/${buywhic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/admin/messages/${buywhic}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       const data = await res.json();
@@ -276,7 +258,7 @@ const ChatRoom2 = () => {
   const fetchChatUserInfo2 = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${buywhic}`,
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${buywhic}`,
+      `${Bankend_Url}/api/v1/chat/admin/userInfo/${buywhic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -296,13 +278,11 @@ const ChatRoom2 = () => {
 
   const handleSendMessage2 = async () => {
     if (newMessage2.trim() || image2) {
-      const message = { sender: user.nickname, content: newMessage, buywhic };
+      // const message = { sender: user.nickname, content: newMessage, buywhic };
 
       const token = localStorage.getItem("token");
 
-      // socket.emit("sendMessage", message);
-
-      let base64Image = null;
+    
 
       const commonMessageData = {
         content: newMessage2 ? newMessage2 : "Image",
@@ -342,7 +322,7 @@ const ChatRoom2 = () => {
           const storedLanguage = localStorage.getItem("language");
 
           // await fetch("http://localhost:3000/api/v1/chat", {
-          await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
+          await fetch(`${Bankend_Url}/api/v1/chat`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -363,7 +343,7 @@ const ChatRoom2 = () => {
         const storedLanguage = localStorage.getItem("language");
 
         // await fetch("http://localhost:3000/api/v1/chat", {
-        await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat", {
+        await fetch(`${Bankend_Url}/api/v1/chat`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -379,7 +359,7 @@ const ChatRoom2 = () => {
   const handleCloseChat2 = async () => {
     socket.emit("closeChat", { orderId });
     const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${buywhic}`,
+      `${Bankend_Url}/api/v1/chat/close/${buywhic}`,
       // `http://localhost:3000/api/v1/chat/close/${buywhic}`,
       {
         method: "PATCH",

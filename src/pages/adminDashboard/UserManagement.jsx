@@ -4,7 +4,7 @@ import AdminTradeCard2 from "../../components/AdminTradeCard2";
 import AdminUserCard from "../../components/AdminUserCard";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import NotificationPopup from "../../components/NotificationPopup";
-import { useAuth } from "../../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
@@ -24,16 +24,13 @@ const UserManagement = () => {
   const allUser = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
 

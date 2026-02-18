@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../utils/AuthProvider";
-import { SuccessToast } from "../utils/Success";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Bankend_Url } from "../utils/AuthProvider";
+import { SuccessToast } from "../utils/Success";
 
-const OtpVerificationPage = ({
-  onVerifySuccess,
-  onResendOtp,
-  userIdentifier,
-}) => {
-   const { t } = useTranslation();
+const OtpVerificationPage = ({  onResendOtp, userIdentifier }) => {
+  const { t } = useTranslation();
 
   // const { user, setUser } = useAuth();
   const navigate = useNavigate();
@@ -91,19 +87,16 @@ const OtpVerificationPage = ({
     // "http://localhost:3000/api/v1/user/users/verify",
     try {
       // Make API call to verify the OTP
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/verify",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nickname: user.nickname, // Pass the userId (could be from props or context)
-            code: fullOtp, // The OTP entered by the user
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname: user.nickname, // Pass the userId (could be from props or context)
+          code: fullOtp, // The OTP entered by the user
+        }),
+      });
 
       const result = await response.json();
 
@@ -118,9 +111,7 @@ const OtpVerificationPage = ({
       navigate("/signin");
       SuccessToast(t("messages.otpVerified"));
     } catch (error) {
-      setErrorMessage(
-        "An error occurred during verification. Please try again."
-      );
+      setErrorMessage("An error occurred during verification. Please try again.");
       console.error("OTP verification error:", error);
     } finally {
       setIsSubmitting(false); // Enable submit button again after operation completes
@@ -139,26 +130,21 @@ const OtpVerificationPage = ({
       // "http://localhost:3000/api/v1/user/users/resendverify",
       const user = JSON.parse(localStorage.getItem("user"));
       console.log(user);
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/resendverify",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nickname: user.nickname,
-            phone: user.phone,
-          }), // Replace with actual user data
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/resendverify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname: user.nickname,
+          phone: user.phone,
+        }), // Replace with actual user data
+      });
 
       const result = await response.json();
       if (!response.ok) {
         // Handle error response from API
-        setErrorMessage(
-          result.error || "Failed to resend OTP. Please try again."
-        );
+        setErrorMessage(result.error || "Failed to resend OTP. Please try again.");
         return;
       }
 
@@ -181,15 +167,11 @@ const OtpVerificationPage = ({
       style={{ backgroundImage: "url('/bgg.png')" }}
     >
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
-        <h2 className="text-3xl font-extrabold text-gray-800 mb-4">
-          OTP Verification
-        </h2>
+        <h2 className="text-3xl font-extrabold text-gray-800 mb-4">OTP Verification</h2>
         <p className="text-gray-600 mb-6">
           A 6-digit code has been sent to your{" "}
-          {userIdentifier
-            ? `account for ${userIdentifier}`
-            : "registered email/phone"}
-          . Please enter the code below. a
+          {userIdentifier ? `account for ${userIdentifier}` : "registered email/phone"}. Please
+          enter the code below. a
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -211,9 +193,7 @@ const OtpVerificationPage = ({
             ))}
           </div>
 
-          {errorMessage && (
-            <p className="text-red-600 text-sm">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-red-600 text-sm">{errorMessage}</p>}
 
           <button
             type="submit"
@@ -235,9 +215,7 @@ const OtpVerificationPage = ({
             onClick={handleResend}
             className={`font-semibold transition-colors cursor-pointer duration-200
               ${
-                canResend
-                  ? "text-blue-600 hover:text-blue-800"
-                  : "text-gray-400 cursor-not-allowed"
+                canResend ? "text-blue-600 hover:text-blue-800" : "text-gray-400 cursor-not-allowed"
               }`}
             disabled={!canResend || isSubmitting}
           >

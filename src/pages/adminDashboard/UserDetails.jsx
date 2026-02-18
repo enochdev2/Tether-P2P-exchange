@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import UserDetail from "../../components/UserDetail";
+import { Bankend_Url } from "../../utils/AuthProvider";
 
 const transactionsData = {
   1: [
@@ -35,45 +35,15 @@ const UserDetails = () => {
   const user = users?.find((u) => u._id === userId);
   const transactions = transactionsData[userId] || [];
 
-  // const [users, setUser] = useState(initialUser || initialUser);
-    const [isSaving, setIsSaving] = useState(false);
-  
-    if (!user) {
-      return <div className="p-8 text-center text-gray-600">No user data available.</div>;
-    }
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setUsers((prev) => ({ ...prev, [name]: value }));
-    };
-  
-  //  useEffect(() => {
-  //     setUser(initialUser || {});
-  //   }, [initialUser]);
-    
-  
-    const handleSave = () => {
-      setIsSaving(true);
-  
-      // TODO: Call API to save updated user profile here
-      setTimeout(() => {
-        setIsSaving(false);
-        alert("User profile saved successfully!");
-      }, 1500);
-    };
-
   useEffect(() => {
     const allUser = async () => {
       try {
-        const response = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/user/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch users");
@@ -88,17 +58,42 @@ const UserDetails = () => {
     allUser();
   }, [navigate]);
 
+  // const [users, setUser] = useState(initialUser || initialUser);
+  const [isSaving, setIsSaving] = useState(false);
+
+  if (!user) {
+    return <div className="p-8 text-center text-gray-600">No user data available.</div>;
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUsers((prev) => ({ ...prev, [name]: value }));
+  };
+
+  //  useEffect(() => {
+  //     setUser(initialUser || {});
+  //   }, [initialUser]);
+
+  const handleSave = () => {
+    setIsSaving(true);
+
+    // TODO: Call API to save updated user profile here
+    setTimeout(() => {
+      setIsSaving(false);
+      alert("User profile saved successfully!");
+    }, 1500);
+  };
+
+  
+
   return (
     <div className="bg-gray-50 pt-20 p-8 font-sans max-w-5xl mx-auto">
       <h1 className="text-3xl font-extrabold mb-8 text-gray-900">
-        User Details{" "}
-        <span className="text-[#26a17b]">(User ID: {user.id || user._id})</span>
+        User Details <span className="text-[#26a17b]">(User ID: {user.id || user._id})</span>
       </h1>
 
       <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-          Edit User Profile
-        </h2>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Edit User Profile</h2>
 
         <form
           onSubmit={(e) => {
@@ -127,10 +122,7 @@ const UserDetails = () => {
             },
           ].map(({ label, name, type, options }) => (
             <div key={name} className="flex flex-col">
-              <label
-                htmlFor={name}
-                className="mb-2 font-medium text-gray-700 select-none"
-              >
+              <label htmlFor={name} className="mb-2 font-medium text-gray-700 select-none">
                 {label}
               </label>
 
@@ -203,9 +195,7 @@ const UserDetails = () => {
       </div>
 
       <div className="bg-white p-6 rounded-xl shadow-lg mt-10 border border-gray-200">
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-          Transaction History
-        </h2>
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Transaction History</h2>
 
         {transactions && transactions.length > 0 ? (
           <table className="min-w-full table-auto border-collapse">
@@ -214,26 +204,15 @@ const UserDetails = () => {
                 <th className="px-4 py-2 border-b text-left font-medium text-gray-700">
                   Transaction ID
                 </th>
-                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">
-                  Amount
-                </th>
-                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">
-                  Status
-                </th>
-                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">
-                  Date
-                </th>
-                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">
-                  Actions
-                </th>
+                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">Amount</th>
+                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">Status</th>
+                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">Date</th>
+                <th className="px-4 py-2 border-b text-left font-medium text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map(({ id, amount, status, date }) => (
-                <tr
-                  key={id}
-                  className="hover:bg-indigo-50 transition-colors cursor-pointer"
-                >
+                <tr key={id} className="hover:bg-indigo-50 transition-colors cursor-pointer">
                   <td className="px-4 py-2 border-b">{id}</td>
                   <td className="px-4 py-2 border-b">{amount}</td>
                   <td
@@ -241,17 +220,15 @@ const UserDetails = () => {
                       status.toLowerCase() === "completed"
                         ? "text-green-600"
                         : status.toLowerCase() === "pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
+                          ? "text-yellow-600"
+                          : "text-red-600"
                     }`}
                   >
                     {status}
                   </td>
                   <td className="px-4 py-2 border-b">{date}</td>
                   <td className="px-4 py-2 border-b">
-                    <button className="text-indigo-600 hover:underline">
-                      View
-                    </button>
+                    <button className="text-indigo-600 hover:underline">View</button>
                   </td>
                 </tr>
               ))}

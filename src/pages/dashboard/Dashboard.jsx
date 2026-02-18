@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router-dom";
 import InfoCard from "../../components/InfoCard";
-import { useAuth } from "../../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
 import Sidebar from "./Sidebar";
 // import io from "socket.io-client";
 import { ErrorToast } from "../../utils/Error";
@@ -82,17 +82,17 @@ function Dashboard() {
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
     const userNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/inquiry",
+      `${Bankend_Url}/api/v1/notification/unread/user/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/registration`,
+      `${Bankend_Url}/api/v1/notification/unread/user/inquiry`,
     ];
 
     const adminNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/registration",
+      `${Bankend_Url}/api/v1/notification/unread/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/chatSession`,
+      `${Bankend_Url}/api/v1/notification/unread/registration`,
     ];
 
     // Assuming you have some way to differentiate the user's role (e.g., `isAdmin` flag)
@@ -166,7 +166,7 @@ function Dashboard() {
       const token = localStorage.getItem("token");
       const response = await fetch(
         // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${user?.nickname}`,
+        `${Bankend_Url}/api/v1/user/users/${user?.nickname}`,
         {
           method: "GET",
           headers: {

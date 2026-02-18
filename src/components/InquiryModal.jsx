@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { SuccessToast } from "../utils/Success";
 import { useTranslation } from "react-i18next";
+import { Bankend_Url } from "../utils/AuthProvider";
 
 const InquiryModal = ({ isOpen, onCancel }) => {
   const { t } = useTranslation();
   const [inquiryType, setInquiryType] = useState("Edit Account Info");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [setLoading] = useState(false);
+  const [ setError] = useState(null);
 
   if (!isOpen) return null;
 
@@ -19,7 +20,7 @@ const InquiryModal = ({ isOpen, onCancel }) => {
       const token = localStorage.getItem("token");
       // Assuming your backend API endpoint for inquiry creation
       const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/inquiry",
+        `${Bankend_Url}/api/v1/inquiry`,
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/inquiry",
         // "http://localhost:3000/api/v1/inquiry",
         {
@@ -40,7 +41,6 @@ const InquiryModal = ({ isOpen, onCancel }) => {
         throw new Error(errorData.error || "Failed to submit inquiry");
       }
 
-      const data = await response.json();
 
       // Optionally, reset form or close modal here
       setInquiryType("Edit Account Info");

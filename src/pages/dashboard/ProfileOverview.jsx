@@ -1,31 +1,26 @@
-import React, { useEffect, useState } from "react";
-import ProfileCard from "../../components/ProfileCard";
-import InfoCard from "../../components/InfoCard";
-import AccountSetting from "../../components/AccountSetting";
-import ProfileSetting from "../../components/ProfileSetting";
 import {
-  Banknote,
   BanknoteIcon,
   PiggyBank,
-  ShieldAlertIcon,
   UserCheck2Icon,
-  Wallet2Icon,
+  Wallet2Icon
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../utils/AuthProvider";
-import NotificationPopup from "../../components/NotificationPopup";
-import { SuccessToast } from "../../utils/Success";
-import { ErrorToast } from "../../utils/Error";
-import { LongSuccessToast } from "../../utils/LongSuccess";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import InfoCard from "../../components/InfoCard";
+import ProfileCard from "../../components/ProfileCard";
+import ProfileSetting from "../../components/ProfileSetting";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
+import { ErrorToast } from "../../utils/Error";
+import { LongSuccessToast } from "../../utils/LongSuccess";
 
 function ProfileOverview() {
   const { t } = useTranslation();
   const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [setNotifications] = useState([]);
+  const [setLoadingNotifications] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -46,16 +41,13 @@ function ProfileOverview() {
     if (user) {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch(
-          `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${user.nickname}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/user/users/${user.nickname}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         // const data = await response.json();
 
@@ -89,16 +81,13 @@ function ProfileOverview() {
         return;
       }
 
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/notification/unread/user/registration`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       // Handle error response with invalid or expired token
       if (!response.ok) {
@@ -128,7 +117,7 @@ function ProfileOverview() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/mark-read/${notificationId}`,
+        `${Bankend_Url}/api/v1/notification/mark-read/${notificationId}`,
         {
           method: "PUT",
           headers: {

@@ -1,14 +1,14 @@
+import i18next from "i18next";
 import { Equal, RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import logo2 from "../../assets/Tether2.png";
 import LoadingSpiner from "../../components/LoadingSpiner";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
-import { useAuth } from "../../utils/AuthProvider";
-import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 
 const BuyFormInput = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,22 +50,18 @@ const Modal = ({ isModalOpen, closeModal }) => {
   const [rate, setRate] = useState(priceKRW);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  // const [depositNetwork, setDepositNetwork] = useState("SOL");
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
   useEffect(() => {
     const fetchPrice = async () => {
       try {
-        const response = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/tetherprice/get-tether-price`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) throw new Error("Failed to fetch tether price");
 
         const data = await response.json();
@@ -94,16 +90,13 @@ const Modal = ({ isModalOpen, closeModal }) => {
     if (!refreshing) return;
     const fetchPrice = async () => {
       try {
-        const response = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
-          {
-            method: "GET",
-            headers: {
-              // Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/tetherprice/get-tether-price`, {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch tether price");
         }
@@ -190,7 +183,7 @@ const Modal = ({ isModalOpen, closeModal }) => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy", {
+      const response = await fetch(`${Bankend_Url}/api/v1/buy`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

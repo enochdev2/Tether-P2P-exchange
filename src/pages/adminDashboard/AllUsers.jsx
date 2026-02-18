@@ -1,25 +1,21 @@
-import { useNavigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../utils/AuthProvider";
 import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Bankend_Url } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
-  const { allUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const allUser = async () => {
       try {
-        const response = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/user/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           const data = await response.json();
@@ -117,8 +113,8 @@ const AllUsers = () => {
                     user.status?.toLowerCase() === "active"
                       ? "text-green-600"
                       : user.status?.toLowerCase() === "pending"
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                        ? "text-yellow-600"
+                        : "text-red-600"
                   }`}
                 >
                   {user.status || "Unknown"}

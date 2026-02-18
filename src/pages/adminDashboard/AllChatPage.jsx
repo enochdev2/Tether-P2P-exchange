@@ -1,33 +1,28 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaArrowRight, FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import NotificationPopup from "../../components/NotificationPopup";
+import { Bankend_Url } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
-import { markAllNotificationsAsRead } from "../../utils";
-import { SuccessToast } from "../../utils/Success";
-import { useTranslation } from "react-i18next";
 
 const AllChatPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [loadingNotifications, setLoadingNotifications] = useState(true);
+  const [ setNotifications] = useState([]);
+  const [ setLoadingNotifications] = useState(true);
   const [selectedTab, setSelectedTab] = useState("Seller"); // State for Seller/Buyer tab
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/allchat`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`${Bankend_Url}/api/v1/chat/allchat`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await res.json();
       if (!res.ok) {
@@ -57,16 +52,13 @@ const AllChatPage = () => {
   async function fetchNotifications() {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/notification/unread/chatSession`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
 
       if (!response.ok) {

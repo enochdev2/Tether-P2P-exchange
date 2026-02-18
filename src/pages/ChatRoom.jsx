@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { useAuth } from "../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../utils/AuthProvider";
 import { SuccessToast } from "../utils/Success";
 import { FiArrowLeft, FiImage } from "react-icons/fi";
 import { ErrorToast } from "../utils/Error";
@@ -30,7 +30,7 @@ const ChatRoom = () => {
   // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
+    const newSocket = io(`${Bankend_Url}`, {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -59,35 +59,24 @@ const ChatRoom = () => {
   }, [orderId]);
 
   const fetchMessages = async () => {
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/messages/${whic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/messages/${whic}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     setMessages(data);
   };
 
   const handleSendMessage = async () => {
     if (newMessage.trim() || image) {
-      const message = { sender: user.nickname, content: newMessage, orderId };
+      // const message = { sender: user.nickname, content: newMessage, orderId };
 
       const token = localStorage.getItem("token");
 
       // socket.emit("sendMessage", message);
 
-      const messageData = {
-        content: newMessage ? newMessage : "Image",
-        sender: user.nickname,
-        orderId: orderId,
-        orderType: orderType, // Pass orderType as well
-        timestamp: new Date().toISOString(),
-      };
-      let base64Image = null;
 
       const commonMessageData = {
         content: newMessage ? newMessage : "Image",
@@ -125,17 +114,14 @@ const ChatRoom = () => {
           socket.emit("sendMessage", messageData);
 
           // "http://localhost:3000/api/v1/chat",
-          await fetch(
-            "https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat",
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(messageData),
-            }
-          );
+          await fetch(`${Bankend_Url}/api/v1/chat`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          });
 
           setImage(null); // Clear image after sending
         });
@@ -148,9 +134,7 @@ const ChatRoom = () => {
         socket.emit("sendMessage", messageData);
 
         // "http://localhost:3000/api/v1/chat",
-        await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat",
-           {
+        await fetch(`${Bankend_Url}/api/v1/chat`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -165,16 +149,13 @@ const ChatRoom = () => {
 
   const handleCloseChat = async () => {
     socket.emit("closeChat", { orderId });
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${whic}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/close/${whic}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     if (res.ok) {
       SuccessToast(t(messages.chatClosed));
       navigate("/admin/dashboard");

@@ -1,39 +1,31 @@
 import { UserPlus2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
-import AdminTradeCard2 from "../../components/AdminTradeCard2";
-import AdminUserCard from "../../components/AdminUserCard";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import { useAuth } from "../../utils/AuthProvider";
-import { ErrorToast } from "../../utils/Error";
-import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import LoadingSpiner from "../../components/LoadingSpiner";
 import ManagerUserCard from "../../components/MangerUserCard";
+import { Bankend_Url } from "../../utils/AuthProvider";
+import { ErrorToast } from "../../utils/Error";
 
 const UserList = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loadingSell, setLoadingSell] = useState(true);
   const [allUsers, setAllUsers] = useState([]);
-  const [change, setChange] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   // const { allUser } = useAuth();
-  const { updateUser } = useAuth();
 
   const allUser = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/manager/users",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/manager/users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
 
@@ -60,35 +52,6 @@ const UserList = () => {
   useEffect(() => {
     allUser();
   }, []);
-
-  const handleSubmit = async (nickname) => {
-    let updatedUser;
-    if (change) {
-      updatedUser = {
-        nickname: nickname,
-        status: "active",
-        // admin: user?.admin || false, // preserve existing admin status
-      };
-    } else {
-      updatedUser = {
-        nickname: nickname,
-        status: "inactive",
-        // admin: user?.admin || false, // preserve existing admin status
-      };
-    }
-
-    try {
-      const response = await updateUser(updatedUser);
-      if (response) {
-        SuccessToast("You have successfully updated the status");
-        allUser();
-      }
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-      ErrorToast(`something went wrong ${error}`);
-      // Optionally handle error here (e.g., show error message)
-    }
-  };
 
   const filteredUsers = allUsers.filter((user) =>
     user.nickname?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -151,10 +114,7 @@ const UserList = () => {
               {t("usermanagement.noUsers")}
             </div>
           ) : (
-            <ManagerUserCard
-              users={filteredUsers}
-              handleUpdate={allUser}
-            />
+            <ManagerUserCard users={filteredUsers} handleUpdate={allUser} />
           )}
         </section>
       </div>

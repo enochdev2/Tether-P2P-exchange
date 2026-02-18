@@ -1,38 +1,11 @@
-import { CommandIcon, InfoIcon, MessageCircle } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import { useAuth } from "../../utils/AuthProvider";
-import NotificationPopup from "../../components/NotificationPopup";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmModal from "../../components/ConfirmModal";
+import LoadingSpiner from "../../components/LoadingSpiner";
+import { Bankend_Url } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 
-// const inquiries = [
-//   {
-//     title: "Edit Account Info",
-//     username: "user",
-//     description: "I need ...",
-//     conmment: "",
-//     date: "2025-05-20",
-//   },
-//   {
-//     title: "Other inquiries",
-//     username: "user",
-//     description: "Help...",
-//     comment: <MessageCircle size={18} />,
-//     date: "2025-04-13",
-//   },
-//   {
-//     title: "Inquiries about Buy",
-//     username: "user",
-//     description: "Help...",
-//     comment: <MessageCircle size={18} />,
-//     date: "2025-03-13",
-//   },
-// ];
-
-// Sort inquiries by date descending;
 
 export default function InquiryHistory() {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,16 +39,13 @@ const AllInquiries = () => {
   const allUsers = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/inquiry/user",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/inquiry/user`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
@@ -171,8 +141,8 @@ const AllInquiries = () => {
                     user.status?.toLowerCase() === "active"
                       ? "text-green-600"
                       : user.status?.toLowerCase() === "pending"
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                        ? "text-yellow-600"
+                        : "text-red-600"
                   }`}
                 >
                   {user.status === "Pending" && t("inquirys.status")}
@@ -216,8 +186,8 @@ const AllInquiries = () => {
                 user.status?.toLowerCase() === "active"
                   ? "text-green-600"
                   : user.status?.toLowerCase() === "pending"
-                  ? "text-yellow-600"
-                  : "text-red-600"
+                    ? "text-yellow-600"
+                    : "text-red-600"
               }`}
             >
               Status: {user.status}
@@ -261,12 +231,12 @@ function formatDateTime(timestamp) {
   const dateOnly = dateObj.toLocaleDateString("en-CA");
 
   // Format time as HH:mm:ss (24-hour)
-  const timeOnly = dateObj.toLocaleTimeString("en-US", {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  // const timeOnly = dateObj.toLocaleTimeString("en-US", {
+  //   hour12: false,
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   second: "2-digit",
+  // });
 
   // return `${dateOnly} ${timeOnly}`;
   return `${dateOnly}`;

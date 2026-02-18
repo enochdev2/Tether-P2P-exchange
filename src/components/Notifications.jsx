@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LongSuccessToast, ErrorToast } from "../../utils/LongSuccess";
+import { Bankend_Url } from "../utils/AuthProvider";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -27,7 +28,7 @@ const Notifications = () => {
       }
 
       if (Array.isArray(data) && data.length > 0) {
-        LongSuccessToast(`You have a new notification for ${endpoint.split('/').pop()}`);
+        LongSuccessToast(`You have a new notification for ${endpoint.split("/").pop()}`);
       }
 
       setNotifications(data); // Update notifications state
@@ -42,17 +43,17 @@ const Notifications = () => {
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
     const userNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/inquiry",
+      `${Bankend_Url}/api/v1/notification/unread/user/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/registration`,
+      `${Bankend_Url}/api/v1/notification/unread/user/inquiry`,
     ];
 
     const adminNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/registration",
+      `${Bankend_Url}/api/v1/notification/unread/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/chatSession`,
+      `${Bankend_Url}/api/v1/notification/unread/registration`,
     ];
 
     // Assuming you have some way to differentiate the user's role (e.g., `isAdmin` flag)

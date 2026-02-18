@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { ErrorToast } from "../../utils/Error";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SuccessToast } from "../../utils/Success";
-import { useAuth } from "../../utils/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
+import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
 
 const TetherPrice = () => {
   const { fetchPrice } = useAuth();
@@ -15,20 +15,13 @@ const TetherPrice = () => {
   useEffect(() => {
     const fetchTetherPrice = async () => {
       try {
-        //   "https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=krw"
-
-        // const token = localStorage.getItem("token");
-
-        const response = await fetch(
-          "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/get-tether-price",
-          {
-            method: "GET",
-            headers: {
-              // Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${Bankend_Url}/api/v1/tetherprice/get-tether-price`, {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           const data = await response.json();
@@ -63,23 +56,18 @@ const TetherPrice = () => {
     const token = localStorage.getItem("token");
 
     try {
-      // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
-      //   const response = await fetch(
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/tetherprice/update-tether-price",
-        {
-          method: "POST",
+      const response = await fetch(`${Bankend_Url}/api/v1/tetherprice/update-tether-price`, {
+        method: "POST",
 
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            tetherPrice: Number(inputPrice), // Make sure it's a number
-            // storedLanguage : localStorage.getItem("language")
-          }),
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tetherPrice: Number(inputPrice), // Make sure it's a number
+          // storedLanguage : localStorage.getItem("language")
+        }),
+      });
       const data = await response.json();
 
       if (!response.ok) {

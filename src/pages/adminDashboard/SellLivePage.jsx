@@ -1,24 +1,20 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import AdminTradeCard from "../../components/AdminTradeCard";
 import AdminTradeCard2 from "../../components/AdminTradeCard2";
+import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
+import ConfirmModal2 from "../../components/ConfirmModal2";
 import LoadingSpiner from "../../components/LoadingSpiner";
-import NotificationPopup from "../../components/NotificationPopup";
+import { Bankend_Url } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
-import AdminTradeInProgressCard from "../../components/AdminTradeInProgressCard";
-import { LongSuccessToast } from "../../utils/LongSuccess";
-import { markAllNotificationsAsRead } from "../../utils";
-import { useTranslation } from "react-i18next";
-import ConfirmModal2 from "../../components/ConfirmModal2";
-import { useNavigate } from "react-router-dom";
 
 const SellLivePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [inProgressOrders, setInProgressOrders] = useState([]);
-  // console.log("🚀 ~ SellLivePage ~ inProgressOrders:", inProgressOrders)
-  // const [loading, setLoading] = useState(true);
   const [sellOrders, setSellOrders] = useState([]);
   const [loadingSell, setLoadingSell] = useState(true);
   const [matchWrong, setMatchWrong] = useState(false);
@@ -40,21 +36,18 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       // `http://localhost:3000/api/v1/sell/admin/match-orders`,
-      const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/match-orders`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            buyerOrderId,
-            sellerOrderId,
-            storedLanguage: localStorage.getItem("language"),
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/match-orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          buyerOrderId,
+          sellerOrderId,
+          storedLanguage: localStorage.getItem("language"),
+        }),
+      });
       // const result = await response.json();
 
       if (!response.ok) {
@@ -81,21 +74,18 @@ const SellLivePage = () => {
       if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/complete-orders`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            buyerOrderId,
-            sellerOrderId,
-            storedLanguage: localStorage.getItem("language"),
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/complete-orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          buyerOrderId,
+          sellerOrderId,
+          storedLanguage: localStorage.getItem("language"),
+        }),
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -119,17 +109,14 @@ const SellLivePage = () => {
       if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/cancel-orders`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ buyerOrderId, sellerOrderId }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/cancel-orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ buyerOrderId, sellerOrderId }),
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -148,17 +135,10 @@ const SellLivePage = () => {
 
   async function fetchSellOrders() {
     try {
-      //   const url = status
-      //     ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders?status=${encodeURIComponent(
-      //         status
-      //       )}`
-      //     : "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders";
-
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/onsale-orders",
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/sell/admin/all/onsale-orders`,
         {
           method: "GET",
           headers: {
@@ -202,8 +182,7 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/pending-orders",
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/sell/admin/all/pending-orders`,
         {
           method: "GET",
           headers: {
@@ -237,17 +216,14 @@ const SellLivePage = () => {
       const token = localStorage.getItem("token");
 
       // "http://localhost:3000/api/v1/sell/admin/all/inProgress-orders",
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/all/inProgress-orders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          // credentials: "include",
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/all/inProgress-orders`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        // credentials: "include",
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -278,8 +254,7 @@ const SellLivePage = () => {
       const storedLanguage = localStorage.getItem("language");
 
       const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/sell/admin/sell-orders/${orderId}/approve/${storedLanguage}`,
         {
           method: "POST",
           headers: {
@@ -295,7 +270,8 @@ const SellLivePage = () => {
       }
 
       const result = await response.json();
-      const message = t("messages.sellOrderApproved") || result.message || "Sell Order Approve Successful";
+      const message =
+        t("messages.sellOrderApproved") || result.message || "Sell Order Approve Successful";
       await fetchSellOrders();
       SuccessToast(message);
 
@@ -313,8 +289,7 @@ const SellLivePage = () => {
       const storedLanguage = localStorage.getItem("language");
 
       const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/sell/admin/sell-orders/${orderId}/reject/${storedLanguage}`,
         {
           method: "POST",
           headers: {

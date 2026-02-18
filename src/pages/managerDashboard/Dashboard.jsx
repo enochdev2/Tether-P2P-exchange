@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import DashboardMetrics from "../../components/DashboardMetrics";
 import { ErrorToast } from "../../utils/Error";
+import { Bankend_Url } from "../../utils/AuthProvider";
 
 const DashboardManager = () => {
   const navigate = useNavigate();
@@ -22,16 +23,13 @@ const DashboardManager = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/manager/getallstats",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/manager/getallstats`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const data = await response.json();

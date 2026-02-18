@@ -7,6 +7,7 @@ import { ErrorToast } from "../../utils/Error";
 import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Bankend_Url } from "../../utils/AuthProvider";
 
 const InquiryManagement = () => {
   const { t } = useTranslation();
@@ -21,16 +22,13 @@ const InquiryManagement = () => {
   const allUser = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/inquiry/all/active",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/inquiry/all/active`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
 

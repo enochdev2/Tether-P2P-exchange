@@ -9,6 +9,7 @@ import { SuccessToast } from "../../utils/Success";
 import { LongSuccessToast } from "../../utils/LongSuccess";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Bankend_Url } from "../../utils/AuthProvider";
 
 const BuyLivePage = () => {
   const { t } = useTranslation();
@@ -39,16 +40,13 @@ const BuyLivePage = () => {
     try {
       setLoadingBuy(false);
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/onbuy-orders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/buy/admin/all/onbuy-orders`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
 
@@ -84,8 +82,7 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/pending-orders",
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/buy/admin/all/pending-orders`,
         {
           method: "GET",
           headers: {
@@ -115,8 +112,7 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/all/inProgress-orders",
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        `${Bankend_Url}/api/v1/buy/admin/all/inProgress-orders`,
         {
           method: "GET",
           headers: {
@@ -156,21 +152,18 @@ const BuyLivePage = () => {
       if (!buyerOrderId || !sellerOrderId) return ErrorToast("input buyer Order ID");
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/cancel-orders`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            buyerOrderId,
-            sellerOrderId,
-            storedLanguage: localStorage.getItem("language"),
-          }),
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/cancel-orders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          buyerOrderId,
+          sellerOrderId,
+          storedLanguage: localStorage.getItem("language"),
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to match orders: ${response.status}`);
@@ -196,7 +189,7 @@ const BuyLivePage = () => {
 
       // `http://localhost:3000/api/v1/buy/admin/buy-orders/${orderId}/approve`,
       const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/approve`,
+        `${Bankend_Url}/api/v1/buy/admin/buy-orders/${orderId}/approve`,
         {
           method: "POST",
           headers: {
@@ -215,7 +208,8 @@ const BuyLivePage = () => {
       }
 
       const result = await response.json();
-      const message = t("messages.buyOrderApproved") || result.message || "Buy Order Approved Successfully";
+      const message =
+        t("messages.buyOrderApproved") || result.message || "Buy Order Approved Successfully";
 
       await fetchInProgressOrders();
       await fetchBuyOrders();
@@ -235,9 +229,8 @@ const BuyLivePage = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        // `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/reject`,
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/reject`,
-        // "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/allonsell-orders-orders",
+        // `${Bankend_Url}/api/v1/buy/admin/buy-orders/${orderId}/reject`,
+        `${Bankend_Url}/api/v1/buy/admin/buy-orders/${orderId}/reject`,
         {
           method: "POST",
           headers: {
@@ -257,7 +250,7 @@ const BuyLivePage = () => {
 
       const result = await response.json();
       const message = t("messages.buyOrderRejectedConfirm") || result.message;
-      
+
       SuccessToast(message);
 
       // Remove the approved order from the current pendingOrders state

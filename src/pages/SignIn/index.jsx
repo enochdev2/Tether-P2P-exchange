@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../utils/AuthProvider";
-import { SuccessToast } from "../../utils/Success";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { ErrorToast } from "../../utils/Error";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import ForgotNicknameModal from "../../components/ForgotNicknameModal ";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
+import { ErrorToast } from "../../utils/Error";
+import { SuccessToast } from "../../utils/Success";
 const SignIn = () => {
   const { t } = useTranslation();
   const { setIsLoggedIn, setUser } = useAuth();
@@ -51,16 +51,12 @@ const SignIn = () => {
       // const data = await login(user);
       // const data = await response.json();
 
-      // const response = await fetch("http://localhost:3000/api/v1/user/login",
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+        credentials: "include",
+      });
 
       localStorage.removeItem("verified");
       const data = await response.json();
@@ -98,9 +94,16 @@ const SignIn = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-cover bg-center px-4 sm:px-6"
+      className="relative flex justify-center items-center min-h-screen bg-cover bg-center px-4 sm:px-6"
       style={{ backgroundImage: "url('/bgg.png')" }}
     >
+       <div className="absolute top-20 left-0 w-full bg-[#110101] text-white overflow-hidden z-10">
+        <div className="flex whitespace-nowrap">
+          <div className="marquee py-2 text-base font-bold">
+            ⚠️ This business is currently on hold. The website is downgraded to a free server and may take up to 50 seconds to load initially.
+          </div>
+        </div>
+      </div>
       <div className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 bg-gray-900/80 rounded-2xl shadow-xl  backdrop-blur-md">
         <h2 className="text-2xl font-bold text-center text-white mb-6 tracking-wide">
           {t("signIn.title")}

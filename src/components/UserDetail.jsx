@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../utils/AuthProvider";
-import { SuccessToast } from "../utils/Success";
-import { ErrorToast } from "../utils/Error";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Bankend_Url, useAuth } from "../utils/AuthProvider";
+import { ErrorToast } from "../utils/Error";
+import { SuccessToast } from "../utils/Success";
 
 const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   const { updateUser } = useAuth();
   // const user = initialUser
   const [user, setUsers] = useState(initialUser || initialUser);
-  console.log("🚀 ~ UserDetail ~ user:", user)
+  console.log("🚀 ~ UserDetail ~ user:", user);
 
   const [phone, setPhone] = useState(user?.phone);
   const [username, setUsername] = useState(user?.username);
   const [referralCode, setReferralCode] = useState(user?.referralCode);
-  const [image, setImage] = useState(null);
   const [nickname, setNickname] = useState(user?.nickname);
   const [password, setPassword] = useState(user?.password);
   const [fullName, setFullName] = useState(user?.fullName);
   const [dob, setDob] = useState(user?.dob);
   const [bankName, setBankName] = useState(user?.bankName);
-  const [telegram, setTelegram] = useState(user?.telegram);
+  const [telegram] = useState(user?.telegram);
   const [bankAccount, setBankAccount] = useState(user?.bankAccount);
   const [tetherAddress, setTetherAddress] = useState(user?.tetherAddress);
   const [status, setStatus] = useState(user?.status || "inactive");
   const [isSaving, setIsSaving] = useState(false);
   const [rawFile, setRawFile] = useState(null);
+
+  useEffect(() => {
+    setUsers(initialUser || {});
+  }, [initialUser]);
 
   if (!user) {
     return <div className="p-8 text-center text-gray-600">No user data available.</div>;
@@ -77,10 +80,6 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
     }
   };
 
-  useEffect(() => {
-    setUsers(initialUser || {});
-  }, [initialUser]);
-
   const handleSave = async () => {
     // e.preventDefault();
 
@@ -105,7 +104,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
       const response = await updateUser(updatedUser);
       if (response.nickname) {
         await handleUpdate();
-        SuccessToast(t("messages.dataUpdated")); 
+        SuccessToast(t("messages.dataUpdated"));
         setIsSaving(false);
         setPhone(phone);
         setUsername(username);
@@ -116,7 +115,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
         setBankAccount(bankAccount);
         setTetherAddress(tetherAddress);
         setStatus(status);
-        setReferralCode(referralCode)
+        setReferralCode(referralCode);
       }
     } catch (error) {
       console.error("Error during sign-up:", error);
@@ -133,25 +132,22 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
     const formData = new FormData();
     formData.append("file", rawFile);
 
-    const res = await fetch(`https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/${userId}/image`, {
+    const res = await fetch(`${Bankend_Url}/api/v1/user/${userId}/image`, {
       method: "PUT",
       body: formData,
     });
 
     const data = await res.json();
-                if (res.ok) {
-                  setUsers((prev) => ({
-                    ...prev,
-                    tetherIdImage: data.imageUrl,
-                  }));
-                  SuccessToast("Image updated successfully!");
+    if (res.ok) {
+      setUsers((prev) => ({
+        ...prev,
+        tetherIdImage: data.imageUrl,
+      }));
+      SuccessToast("Image updated successfully!");
     } else {
       console.error("Image update failed:", data.message);
     }
   };
-
-               
-
 
   return (
     <div className="bg-gray-50 min-h-screen p-6 sm:p-8 font-sans max-w-5xl mx-auto">
@@ -227,28 +223,28 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
                     name === "phone"
                       ? phone
                       : name === "username"
-                      ? username
-                      : name === "nickname"
-                      ? nickname
-                      : name === "password"
-                      ? password
-                      : name === "fullName"
-                      ? fullName
-                      : name === "dob"
-                      ? dob
-                      : name === "referralCode"
-                      ? referralCode
-                      : name === "bankName"
-                      ? bankName
-                      : name === "bankAccount"
-                      ? bankAccount
-                      : name === "telegram"
-                      ? telegram
-                      : name === "tetherAddress"
-                      ? tetherAddress
-                      : name === "status"
-                      ? status
-                      : ""
+                        ? username
+                        : name === "nickname"
+                          ? nickname
+                          : name === "password"
+                            ? password
+                            : name === "fullName"
+                              ? fullName
+                              : name === "dob"
+                                ? dob
+                                : name === "referralCode"
+                                  ? referralCode
+                                  : name === "bankName"
+                                    ? bankName
+                                    : name === "bankAccount"
+                                      ? bankAccount
+                                      : name === "telegram"
+                                        ? telegram
+                                        : name === "tetherAddress"
+                                          ? tetherAddress
+                                          : name === "status"
+                                            ? status
+                                            : ""
                   }
                   onChange={handleChange}
                   disabled={
@@ -279,7 +275,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
           </div>
           <div className="flex flex-col mt-4">
             <label className="mb-2 font-medium text-gray-700 text-sm sm:text-base">
-              Update the  ID Image
+              Update the ID Image
             </label>
             <input
               type="file"
@@ -304,7 +300,7 @@ const UserDetail = ({ user: initialUser, setIsViewing, handleUpdate }) => {
             />
             <button
               type="button"
-              onClick={()=> updateImage(user._id)}
+              onClick={() => updateImage(user._id)}
               className="mt-3 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition duration-200"
             >
               Upload Image

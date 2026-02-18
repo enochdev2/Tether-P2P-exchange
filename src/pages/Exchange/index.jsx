@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import BuyTetherComponent from "../../components/BuyTetherComponent";
-import LoadingSpiner from "../../components/LoadingSpiner";
-import NotificationPopup from "../../components/NotificationPopup";
-import TradeCard from "../../components/TradeCard";
-import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
-import { ErrorToast } from "../../utils/Error";
-import { LongSuccessToast } from "../../utils/LongSuccess";
-import { SuccessToast } from "../../utils/Success";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import BuyTetherComponent from "../../components/BuyTetherComponent";
+import LoadingSpiner from "../../components/LoadingSpiner";
+import TradeCard from "../../components/TradeCard";
+import { Bankend_Url } from "../../utils/AuthProvider";
+import { ErrorToast } from "../../utils/Error";
+import UserTradeInProgressCard from "../dashboard/UserTradeInProgressCard";
 
 const TradingPage = () => {
   const { t } = useTranslation();
@@ -25,8 +23,7 @@ const TradingPage = () => {
   // Function to fetch buy orders, optionally filtered by status
   async function fetchBuyOrders() {
     try {
-      const url = "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/buy-orders";
-      // : "http://localhost:3000/api/v1/buy/buy-orders";
+      const url = `${Bankend_Url}/api/v1/buy/buy-orders`;
 
       const token = localStorage.getItem("token");
 
@@ -82,16 +79,13 @@ const TradingPage = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/user/inProgress-orders",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/buy/user/inProgress-orders`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       const buyInProgressOrders = await response.json();
 
@@ -108,7 +102,6 @@ const TradingPage = () => {
       return null;
     }
   }
-
 
   if (loading) return <LoadingSpiner />;
 

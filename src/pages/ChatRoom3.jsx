@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import ChatRoomPanel2 from "../components/chat/ChatRoomPanel2";
-import { useAuth } from "../utils/AuthProvider";
+import { Bankend_Url, useAuth } from "../utils/AuthProvider";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
 
@@ -30,15 +30,12 @@ const ChatRoom3 = () => {
   const [image2, setImage2] = useState(null);
   const navigate = useNavigate();
   let whic = orderId.length > 5 ? orderId : orderType;
-  const whi = orderType.length < 5 ? orderType : orderId;
   const buywhic = buyOrderId;
   const [userChatId, setUserChatId] = useState(whic);
   const [userChatId2, setUserChatId2] = useState(buywhic);
-  // whic = whi === "buy" && orderId
-  // const orderId = offerId;
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
+    const newSocket = io(`${Bankend_Url}`, {
       path: "/socket.io",
       withCredentials: true,
     });
@@ -68,15 +65,12 @@ const ChatRoom3 = () => {
   }, [whic]);
 
   const fetchMessages = async () => {
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/end/${whic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/admin/messages/end/${whic}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       const data = await res.json();
@@ -84,13 +78,12 @@ const ChatRoom3 = () => {
       ErrorToast(errorMsg);
     }
     setMessages(data.messages);
-    
   };
 
   const fetchChatUserInfo = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${whic}`,
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${whic}`,
+      `${Bankend_Url}/api/v1/chat/admin/userInfo/${whic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -110,16 +103,13 @@ const ChatRoom3 = () => {
 
   const handleCloseChat = async () => {
     socket.emit("closeChat", { whic });
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${whic}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/close/${whic}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     const ress = await handleCloseChat2();
     if (ress.ok && res.ok) {
       SuccessToast(t(messages.chatClosed));
@@ -131,14 +121,14 @@ const ChatRoom3 = () => {
   //? .......BUYER................
   useEffect(() => {
     // const newSocket = io("http://localhost:3000", {
-    const newSocket = io("https://tether-p2-p-exchang-backend.vercel.app", {
+    const newSocket = io(`${Bankend_Url}`, {
       path: "/socket.io",
       withCredentials: true,
     });
 
     setSocket(newSocket);
 
-    fetchChatUserInfo2()
+    fetchChatUserInfo2();
     fetchMessages2();
 
     newSocket.on("connect", () => {
@@ -161,15 +151,12 @@ const ChatRoom3 = () => {
   }, [buywhic]);
 
   const fetchMessages2 = async () => {
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/messages/end/${buywhic}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/admin/messages/end/${buywhic}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
     const data = await res.json();
     if (!res.ok) {
       const data = await res.json();
@@ -179,10 +166,10 @@ const ChatRoom3 = () => {
     setMessages2(data.messages);
   };
 
-   const fetchChatUserInfo2 = async () => {
+  const fetchChatUserInfo2 = async () => {
     const res = await fetch(
       // `http://localhost:3000/api/v1/chat/admin/userInfo/${buywhic}`,
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/admin/userInfo/${buywhic}`,
+      `${Bankend_Url}/api/v1/chat/admin/userInfo/${buywhic}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -202,16 +189,13 @@ const ChatRoom3 = () => {
 
   const handleCloseChat2 = async () => {
     socket.emit("closeChat", { orderId });
-    const res = await fetch(
-      `https://tether-p2-p-exchang-backend.vercel.app/api/v1/chat/close/${buywhic}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    const res = await fetch(`${Bankend_Url}/api/v1/chat/close/${buywhic}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     const ress = await handleCloseChat();
     if (ress.ok && res.ok) {
       SuccessToast(t(messages.chatClosed));
@@ -221,51 +205,6 @@ const ChatRoom3 = () => {
     // Or navigate away:
   };
 
-  const readImageAsDataURL = (file, callback) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const imageDataUrl = reader.result;
-      callback(imageDataUrl);
-    };
-    reader.readAsDataURL(file);
-  };
-  const readImageAsDataURL2 = (files, callback) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const imageDataUrl = reader.result;
-      callback(imageDataUrl);
-    };
-    reader.readAsDataURL(files);
-  };
-
-  const dataURLtoBlob = (dataURL) => {
-    const splitDataUrl = dataURL.split(",");
-    const byteString = atob(splitDataUrl[1]);
-    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
-
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-
-    for (let i = 0; i < byteString.length; i++) {
-      uint8Array[i] = byteString.charCodeAt(i);
-    }
-
-    return new Blob([arrayBuffer], { type: mimeString });
-  };
-  const dataURLtoBlob2 = (dataURL) => {
-    const splitDataUrl = dataURL.split(",");
-    const byteString = atob(splitDataUrl[1]);
-    const mimeString = splitDataUrl[0].split(":")[1].split(";")[0];
-
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-
-    for (let i = 0; i < byteString.length; i++) {
-      uint8Array[i] = byteString.charCodeAt(i);
-    }
-
-    return new Blob([arrayBuffer], { type: mimeString });
-  };
 
   // Check if the user is authorized to access the chatroom
   // if (!userRole === 'admin' || !userOrderId === orderId) {

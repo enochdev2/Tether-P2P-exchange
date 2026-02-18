@@ -1,12 +1,11 @@
-import { CheckCircle, Clock, Star } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FaCopy } from "react-icons/fa";
 import logo2 from "../assets/Tether2.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Bankend_Url } from "../utils/AuthProvider";
 import { ErrorToast } from "../utils/Error";
 import { SuccessToast } from "../utils/Success";
-import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
-import { FaCopy } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
 
 const statusColors = {
   "On sell": "#26a17b", // Green
@@ -16,9 +15,6 @@ const statusColors = {
 
 const TradeCard = ({ offer, sell, fetchOrders }) => {
   const { t } = useTranslation();
-
-  const navigate = useNavigate();
-  // const isPending = sell ? offer.status === " " : offer.status === " ";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingOrderId, setPendingOrderId] = useState(null);
@@ -37,10 +33,10 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
       const token = localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user"));
       const storedLanguage = localStorage.getItem("language");
-      
+
       const url = sell
-        ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders/${orderId}/cancel`
-        : `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/buy-orders/${orderId}/cancel`;
+        ? `${Bankend_Url}/api/v1/sell/sell-orders/${orderId}/cancel`
+        : `${Bankend_Url}/api/v1/buy/buy-orders/${orderId}/cancel`;
 
       const response = await fetch(url, {
         method: "DELETE",
@@ -89,8 +85,6 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
 
   const dateOnly = dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD
 
-  const orderType = sell ? "sell" : "buy";
-
   return (
     <div
       className={`flex flex-co sm:flex-row items-center bg-white rounded-lg py-2 px-1 md:px-1 sm:py-2 md:py-2 mb-4 border border-gray-200 shadow-sm overflow-x-hidden justify-between
@@ -122,7 +116,9 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
               {t("tradecard.total", { amount: parseFloat(offer.amount).toFixed(4) })}
             </span>
             <span className="font-semibold text-xs sm:text-base text-gray-900 truncate">
-              {t("tradecard.balance", { amount: parseFloat(offer.amountRemaining).toFixed(4) })}{" "}
+              {t("tradecard.balance", {
+                amount: parseFloat(offer.amountRemaining).toFixed(4),
+              })}{" "}
             </span>
           </div>
         </div>
@@ -187,8 +183,8 @@ const TradeCard = ({ offer, sell, fetchOrders }) => {
                 offer.status === "Pending Approval"
                   ? "text-gray-400"
                   : offer.status === "Sell completed" || offer.status === "Buy Completed"
-                  ? "text-orange-500"
-                  : "text-lime-600"
+                    ? "text-orange-500"
+                    : "text-lime-600"
               }`}
             >
               {offer.status === "Pending Approval" && t("status.pendingApproval")}

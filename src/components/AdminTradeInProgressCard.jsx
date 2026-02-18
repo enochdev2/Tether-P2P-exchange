@@ -8,6 +8,7 @@ import { SuccessToast } from "../utils/Success";
 import ConfirmModal from "./ConfirmModal";
 import { useTranslation } from "react-i18next";
 import ConfirmModal3 from "./ConfirmModal3";
+import { Bankend_Url } from "../utils/AuthProvider";
 
 // import your logo and statusColors accordingly
 
@@ -23,7 +24,6 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
   const [buyerOrderId, setBuyerOrderId] = useState("");
 
   // Adjust isPending logic if needed
-  const isPending = offer.status === "In Progress";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpens, setIsModalOpens] = useState(false);
@@ -65,13 +65,10 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     try {
       if (!orderId) return ErrorToast(" Order ID not found. Please try again.");
       const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
 
       const url = sell
-        ? `https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/sell-orders/${orderId}/cancel`
-        : `https://tether-p2-p-exchang-backend.vercel.app/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
-        // ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/admin/sell-orders/${orderId}/cancel`
-        // : `https://tether-p2p-exchang-backend.onrender.com/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
+        ? `${Bankend_Url}/api/v1/sell/admin/sell-orders/${orderId}/cancel`
+        : `${Bankend_Url}/api/v1/buy/admin/buy-orders/${orderId}/cancel`;
 
       const response = await fetch(url, {
         method: "DELETE",
@@ -169,7 +166,6 @@ const AdminTradeInProgressCard = ({ offer, sell, onMatch, onCancel, onMatchs, fe
     return rows;
   };
 
-  const matchedOrders = sell ? offer?.matchedBuyOrders : offer?.matchedSellOrders;
 
   return (
     <div className="relative  w-full flex flex-col gap-4 items-center mb-4 rounded-xl bg-white p-2 shadow-lg border border-green-600">

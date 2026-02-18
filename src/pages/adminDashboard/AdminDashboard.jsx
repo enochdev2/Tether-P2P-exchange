@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom"; // Import Outlet for dynamic content rendering
-import Sidebar from "./Sidebar";
-import { useAuth } from "../../utils/AuthProvider";
-import InfoCard from "../../components/InfoCard";
-import { SettingsIcon, User2 } from "lucide-react";
-import UsersCard from "../../components/UsersCard";
-import DashboardMetrics from "../../components/DashboardMetrics";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LongSuccessToast } from "../../utils/LongSuccess";
-import { ErrorToast } from "../../utils/Error";
-import { handleMarkAllAsRead, markNotificationRead } from "../../utils";
-import NotificationPopup from "../../components/NotificationPopup";
+import { Outlet, useNavigate } from "react-router-dom"; // Import Outlet for dynamic content rendering
 import AlarmBell from "../../components/AlarmBell";
+import NotificationPopup from "../../components/NotificationPopup";
+import { handleMarkAllAsRead, markNotificationRead } from "../../utils";
+import { Bankend_Url, useAuth } from "../../utils/AuthProvider";
+import { LongSuccessToast } from "../../utils/LongSuccess";
+import Sidebar from "./Sidebar";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -19,12 +14,6 @@ const AdminDashboard = () => {
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const navigate = useNavigate();
   const [isOn, setIsOn] = useState(true);
-  const [setStats] = useState({
-    users: 6577,
-    totalSales: 1576,
-    totalBuys: 6557,
-    totalFees: 45345,
-  });
 
   const playNotificationSound = () => {
     const audio = new Audio("/notification.mp3"); // Replace with actual sound path
@@ -93,17 +82,17 @@ const AdminDashboard = () => {
   useEffect(() => {
     // Example API endpoints for the user and admin notifications
     const userNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/registration",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/user/inquiry",
+      `${Bankend_Url}/api/v1/notification/unread/user/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/user/registration`,
+      `${Bankend_Url}/api/v1/notification/unread/user/inquiry`,
     ];
 
     const adminNotifications = [
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/sellOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/buyOrders",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/chatSession",
-      "https://tether-p2-p-exchang-backend.vercel.app/api/v1/notification/unread/registration",
+      `${Bankend_Url}/api/v1/notification/unread/sellOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/buyOrders`,
+      `${Bankend_Url}/api/v1/notification/unread/chatSession`,
+      `${Bankend_Url}/api/v1/notification/unread/registration`,
     ];
 
     // Assuming you have some way to differentiate the user's role (e.g., `isAdmin` flag)
@@ -173,16 +162,13 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       console.log("🚀 ~ getUserProfile ~ user.nickname:", user?.nickname); // `http://localhost:3000/api/v1/user/users/${updatedData.nickname}`,
-      const response = await fetch(
-        `https://tether-p2-p-exchang-backend.vercel.app/api/v1/user/users/${user?.nickname}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/user/users/${user?.nickname}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const data = await response.json();

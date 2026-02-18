@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import DashboardMetrics from "../../components/DashboardMetrics";
-import { useAuth } from "../../utils/AuthProvider";
-import Sidebar from "./Sidebar";
-import { LongSuccessToast } from "../../utils/LongSuccess";
+import { Bankend_Url } from "../../utils/AuthProvider";
 import { ErrorToast } from "../../utils/Error";
 
 const Dashboards = () => {
@@ -15,7 +13,7 @@ const Dashboards = () => {
     totalBuys: 6557,
     totalFees: 45345,
   });
-  const [loadingStats, setLoadingStats] = useState(true);
+  const [ setLoadingStats] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -25,16 +23,13 @@ const Dashboards = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/admin/getallstats",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${Bankend_Url}/api/v1/sell/admin/getallstats`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const data = await response.json();

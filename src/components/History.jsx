@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import UserTradeInProgressCard from "../pages/dashboard/UserTradeInProgressCard";
+import { Bankend_Url } from "../utils/AuthProvider";
 import { ErrorToast } from "../utils/Error";
 import BuyTetherComponent from "./BuyTetherComponent";
 import LoadingSpiner from "./LoadingSpiner";
@@ -9,7 +10,7 @@ import TradeCard from "./TradeCard";
 
 const History = () => {
   const { t } = useTranslation();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inProgressOrders, setInProgressOrders] = useState([]);
@@ -20,22 +21,15 @@ const History = () => {
   }, []);
 
   // Function to fetch buy orders, optionally filtered by status
-  async function fetchSellOrders(status = "") {
+  async function fetchSellOrders( ) {
     try {
-      // Build the URL with optional status query parameter
-      // const url = status
-      //   ? `https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders?status=${encodeURIComponent(
-      //       status
-      //     )}`
-      //     : "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders";
-         
+    
 
       const token = localStorage.getItem("token");
-      
 
       const response = await fetch(
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/sell-orders",
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/sell-orders",
+        `${Bankend_Url}/api/v1/sell/sell-orders`,
         {
           method: "GET",
           headers: {
@@ -47,7 +41,7 @@ const History = () => {
 
       const sellOrders = await response.json();
 
-       if (!response.ok) {
+      if (!response.ok) {
         const data = await response.json();
         const errorMsg = data.error || data.message || "Failed to register user";
         if (errorMsg === "Invalid or expired token") {
@@ -84,15 +78,13 @@ const History = () => {
     }
   }
 
-  
-
   async function fetchInProgressOrders() {
     try {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
         // "https://tether-p2p-exchang-backend.onrender.com/api/v1/sell/user/inProgress-orders",
-        "https://tether-p2-p-exchang-backend.vercel.app/api/v1/sell/user/inProgress-orders",
+        `${Bankend_Url}/api/v1/sell/user/inProgress-orders`,
         {
           method: "GET",
           headers: {
@@ -115,7 +107,6 @@ const History = () => {
       return null;
     }
   }
-
 
   if (loading) return <LoadingSpiner />;
 
@@ -192,7 +183,6 @@ const History = () => {
           )}
         </div>
       </div>
-    
     </div>
   );
 };
